@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="8000px"
+	 height="800px" viewBox="0 0 8000 800" enable-background="new 0 0 8000 800" xml:space="preserve">
+<g id="terrain">
+	<g>
+		<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="1416.225,991.069 1416.5,990.688 1416.225,990.688 		"/>
+		<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="1123.499,543.998 1151.499,554.998 1128.499,572.578 
+			750.499,563.33 735.499,614.328 816.167,636.664 802.832,677.332 771.167,697.002 744.832,771 797.499,820.334 763.499,838.334 
+			662.832,720.334 704.167,634.332 708.167,582.332 572.832,560.332 490.832,572.578 317.499,634.332 176.832,636.998 
+			100.995,643.074 -1,572.578 -0.501,990.498 1390.302,990.688 1390.578,497.586 		"/>
+	</g>
+</g>
+<g id="startPosition">
+</g>
+<g id="endPosition">
+</g>
+</svg>
