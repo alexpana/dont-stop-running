@@ -1,19 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="8000px"
-	 height="800px" viewBox="0 0 8000 800" enable-background="new 0 0 8000 800" xml:space="preserve">
-<g id="terrain">
-	<g>
-		<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="1416.225,991.069 1416.5,990.688 1416.225,990.688 		"/>
-		<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="1123.499,543.998 1151.499,554.998 1128.499,572.578 
-			750.499,563.33 735.499,614.328 816.167,636.664 802.832,677.332 771.167,697.002 744.832,771 797.499,820.334 763.499,838.334 
-			662.832,720.334 704.167,634.332 708.167,582.332 572.832,560.332 490.832,572.578 317.499,634.332 176.832,636.998 
-			100.995,643.074 -1,572.578 -0.501,990.498 1390.302,990.688 1390.578,497.586 		"/>
-	</g>
-</g>
-<g id="startPosition">
-</g>
-<g id="endPosition">
-</g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="210mm" height="297mm" viewBox="0 0 744.09448819 1052.3622047" id="svg2" version="1.1" inkscape:version="0.91 r13725" sodipodi:docname="level2.svg" shape-rendering="crispEdges">
+    <defs id="defs4" />
+    <sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="0.35" inkscape:cx="1.2e+002" inkscape:cy="1.2e+002" inkscape:document-units="px" inkscape:current-layer="svg2" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1028" inkscape:window-x="-8" inkscape:window-y="22" inkscape:window-maximized="1" inkscape:showpageshadow="false" showguides="true" />
+    <path sodipodi:nodetypes="cccccccccccccccccccccccc" id="terrain" style="fill:#dfad6b;fill-opacity:1;stroke:#493227;stroke-width:11.5;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" d="M 751.582,826.9242 804.249,876.2582 770.249,894.2582 669.582,776.2582 710.917,690.2562 714.917,638.2562 579.582,616.2562 497.582,628.5022 324.249,690.2562 183.582,692.9222 107.745,698.9982 5.7499988,628.5022 6.2489988,1046.4222 1397.0519,1046.6122 1397.3279,553.5102 1130.2489,599.9222 1158.2489,610.9222 1135.2489,628.5022 757.249,619.2542 742.249,670.2522 822.917,692.5882 809.582,733.2562 777.917,752.9262 Z" inkscape:label="terrain" inkscape:connector-curvature="0" />
+    <rect inkscape:label="start_position" y="1020.3622" x="4.9999999e-006" height="31.999996" width="32.000004" id="startPosition" style="fill:#a4df6b;fill-opacity:1;stroke:#3b4d23;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect style="fill:#dfad6b;fill-opacity:1;stroke:#493227;stroke-width:11.5;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="endPosition" width="242.85715" height="231.42857" x="397.14285" y="252.3622" inkscape:label="end_position" />
+    <metadata id="metadata4184">
+        <rdf:RDF>
+            <cc:Work rdf:about="">
+                <dc:title></dc:title>
+            </cc:Work>
+        </rdf:RDF>
+    </metadata>
 </svg>
