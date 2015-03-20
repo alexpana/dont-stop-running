@@ -127,7 +127,7 @@ public class LevelPreview extends Game {
         levelNameLabel.setAlignment(Align.left);
 
         table.add(cameraPositionLabel).row();
-        table.add(levelNameLabel);
+        table.add(levelNameLabel).left();
 
         table.left().top();
     }
