@@ -120,12 +120,10 @@ public class LevelPreview extends Game {
         table.setFillParent(true);
         stage.addActor(table);
 
-        stage.setDebugAll(true);
-
         cameraPositionLabel = new Label("", uiSkin);
         cameraPositionLabel.setAlignment(Align.left);
 
-        levelNameLabel = new Label("No level loaded.", uiSkin);
+        levelNameLabel = new Label(levelName != null ? "Loaded " + levelName : "No level loaded.", uiSkin);
         levelNameLabel.setAlignment(Align.left);
 
         table.add(cameraPositionLabel).row();
@@ -204,7 +202,9 @@ public class LevelPreview extends Game {
         this.level = level;
         this.levelName = levelName;
 
-        this.levelNameLabel.setText("Loaded " + levelName);
+        if (levelNameLabel != null) {
+            levelNameLabel.setText("Loaded " + levelName);
+        }
     }
 
     public static LevelPreview launch() {
