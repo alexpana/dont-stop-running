@@ -60,7 +60,6 @@ public class CameraController extends InputAdapter implements InputComponent {
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.CONTROL_LEFT) {
             enableScrolling = true;
-            return true;
         }
 
         if (keycode == Input.Keys.SPACE) {
@@ -75,7 +74,6 @@ public class CameraController extends InputAdapter implements InputComponent {
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.CONTROL_LEFT) {
             enableScrolling = false;
-            return true;
         }
 
         if (keycode == Input.Keys.SPACE) {

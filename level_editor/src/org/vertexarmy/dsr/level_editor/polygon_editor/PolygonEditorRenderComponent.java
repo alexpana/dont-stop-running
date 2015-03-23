@@ -12,6 +12,9 @@ import org.vertexarmy.dsr.math.Polygon;
  * on 3/23/2015.
  */
 public class PolygonEditorRenderComponent extends RenderComponent {
+    public static final Color DRAGGED_VERTEX_HANDLER_COLOR = Color.GREEN;
+    public static final Color SELECTED_VERTEX_HANDLER_COLOR = Color.RED;
+    public static final Color DEFAULT_VERTEX_HANDLER_COLOR = Color.YELLOW;
     private Polygon polygon;
 
     private List<VertexHandler> vertexHandlers;
@@ -52,11 +55,11 @@ public class PolygonEditorRenderComponent extends RenderComponent {
         float y = polygon.getVertices()[handler.vertexIndex * 2 + 1];
 
         if (handler.isDragged() || handler.isHovered()) {
-            shapeRenderer.setColor(Color.GREEN);
+            shapeRenderer.setColor(DRAGGED_VERTEX_HANDLER_COLOR);
         } else if (handler.isSelected()) {
-            shapeRenderer.setColor(Color.BLUE);
+            shapeRenderer.setColor(SELECTED_VERTEX_HANDLER_COLOR);
         } else {
-            shapeRenderer.setColor(Color.YELLOW);
+            shapeRenderer.setColor(DEFAULT_VERTEX_HANDLER_COLOR);
         }
         drawRect(x, y, handler.hitSize / zoom);
     }
