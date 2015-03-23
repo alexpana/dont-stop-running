@@ -20,7 +20,7 @@ import org.vertexarmy.dsr.graphics.GraphicsUtils.GlError;
 public class Renderer {
     private final PolygonSpriteBatch POLYGON_SPRITE_BATCH = new PolygonSpriteBatch();
 
-    private final Map<Color, Texture> colorTextureMap = new HashMap<Color, Texture>();
+    private final Map<Color, Texture> colorTextureMap = new HashMap<>();
 
     private State state;
 

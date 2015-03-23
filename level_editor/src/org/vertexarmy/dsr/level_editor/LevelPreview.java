@@ -27,18 +27,18 @@ import org.vertexarmy.dsr.graphics.ShaderRepository;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.level_editor.polygon_editor.PolygonEditor;
 
-public class LevelPreview extends Game {
+class LevelPreview extends Game {
     private final static SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
 
     private final Root root = new Root();
 
-    private Map<Tiles, TextureRegion> tiles = new HashMap<>();
+    private final Map<Tiles, TextureRegion> tiles = new HashMap<>();
 
     private Level level;
 
     private DebugValuesPanel debugValuesPanel;
 
-    private String levelToLoad;
+    private final String levelToLoad;
 
     private PolygonSprite terrainSprite;
 
@@ -142,7 +142,7 @@ public class LevelPreview extends Game {
         uiNode.getStage().getViewport().update(w, h, true);
     }
 
-    public void setLevel(Level level, String levelName) {
+    void setLevel(Level level, String levelName) {
         this.level = level;
         DebugValues.instance().setValue("loaded level", levelName);
 

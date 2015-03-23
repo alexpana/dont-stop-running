@@ -50,6 +50,7 @@ public class Algorithms {
         return 0;
     }
 
+    @SafeVarargs
     public static <E> boolean allEqual(E... elements) {
         if (elements.length < 2) {
             return true;

@@ -1,6 +1,5 @@
 package org.vertexarmy.dsr.atlas_viewer.ui;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.JLabel;

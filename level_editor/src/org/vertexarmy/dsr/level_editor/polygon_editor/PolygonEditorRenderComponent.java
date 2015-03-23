@@ -11,17 +11,17 @@ import org.vertexarmy.dsr.math.Polygon;
  * created by Alex
  * on 3/23/2015.
  */
-public class PolygonEditorRenderComponent extends RenderComponent {
-    public static final Color DRAGGED_VERTEX_HANDLER_COLOR = Color.GREEN;
-    public static final Color SELECTED_VERTEX_HANDLER_COLOR = Color.RED;
-    public static final Color DEFAULT_VERTEX_HANDLER_COLOR = Color.YELLOW;
-    private Polygon polygon;
+class PolygonEditorRenderComponent extends RenderComponent {
+    private static final Color DRAGGED_VERTEX_HANDLER_COLOR = Color.GREEN;
+    private static final Color SELECTED_VERTEX_HANDLER_COLOR = Color.RED;
+    private static final Color DEFAULT_VERTEX_HANDLER_COLOR = Color.YELLOW;
+    private final Polygon polygon;
 
-    private List<VertexHandler> vertexHandlers;
+    private final List<VertexHandler> vertexHandlers;
 
-    private PolygonEditor polygonEditor;
+    private final PolygonEditor polygonEditor;
 
-    private ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
+    private final ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
 
     public PolygonEditorRenderComponent(PolygonEditor polygonEditor) {
         this.polygonEditor = polygonEditor;

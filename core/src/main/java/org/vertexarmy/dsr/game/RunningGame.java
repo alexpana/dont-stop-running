@@ -9,39 +9,34 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.game.behavior.Behavior;
 import org.vertexarmy.dsr.game.behavior.SpriteRotateBehavior;
 import org.vertexarmy.dsr.game.behavior.SweepHorizontalBehavior;
 import org.vertexarmy.dsr.game.behavior.SweepVerticalBehavior;
-import org.vertexarmy.dsr.math.Polygon;
 import org.vertexarmy.dsr.game.objects.GameObject;
 import org.vertexarmy.dsr.game.objects.SpriteObject;
+import org.vertexarmy.dsr.graphics.SpriteFactory;
+import org.vertexarmy.dsr.math.Polygon;
 
 public class RunningGame extends Game {
-    private Map<Tiles, TextureRegion> tiles = new HashMap<Tiles, TextureRegion>();
+    private Map<Tiles, TextureRegion> tiles = new HashMap<>();
     private Camera camera;
-    private final List<GameObject> gameObjectList = new ArrayList<GameObject>();
-    private final Map<GameObject, List<Behavior>> behaviors = new HashMap<GameObject, List<Behavior>>();
+    private final List<GameObject> gameObjectList = new ArrayList<>();
+    private final Map<GameObject, List<Behavior>> behaviors = new HashMap<>();
     public static PolygonSpriteBatch PSB;
-    private static SpriteBatch SB;
-    private World physicsWorld;
 
     @Override
     public void create() {
         camera = new OrthographicCamera(640, 480);
         camera.update();
 
-        SB = new SpriteBatch();
         PSB = new PolygonSpriteBatch(128, createShaderProgram());
         PSB.setShader(createDefaultShader());
 

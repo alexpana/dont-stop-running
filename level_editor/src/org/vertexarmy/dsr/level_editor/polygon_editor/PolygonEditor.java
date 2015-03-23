@@ -30,12 +30,12 @@ public class PolygonEditor {
         DEFAULT,
         SELECT,
         ADD_VERTEX,
-        DELETE_VERTEX;
+        DELETE_VERTEX
     }
 
     private EditModeType currentEditModeType = EditModeType.SELECT;
 
-    private Map<EditModeType, EditMode> editModes = Maps.newHashMap();
+    private final Map<EditModeType, EditMode> editModes = Maps.newHashMap();
 
     public PolygonEditor(Polygon polygon) {
         this.polygon = polygon;

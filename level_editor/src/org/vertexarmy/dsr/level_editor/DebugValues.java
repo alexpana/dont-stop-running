@@ -50,7 +50,7 @@ public class DebugValues {
         listeners.remove(listener);
     }
 
-    public void notifyListeners() {
+    private void notifyListeners() {
         for (Listener listener : listeners) {
             listener.valuesChanged();
         }

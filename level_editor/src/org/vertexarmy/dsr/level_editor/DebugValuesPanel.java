@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
  * created by Alex
  * on 3/20/2015.
  */
-public class DebugValuesPanel extends Table {
+class DebugValuesPanel extends Table {
 
     public DebugValuesPanel(final Skin skin) {
         DebugValues.instance().addListener(new DebugValues.Listener() {

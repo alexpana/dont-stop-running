@@ -11,10 +11,10 @@ import org.vertexarmy.dsr.core.component.InputComponent;
  * on 3/23/2015.
  */
 // TODO: change modes using hotkeys: SHIFT, CTRL, etc.
-public class PolygonEditorInputComponent implements InputComponent, InputProcessor {
-    private PolygonEditor polygonEditor;
+class PolygonEditorInputComponent implements InputComponent, InputProcessor {
+    private final PolygonEditor polygonEditor;
 
-    private Map<Integer, PolygonEditor.EditModeType> hotkeys = Maps.newHashMap();
+    private final Map<Integer, PolygonEditor.EditModeType> hotkeys = Maps.newHashMap();
 
     public PolygonEditorInputComponent(final PolygonEditor polygonEditor) {
         this.polygonEditor = polygonEditor;

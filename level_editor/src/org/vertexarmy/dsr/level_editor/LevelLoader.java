@@ -13,8 +13,8 @@ import org.w3c.dom.Node;
  * created by Alex
  * on 3/7/2015.
  */
-public class LevelLoader {
-    private String filename;
+class LevelLoader {
+    private final String filename;
 
     public LevelLoader(String filename) {
         this.filename = filename;

@@ -29,7 +29,7 @@ public class EditModeSelect extends InputAdapter implements EditMode {
 
     private boolean multipleSelectionsDisabled = false;
 
-    private List<VertexHandler> newlySelectedHandlers = Lists.newArrayList();
+    private final List<VertexHandler> newlySelectedHandlers = Lists.newArrayList();
 
     // TODO: handle inverse selection via SHIFT
 

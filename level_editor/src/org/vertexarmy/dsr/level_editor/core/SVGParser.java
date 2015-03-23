@@ -21,7 +21,7 @@ public class SVGParser {
     private static final SAXSVGDocumentFactory DOCUMENT_FACTORY = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName());
     private static final XPath XPATH = XPathFactory.newInstance().newXPath();
 
-    private Document document;
+    private final Document document;
 
     public static SVGParser fromFilename(String filename) throws IOException {
         Document doc = DOCUMENT_FACTORY.createDocument(new File(filename).toURI().toURL().toString());
