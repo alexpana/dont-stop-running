@@ -39,4 +39,24 @@ public class SpriteFactory {
 
         return sprite;
     }
+
+    public PolygonSprite createSprite(Polygon polygon, int triangleIndex) {
+        short[] indices = EarClippingTriangulation.triangulate(polygon);
+
+        short[] indices3 = new short[3];
+        indices3[0] = indices[triangleIndex * 3];
+        indices3[1] = indices[triangleIndex * 3 + 1];
+        indices3[2] = indices[triangleIndex * 3 + 2];
+
+        PolygonRegion polygonRegion = new PolygonRegion(
+                new TextureRegion(GraphicsUtils.getColorTexture(Color.WHITE), 1, 1),
+                polygon.getVertices(),
+                indices3);
+
+        PolygonSprite sprite = new PolygonSprite(polygonRegion);
+        sprite.setScale(1, 1);
+        sprite.setPosition(0, 0);
+
+        return sprite;
+    }
 }

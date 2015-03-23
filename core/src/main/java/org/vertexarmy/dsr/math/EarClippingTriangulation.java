@@ -24,7 +24,8 @@ public class EarClippingTriangulation {
         CircularDoublyLinkedList<PolygonVertex> vertexList = createVectorLinkedList(polygon);
         CircularDoublyLinkedList.Iterator<PolygonVertex> earIterator = vertexList.getIterator();
 
-        while (vertexList.size() > 3) {
+        int iterationCount = 0;
+        while (vertexList.size() > 3 && iterationCount < vertexList.size()) {
             if (isEar(earIterator)) {
                 indices[indexPosition++] = earIterator.next().index;
                 indices[indexPosition++] = earIterator.current().index;
@@ -32,9 +33,11 @@ public class EarClippingTriangulation {
 
                 earIterator.forward();
                 vertexList.remove(earIterator.previous());
+                iterationCount = 0;
             } else {
                 earIterator.forward();
             }
+            iterationCount += 1;
         }
 
         indices[indexPosition++] = earIterator.next().index;
@@ -48,6 +51,14 @@ public class EarClippingTriangulation {
         PolygonVertex previous = vertex.previous();
         PolygonVertex current = vertex.current();
         PolygonVertex next = vertex.next();
+
+        // is convex
+        Vector2 v1 = new Vector2(previous.position).sub(current.position);
+        Vector2 v2 = new Vector2(previous.position).sub(next.position);
+
+        if (v1.crs(v2) >= 0) {
+            return false;
+        }
 
         Triangle triangle = new Triangle(previous.position, current.position, next.position);
 

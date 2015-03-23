@@ -21,11 +21,14 @@ public class LevelLoader {
     }
 
     public Level load() throws CorruptLevel, IOException {
-        Gdx.app.log("LevelLoader", "Loading level: " + filename);
+        Gdx.app.log("LevelLoader", "Loading level " + filename);
 
         SVGParser parser = SVGParser.fromFilename(filename);
 
-        Node terrain = parser.xpath("//*[@id='terrain']/*[1]/@points").first();
+        Node terrain = parser.xpath("//*[@id='terrain']/@d").first();
+        if (terrain == null) {
+            terrain = parser.xpath("//*[@id='terrain']/@path").first();
+        }
         Node startPosition = parser.xpath("//*[@id='startPosition']/*").first();
         Node endPosition = parser.xpath("//*[@id='endPosition']/*").first();
 
@@ -34,11 +37,11 @@ public class LevelLoader {
         }
 
         if (startPosition == null) {
-            throw new CorruptLevel("Could not find layer 'startPosition' in " + filename);
+            Gdx.app.error("LevelLoader", "Could not find layer 'startPosition' in " + filename);
         }
 
         if (endPosition == null) {
-            throw new CorruptLevel("Could not find layer 'endPosition' in " + filename);
+            Gdx.app.error("LevelLoader", "Could not find layer 'endPosition' in " + filename);
         }
 
         Polygon terrainPoly = PolygonBuilder.fromNode(terrain);

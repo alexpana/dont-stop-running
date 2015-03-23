@@ -1,5 +1,6 @@
 package org.vertexarmy.dsr.math;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -61,5 +62,17 @@ public class Algorithms {
         }
 
         return true;
+    }
+
+    public static float clamp(float value, float min, float max) {
+        return Math.min(max, Math.max(value, min));
+    }
+
+    public static Rectangle createRectangle(float rx1, float ry1, float rx2, float ry2) {
+        return new Rectangle(Math.min(rx1, rx2), Math.min(ry1, ry2), Math.abs(rx1 - rx2), Math.abs(ry1 - ry2));
+    }
+
+    public static Rectangle createRectangle(Vector2 v1, Vector2 v2) {
+        return createRectangle(v1.x, v1.y, v2.x, v2.y);
     }
 }

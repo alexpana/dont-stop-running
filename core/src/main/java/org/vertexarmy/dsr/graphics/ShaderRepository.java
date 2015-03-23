@@ -10,20 +10,26 @@ import java.util.Map;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class ShaderRepository {
+    private static final ShaderRepository INSTANCE = new ShaderRepository();
+
     private final Map<ShaderInstance, ShaderProgram> shaderMap = Maps.newHashMap();
 
     public enum ShaderInstance {
         DEFAULT_POS_COL_TEX_PROJ
     }
 
-    public ShaderRepository() {
+    private ShaderRepository() {
+    }
+
+    public static ShaderRepository instance() {
+        return INSTANCE;
     }
 
     /**
      * Builds all the available shaders. This method must be called after initializing libgdx, when a valid
      * opengl context is available.
      */
-    public void buildShaders() {
+    public void initialize() {
         shaderMap.put(ShaderInstance.DEFAULT_POS_COL_TEX_PROJ, createDefaultPosColTexProjShader());
     }
 

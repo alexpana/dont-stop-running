@@ -1,5 +1,6 @@
 package org.vertexarmy.dsr.collection;
 
+import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.List;
@@ -68,9 +69,9 @@ public class CircularDoublyLinkedList<T> {
             return root;
         }
 
-        Node it = root;
+        Node it = root.next;
 
-        while (it.next != root) {
+        while (it != root) {
             if (it.value.equals(item)) {
                 return it;
             }
@@ -95,7 +96,6 @@ public class CircularDoublyLinkedList<T> {
             previous.next = next;
         }
 
-
         size -= 1;
     }
 
@@ -116,8 +116,16 @@ public class CircularDoublyLinkedList<T> {
     }
 
     public List<T> asList() {
-        // TODO: implement
-        return null;
+        List<T> result = Lists.newArrayList();
+        if (root != null) {
+            result.add(root.value);
+            Node node = root.next;
+            while (node != root) {
+                result.add(node.value);
+                node = node.next;
+            }
+        }
+        return result;
     }
 
     @RequiredArgsConstructor
