@@ -2,6 +2,9 @@ package org.vertexarmy.dsr.level_editor;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
@@ -18,6 +21,7 @@ import java.util.Map;
 import org.vertexarmy.dsr.core.Root;
 import org.vertexarmy.dsr.core.UiNode;
 import org.vertexarmy.dsr.core.component.ComponentType;
+import org.vertexarmy.dsr.core.component.InputComponent;
 import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
@@ -79,8 +83,27 @@ class LevelPreview extends Game {
                     terrainSprite.draw(polygonSpriteBatch);
                     polygonSpriteBatch.end();
                 }
+
+                DebugValues.instance().setValue("fps", String.valueOf(Gdx.graphics.getFramesPerSecond()));
             }
         });
+
+        originNode.addComponent(ComponentType.INPUT, new InputComponent() {
+            @Override
+            public InputProcessor getInputAdapter() {
+                return new InputAdapter() {
+                    @Override
+                    public boolean keyDown(int keycode) {
+                        if (keycode == Input.Keys.F1) {
+                            uiNode.getContentTable().setVisible(!uiNode.getContentTable().isVisible());
+                            return true;
+                        }
+                        return false;
+                    }
+                };
+            }
+        });
+
         root.addNode(originNode);
 
         Texture tilesTexture = new Texture(Gdx.files.internal("tiles.png"));

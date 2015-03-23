@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
+import org.vertexarmy.dsr.level_editor.DebugValues;
 import org.vertexarmy.dsr.math.Polygon;
 
 /**
@@ -46,6 +47,10 @@ public class PolygonEditor {
 
         editModes.put(EditModeType.DEFAULT, new EditModeDefault(this));
         editModes.put(EditModeType.SELECT, new EditModeSelect(this));
+        editModes.put(EditModeType.ADD_VERTEX, new EditModeDefault(this));
+        editModes.put(EditModeType.DELETE_VERTEX, new EditModeDefault(this));
+
+        setEditMode(EditModeType.DEFAULT);
 
         node = new Node();
         node.addComponent(ComponentType.RENDER, new PolygonEditorRenderComponent(this));
@@ -61,7 +66,9 @@ public class PolygonEditor {
             getEditMode().stop();
             currentEditModeType = editEditModeType;
             getEditMode().start();
+
         }
+        DebugValues.instance().setValue("edit mode", editEditModeType.name());
     }
 
     VertexHandler getHoveredVertexHandler() {

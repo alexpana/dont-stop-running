@@ -1,8 +1,12 @@
 package org.vertexarmy.dsr.level_editor;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import org.vertexarmy.dsr.graphics.GraphicsUtils;
 
 /**
  * created by Alex
@@ -16,28 +20,12 @@ class DebugValuesPanel extends Table {
             public void valuesChanged() {
                 clear();
                 for (String key : DebugValues.instance().keySet()) {
-                    add(new Label(key + ":", skin)).left();
+                    add(new Label(key + ":", skin)).right().pad(0, 0, 0, 4);
                     add(new Label(DebugValues.instance().getValue(key), skin)).left().row();
                 }
             }
         });
+        this.setBackground(new TextureRegionDrawable(new TextureRegion(GraphicsUtils.getColorTexture(new Color(0x00000040)))));
+        this.pad(10, 10, 10, 10);
     }
-
-//    public void setCameraPosition(int x, int y) {
-//        cameraPositionLabel.setText(x + ", " + y);
-//    }
-//
-//    public void setLoadedLevel(String loadedLevel) {
-//        levelNameLabel.setText(loadedLevel);
-//    }
-//
-//    public void setZoomLevel(float zoomLevel) {
-//        zoomLevelLabel.setText(String.valueOf(zoomLevel * 100) + " %");
-//    }
-//
-//    public void setMousePosition(int x, int y) {
-//        mouseCoordinatesViewport.setText(x + ", " + y);
-//        Vector2 mouseWorld = RenderSystem.instance().screenToWorld(new Vector2(x, y));
-//        mouseCoordinatesWorld.setText((int) mouseWorld.x + ", " + (int) mouseWorld.y);
-//    }
 }

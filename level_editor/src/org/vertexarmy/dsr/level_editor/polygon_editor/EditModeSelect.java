@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -121,11 +122,12 @@ public class EditModeSelect extends InputAdapter implements EditMode {
 
     @Override
     public void start() {
-
+        DebugValues.instance().setValue("multiple select", String.valueOf(multipleSelections));
     }
 
     @Override
     public void stop() {
+        DebugValues.instance().clearValue("multiple select");
         dragHelper.endDrag();
         clearSelection();
     }
@@ -140,7 +142,7 @@ public class EditModeSelect extends InputAdapter implements EditMode {
             float x2 = dragHelper.getLastPosition().x;
             float y2 = dragHelper.getLastPosition().y;
 
-            Gdx.gl20.glEnable(Gdx.gl.GL_BLEND);
+            Gdx.gl20.glEnable(GL20.GL_BLEND);
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(new Color(0x40508080));
