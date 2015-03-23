@@ -53,6 +53,11 @@ public class UiNode extends Node {
                 stage.act(Gdx.graphics.getDeltaTime());
                 stage.draw();
             }
+
+            @Override
+            public RenderList getRenderList() {
+                return RenderList.UI;
+            }
         });
     }
 }

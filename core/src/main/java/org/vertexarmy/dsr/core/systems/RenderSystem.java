@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.beust.jcommander.internal.Lists;
-import java.util.List;
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.graphics.ShaderRepository;
@@ -21,7 +21,7 @@ import org.vertexarmy.dsr.graphics.ShaderRepository;
 public class RenderSystem {
     private final static RenderSystem INSTANCE = new RenderSystem();
 
-    private final List<RenderComponent> components = Lists.newArrayList();
+    private final Multimap<RenderComponent.RenderList, RenderComponent> components = LinkedListMultimap.create();
 
     @Getter
     private Camera camera;
@@ -66,11 +66,11 @@ public class RenderSystem {
     }
 
     public void addRenderComponent(RenderComponent component) {
-        components.add(component);
+        components.put(component.getRenderList(), component);
     }
 
     public void removeRenderComponent(RenderComponent component) {
-        components.remove(component);
+        components.remove(component.getRenderList(), component);
     }
 
     public void update() {
@@ -85,7 +85,11 @@ public class RenderSystem {
         shapeRenderer.setProjectionMatrix(camera.projection);
         shapeRenderer.setTransformMatrix(camera.view);
 
-        for (RenderComponent component : components) {
+        for (RenderComponent component : components.get(RenderComponent.RenderList.DEFAULT)) {
+            component.render();
+        }
+
+        for (RenderComponent component : components.get(RenderComponent.RenderList.UI)) {
             component.render();
         }
     }
