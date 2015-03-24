@@ -3,7 +3,6 @@ package org.vertexarmy.dsr.level_editor.polygon_editor;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import lombok.RequiredArgsConstructor;
-import org.lwjgl.util.vector.Vector;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
@@ -91,6 +90,7 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     @Override
     public void stop() {
         dragHelper.endDrag();
+        polygonEditor.getHoveredVertexHandler().setHovered(false);
     }
 
     @Override
