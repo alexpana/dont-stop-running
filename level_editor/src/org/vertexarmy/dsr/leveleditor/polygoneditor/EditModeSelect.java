@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor.polygon_editor;
+package org.vertexarmy.dsr.leveleditor.polygoneditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,11 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
-import org.vertexarmy.dsr.level_editor.DebugValues;
-import org.vertexarmy.dsr.level_editor.polygon_editor.actions.AlignHandlersHorizontallyAction;
-import org.vertexarmy.dsr.level_editor.polygon_editor.actions.AlignHandlersVerticallyAction;
-import org.vertexarmy.dsr.level_editor.polygon_editor.actions.DeselectAllHandlersAction;
-import org.vertexarmy.dsr.level_editor.polygon_editor.actions.SelectHandlersAction;
+import org.vertexarmy.dsr.leveleditor.DebugValues;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.SelectHandlersAction;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.AlignHandlersHorizontallyAction;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.AlignHandlersVerticallyAction;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.DeselectAllHandlersAction;
 import org.vertexarmy.dsr.math.Algorithms;
 
 /**
@@ -81,7 +81,7 @@ public class EditModeSelect extends InputAdapter implements EditMode {
             Rectangle selectionRect = Algorithms.createRectangle(dragHelper.getDragStartPosition(), dragHelper.getLastPosition());
 
             for (VertexHandler handler : polygonEditor.getVertexHandlers()) {
-                vertexPosition.set(polygonEditor.getPolygon().getVertices()[handler.vertexIndex * 2], polygonEditor.getPolygon().getVertices()[handler.vertexIndex * 2 + 1]);
+                vertexPosition.set(polygonEditor.getPolygon().getVertices()[handler.getVertexIndex() * 2], polygonEditor.getPolygon().getVertices()[handler.getVertexIndex() * 2 + 1]);
                 if (selectionRect.contains(vertexPosition)) {
                     if (!handler.isSelected()) {
                         newlySelectedHandlers.add(handler);

@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor.polygon_editor;
+package org.vertexarmy.dsr.leveleditor.polygoneditor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -51,8 +51,8 @@ class PolygonEditorRenderComponent extends RenderComponent {
 
     private void drawHandler(VertexHandler handler) {
         float zoom = RenderSystem.instance().getZoom();
-        float x = polygon.getVertices()[handler.vertexIndex * 2];
-        float y = polygon.getVertices()[handler.vertexIndex * 2 + 1];
+        float x = polygon.getVertices()[handler.getVertexIndex() * 2];
+        float y = polygon.getVertices()[handler.getVertexIndex() * 2 + 1];
 
         if (handler.isDragged() || handler.isHovered()) {
             shapeRenderer.setColor(DRAGGED_VERTEX_HANDLER_COLOR);
@@ -61,7 +61,7 @@ class PolygonEditorRenderComponent extends RenderComponent {
         } else {
             shapeRenderer.setColor(DEFAULT_VERTEX_HANDLER_COLOR);
         }
-        drawRect(x, y, handler.hitSize / zoom);
+        drawRect(x, y, handler.getHitSize() / zoom);
     }
 
     private void drawRect(float x, float y, float size) {

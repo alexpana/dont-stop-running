@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor.polygon_editor;
+package org.vertexarmy.dsr.leveleditor.polygoneditor;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
@@ -11,7 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
-import org.vertexarmy.dsr.level_editor.DebugValues;
+import org.vertexarmy.dsr.leveleditor.DebugValues;
 import org.vertexarmy.dsr.math.Polygon;
 
 /**
@@ -104,7 +104,7 @@ public class PolygonEditor {
     }
 
     public Vector2 getVertex(VertexHandler handler) {
-        return new Vector2(polygon.getVertices()[handler.vertexIndex * 2], polygon.getVertices()[handler.vertexIndex * 2 + 1]);
+        return new Vector2(polygon.getVertices()[handler.getVertexIndex() * 2], polygon.getVertices()[handler.getVertexIndex() * 2 + 1]);
     }
 
     public void setVertex(VertexHandler handler, Vector2 position) {
@@ -112,7 +112,7 @@ public class PolygonEditor {
     }
 
     public void setVertex(VertexHandler handler, float x, float y) {
-        polygon.getVertices()[handler.vertexIndex * 2] = x;
-        polygon.getVertices()[handler.vertexIndex * 2 + 1] = y;
+        polygon.getVertices()[handler.getVertexIndex() * 2] = x;
+        polygon.getVertices()[handler.getVertexIndex() * 2 + 1] = y;
     }
 }

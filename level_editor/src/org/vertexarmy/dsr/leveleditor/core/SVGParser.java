@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor.core;
+package org.vertexarmy.dsr.leveleditor.core;
 
 import java.io.File;
 import java.io.IOException;

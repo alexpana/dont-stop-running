@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor.core;
+package org.vertexarmy.dsr.leveleditor.core;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;

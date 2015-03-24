@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor.polygon_editor;
+package org.vertexarmy.dsr.leveleditor.polygoneditor;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
-import org.vertexarmy.dsr.level_editor.polygon_editor.actions.MoveHandlerAction;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.MoveHandlerAction;
 
 /**
  * created by Alex
@@ -58,12 +58,12 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         for (VertexHandler handler : polygonEditor.getVertexHandlers()) {
-            float xp = polygonEditor.getPolygon().getVertices()[handler.vertexIndex * 2];
-            float yp = polygonEditor.getPolygon().getVertices()[handler.vertexIndex * 2 + 1];
+            float xp = polygonEditor.getPolygon().getVertices()[handler.getVertexIndex() * 2];
+            float yp = polygonEditor.getPolygon().getVertices()[handler.getVertexIndex() * 2 + 1];
             Vector2 m = mouseWorld(screenX, screenY);
 
-            handler.setHovered(Math.abs(xp - m.x) < handler.hitSize / 2 / RenderSystem.instance().getZoom() &&
-                    Math.abs(yp - m.y) < handler.hitSize / 2 / RenderSystem.instance().getZoom());
+            handler.setHovered(Math.abs(xp - m.x) < handler.getHitSize() / 2 / RenderSystem.instance().getZoom() &&
+                    Math.abs(yp - m.y) < handler.getHitSize() / 2 / RenderSystem.instance().getZoom());
         }
 
         return false;
@@ -73,7 +73,7 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         VertexHandler draggedHandler = polygonEditor.getDraggedVertexHandler();
         if (draggedHandler != null) {
-            int i = draggedHandler.vertexIndex;
+            int i = draggedHandler.getVertexIndex();
             Vector2 dragOffset = dragHelper.getDragOffset(mouseWorld(screenX, screenY));
             dragHelper.reset(mouseWorld(screenX, screenY));
             polygonEditor.getPolygon().getVertices()[i * 2] += dragOffset.x;
@@ -90,7 +90,9 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     @Override
     public void stop() {
         dragHelper.endDrag();
-        polygonEditor.getHoveredVertexHandler().setHovered(false);
+        if (polygonEditor.getHoveredVertexHandler() != null) {
+            polygonEditor.getHoveredVertexHandler().setHovered(false);
+        }
     }
 
     @Override

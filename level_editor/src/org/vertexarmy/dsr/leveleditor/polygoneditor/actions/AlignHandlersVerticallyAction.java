@@ -1,10 +1,10 @@
-package org.vertexarmy.dsr.level_editor.polygon_editor.actions;
+package org.vertexarmy.dsr.leveleditor.polygoneditor.actions;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.level_editor.polygon_editor.PolygonEditor;
-import org.vertexarmy.dsr.level_editor.polygon_editor.VertexHandler;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.VertexHandler;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class AlignHandlersVerticallyAction extends ActionManager.ActionAdapter {
 
             medianX /= selectedHandlers.size();
             for (VertexHandler handler : selectedHandlers) {
-                polygonEditor.getPolygon().getVertices()[handler.vertexIndex * 2] = medianX;
+                polygonEditor.getPolygon().getVertices()[handler.getVertexIndex() * 2] = medianX;
             }
         }
     }

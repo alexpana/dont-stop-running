@@ -9,7 +9,6 @@ buildscript {
 }
 
 allprojects {
-    apply plugin: "eclipse"
     apply plugin: "idea"
 
     version = '1.0'
@@ -32,7 +31,6 @@ allprojects {
 project(":desktop") {
     apply plugin: "java"
 
-
     dependencies {
         compile project(":core")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
@@ -43,6 +41,7 @@ project(":desktop") {
 
 project(":core") {
     apply plugin: "java"
+    apply plugin: "sonar-runner"
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -72,6 +71,7 @@ project(":html") {
 
 project(":level_editor") {
     apply plugin: "java"
+    apply plugin: "sonar-runner"
 
     dependencies {
         compile project(":core")
@@ -94,8 +94,4 @@ project(":atlas_viewer") {
         compile project(":core")
         compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
     }
-}
-
-tasks.eclipse.doLast {
-    delete ".project"
 }

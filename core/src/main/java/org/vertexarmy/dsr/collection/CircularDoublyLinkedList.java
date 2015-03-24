@@ -150,7 +150,7 @@ public class CircularDoublyLinkedList<T> {
 
         void forward();
 
-        public void backward();
+        void backward();
 
         Iterator<T> duplicate();
     }

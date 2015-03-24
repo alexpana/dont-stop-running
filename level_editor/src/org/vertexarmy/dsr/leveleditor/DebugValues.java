@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor;
+package org.vertexarmy.dsr.leveleditor;
 
 import com.beust.jcommander.internal.Lists;
 import java.util.List;
@@ -56,7 +56,7 @@ public class DebugValues {
         }
     }
 
-    public static interface Listener {
+    public interface Listener {
         void valuesChanged();
     }
 }

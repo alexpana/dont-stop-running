@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor;
+package org.vertexarmy.dsr.leveleditor;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -29,7 +29,7 @@ import org.vertexarmy.dsr.game.Level;
 import org.vertexarmy.dsr.game.Tiles;
 import org.vertexarmy.dsr.graphics.ShaderRepository;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
-import org.vertexarmy.dsr.level_editor.polygon_editor.PolygonEditor;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
 
 class LevelPreview extends Game {
     private final static SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();

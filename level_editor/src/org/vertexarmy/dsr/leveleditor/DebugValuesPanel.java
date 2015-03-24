@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor;
+package org.vertexarmy.dsr.leveleditor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

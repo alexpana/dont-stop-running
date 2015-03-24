@@ -42,6 +42,7 @@ public class InputSystem {
                             return true;
                         }
                     } catch (Exception ignored) {
+                        ignored.printStackTrace();
                     }
                 }
                 return false;

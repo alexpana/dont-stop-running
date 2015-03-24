@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor.polygon_editor;
+package org.vertexarmy.dsr.leveleditor.polygoneditor;
 
 import com.badlogic.gdx.InputProcessor;
 

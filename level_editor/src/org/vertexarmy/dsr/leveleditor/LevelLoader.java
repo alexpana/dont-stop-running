@@ -1,11 +1,11 @@
-package org.vertexarmy.dsr.level_editor;
+package org.vertexarmy.dsr.leveleditor;
 
 import com.badlogic.gdx.Gdx;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import org.vertexarmy.dsr.game.Level;
-import org.vertexarmy.dsr.level_editor.core.PolygonBuilder;
-import org.vertexarmy.dsr.level_editor.core.SVGParser;
+import org.vertexarmy.dsr.leveleditor.core.PolygonBuilder;
+import org.vertexarmy.dsr.leveleditor.core.SVGParser;
 import org.vertexarmy.dsr.math.Polygon;
 import org.w3c.dom.Node;
 

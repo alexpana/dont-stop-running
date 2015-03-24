@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.level_editor.polygon_editor;
+package org.vertexarmy.dsr.leveleditor.polygoneditor;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +22,11 @@ public class VertexHandler {
     @Getter
     private boolean selected = false;
 
-    public float hitSize = 6;
+    @Getter
+    private float hitSize = DEFAULT_SIZE;
 
-    public final int vertexIndex;
+    @Getter
+    private final int vertexIndex;
 
     public void setHovered(boolean hovered) {
         this.hovered = hovered;
