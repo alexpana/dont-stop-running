@@ -3,6 +3,8 @@ package org.vertexarmy.dsr.level_editor.polygon_editor;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import lombok.RequiredArgsConstructor;
+import org.lwjgl.util.vector.Vector;
+import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 
@@ -16,11 +18,17 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     private final DragHelper dragHelper = new DragHelper();
 
+    private final Vector2 originalVertexPosition = new Vector2();
+
+    private final Vector2 newVertexPosition = new Vector2();
+
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         VertexHandler hoveredHandler = polygonEditor.getHoveredVertexHandler();
 
         if (hoveredHandler != null) {
+            originalVertexPosition.set(polygonEditor.getVertex(hoveredHandler));
+
             hoveredHandler.setDragged(true);
             dragHelper.beginDrag(mouseWorld(screenX, screenY));
             return true;
@@ -33,8 +41,15 @@ public class EditModeDefault extends InputAdapter implements EditMode {
         VertexHandler hoveredHandler = polygonEditor.getHoveredVertexHandler();
 
         if (hoveredHandler != null) {
+            newVertexPosition.set(polygonEditor.getVertex(hoveredHandler));
+
             hoveredHandler.setDragged(false);
             dragHelper.endDrag();
+
+            if (Vector2.dst2(newVertexPosition.x, newVertexPosition.y, originalVertexPosition.x, originalVertexPosition.y) > 1) {
+                ActionManager.instance().runAction(createMoveVertexAction());
+            }
+
             return true;
         }
         return false;
@@ -79,6 +94,26 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     @Override
     public void render() {
+    }
+
+    private ActionManager.Action createMoveVertexAction() {
+        return new ActionManager.Action() {
+            private final Vector2 originalPosition = new Vector2(originalVertexPosition);
+
+            private final Vector2 newPosition = new Vector2(newVertexPosition);
+
+            private final VertexHandler vertexHandler = polygonEditor.getHoveredVertexHandler();
+
+            @Override
+            public void doAction() {
+                polygonEditor.setVertex(vertexHandler, newPosition.x, newPosition.y);
+            }
+
+            @Override
+            public void undoAction() {
+                polygonEditor.setVertex(vertexHandler, originalPosition.x, originalPosition.y);
+            }
+        };
     }
 
     private Vector2 mouseWorld(int screenX, int screenY) {
