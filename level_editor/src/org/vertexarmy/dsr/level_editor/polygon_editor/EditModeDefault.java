@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
+import org.vertexarmy.dsr.level_editor.polygon_editor.actions.MoveHandlerAction;
 
 /**
  * created by Alex
@@ -47,7 +48,7 @@ public class EditModeDefault extends InputAdapter implements EditMode {
             dragHelper.endDrag();
 
             if (Vector2.dst2(newVertexPosition.x, newVertexPosition.y, originalVertexPosition.x, originalVertexPosition.y) > 1) {
-                ActionManager.instance().runAction(createMoveVertexAction());
+                ActionManager.instance().runAction(new MoveHandlerAction(polygonEditor, hoveredHandler, originalVertexPosition, newVertexPosition));
             }
 
             return true;
@@ -94,26 +95,6 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     @Override
     public void render() {
-    }
-
-    private ActionManager.Action createMoveVertexAction() {
-        return new ActionManager.Action() {
-            private final Vector2 originalPosition = new Vector2(originalVertexPosition);
-
-            private final Vector2 newPosition = new Vector2(newVertexPosition);
-
-            private final VertexHandler vertexHandler = polygonEditor.getHoveredVertexHandler();
-
-            @Override
-            public void doAction() {
-                polygonEditor.setVertex(vertexHandler, newPosition.x, newPosition.y);
-            }
-
-            @Override
-            public void undoAction() {
-                polygonEditor.setVertex(vertexHandler, originalPosition.x, originalPosition.y);
-            }
-        };
     }
 
     private Vector2 mouseWorld(int screenX, int screenY) {

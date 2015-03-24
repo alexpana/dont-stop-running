@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
  * on 3/23/2015.
  */
 @RequiredArgsConstructor
-class VertexHandler {
+public class VertexHandler {
     private static final int MAGNIFIED_SIZE = 10;
 
     private static final int DEFAULT_SIZE = 6;

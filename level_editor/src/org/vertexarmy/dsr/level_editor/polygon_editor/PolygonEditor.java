@@ -3,8 +3,10 @@ package org.vertexarmy.dsr.level_editor.polygon_editor;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.Maps;
+
 import java.util.List;
 import java.util.Map;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.component.ComponentType;
@@ -103,6 +105,10 @@ public class PolygonEditor {
 
     public Vector2 getVertex(VertexHandler handler) {
         return new Vector2(polygon.getVertices()[handler.vertexIndex * 2], polygon.getVertices()[handler.vertexIndex * 2 + 1]);
+    }
+
+    public void setVertex(VertexHandler handler, Vector2 position) {
+        setVertex(handler, position.x, position.y);
     }
 
     public void setVertex(VertexHandler handler, float x, float y) {

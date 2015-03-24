@@ -24,6 +24,10 @@ public final class ActionManager {
     }
 
     public void runAction(Action action) {
+        if (!action.isValid()) {
+            return;
+        }
+
         undoActionStack.add(action);
         action.doAction();
 
@@ -74,5 +78,22 @@ public final class ActionManager {
         void doAction();
 
         void undoAction();
+
+        boolean isValid();
+    }
+
+    public static abstract class ActionAdapter implements Action {
+        @Override
+        public void doAction() {
+        }
+
+        @Override
+        public void undoAction() {
+        }
+
+        @Override
+        public boolean isValid() {
+            return false;
+        }
     }
 }

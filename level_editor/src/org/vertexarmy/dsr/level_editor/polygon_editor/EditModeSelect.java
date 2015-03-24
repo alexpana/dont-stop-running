@@ -17,6 +17,10 @@ import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.level_editor.DebugValues;
+import org.vertexarmy.dsr.level_editor.polygon_editor.actions.AlignHandlersHorizontallyAction;
+import org.vertexarmy.dsr.level_editor.polygon_editor.actions.AlignHandlersVerticallyAction;
+import org.vertexarmy.dsr.level_editor.polygon_editor.actions.DeselectAllHandlersAction;
+import org.vertexarmy.dsr.level_editor.polygon_editor.actions.SelectHandlersAction;
 import org.vertexarmy.dsr.math.Algorithms;
 
 /**
@@ -59,7 +63,7 @@ public class EditModeSelect extends InputAdapter implements EditMode {
             }
 
             if (!newlySelectedHandlers.isEmpty()) {
-                ActionManager.instance().runAction(createSelectionAction(newlySelectedHandlers));
+                ActionManager.instance().runAction(new SelectHandlersAction(newlySelectedHandlers));
             }
 
             return true;
@@ -96,12 +100,12 @@ public class EditModeSelect extends InputAdapter implements EditMode {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.X) {
-            alignVertically();
+            ActionManager.instance().runAction(new AlignHandlersVerticallyAction(polygonEditor, polygonEditor.getSelectedHandlers()));
             return true;
         }
 
         if (keycode == Input.Keys.Y) {
-            alignHorizontally();
+            ActionManager.instance().runAction(new AlignHandlersHorizontallyAction(polygonEditor, polygonEditor.getSelectedHandlers()));
             return true;
         }
 
@@ -165,83 +169,13 @@ public class EditModeSelect extends InputAdapter implements EditMode {
         }
     }
 
-    private void alignVertically() {
-        float medianX = 0;
-        List<VertexHandler> selectedHandlers = polygonEditor.getSelectedHandlers();
-        if (selectedHandlers.size() > 0) {
-            for (VertexHandler handler : selectedHandlers) {
-                medianX += polygonEditor.getVertex(handler).x;
-            }
-
-            medianX /= selectedHandlers.size();
-            for (VertexHandler handler : selectedHandlers) {
-                polygonEditor.getPolygon().getVertices()[handler.vertexIndex * 2] = medianX;
-            }
-        }
-    }
-
-    private void alignHorizontally() {
-        float medianY = 0;
-        List<VertexHandler> selectedHandlers = polygonEditor.getSelectedHandlers();
-        if (selectedHandlers.size() > 0) {
-            for (VertexHandler handler : selectedHandlers) {
-                medianY += polygonEditor.getVertex(handler).y;
-            }
-
-            medianY /= selectedHandlers.size();
-            for (VertexHandler handler : selectedHandlers) {
-                polygonEditor.getPolygon().getVertices()[handler.vertexIndex * 2 + 1] = medianY;
-            }
-        }
-    }
-
     private void clearSelection() {
         if (!polygonEditor.getSelectedHandlers().isEmpty()) {
-            ActionManager.instance().runAction(createDeselectAllAction());
+            ActionManager.instance().runAction(new DeselectAllHandlersAction(polygonEditor.getVertexHandlers(), polygonEditor.getSelectedHandlers()));
         }
     }
 
     private Vector2 mouseWorld(int screenX, int screenY) {
         return RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
-    }
-
-    private ActionManager.Action createSelectionAction(final List<VertexHandler> selectHandlers) {
-        return new ActionManager.Action() {
-            private final List<VertexHandler> selectedHandlers = Lists.newArrayList(selectHandlers);
-
-            @Override
-            public void doAction() {
-                for (VertexHandler vertexHandler : selectedHandlers) {
-                    vertexHandler.setSelected(true);
-                }
-            }
-
-            @Override
-            public void undoAction() {
-                for (VertexHandler vertexHandler : selectedHandlers) {
-                    vertexHandler.setSelected(false);
-                }
-            }
-        };
-    }
-
-    private ActionManager.Action createDeselectAllAction() {
-        return new ActionManager.Action() {
-            private final List<VertexHandler> selectedHandlers = Lists.newArrayList(polygonEditor.getSelectedHandlers());
-
-            @Override
-            public void doAction() {
-                for (VertexHandler vertexHandler : polygonEditor.getVertexHandlers()) {
-                    vertexHandler.setSelected(false);
-                }
-            }
-
-            @Override
-            public void undoAction() {
-                for (VertexHandler vertexHandler : selectedHandlers) {
-                    vertexHandler.setSelected(true);
-                }
-            }
-        };
     }
 }
