@@ -76,4 +76,17 @@ public class Algorithms {
     public static Rectangle createRectangle(Vector2 v1, Vector2 v2) {
         return createRectangle(v1.x, v1.y, v2.x, v2.y);
     }
+
+    @SuppressWarnings("UnusedDeclaration")
+    public static float distance(Vector2 a, Vector2 b) {
+        final float deltaX = a.x - b.x;
+        final float deltaY = a.y - b.y;
+        return (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    }
+
+    public static float distanceSq(Vector2 a, Vector2 b) {
+        final float deltaX = a.x - b.x;
+        final float deltaY = a.y - b.y;
+        return deltaX * deltaX + deltaY * deltaY;
+    }
 }
