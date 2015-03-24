@@ -50,6 +50,10 @@ public class DragHelper {
         lastPosition.set(x, y);
     }
 
+    public Vector2 getCurrentDragOffset() {
+        return getDragOffset(lastPosition);
+    }
+
     public Vector2 getDragOffset(Vector2 currentPosition) {
         return getDragOffset(currentPosition.x, currentPosition.y);
     }
