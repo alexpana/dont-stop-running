@@ -85,6 +85,7 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     @Override
     public void start() {
+        // unused
     }
 
     @Override
@@ -97,6 +98,7 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     @Override
     public void render() {
+        // unused
     }
 
     private Vector2 mouseWorld(int screenX, int screenY) {

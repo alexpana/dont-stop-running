@@ -17,6 +17,8 @@ import org.vertexarmy.dsr.math.Algorithms;
 class CameraController extends InputAdapter implements InputComponent {
     private static final float[] ZOOM_STEPS = new float[]{0.1f, 0.25f, 0.33f, 0.5f, 0.66f, 0.75f, 1.0f, 1.5f, 2f, 3f, 4f, 5f};
 
+    private static final int ZOOM_DEFAULT_LEVEL = 6; // a zoom of 1.0
+
     private final Vector3 tmp = new Vector3();
 
     private final Vector2 dragPosition = new Vector2(0, 0);
@@ -25,7 +27,7 @@ class CameraController extends InputAdapter implements InputComponent {
 
     private boolean enableCameraPanning;
 
-    private int zoomStep = 6;
+    private int zoomStep = ZOOM_DEFAULT_LEVEL;
 
     public CameraController() {
     }

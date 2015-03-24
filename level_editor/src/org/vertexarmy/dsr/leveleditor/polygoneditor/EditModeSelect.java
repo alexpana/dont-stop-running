@@ -9,18 +9,16 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
-
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.SelectHandlersAction;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.AlignHandlersHorizontallyAction;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.AlignHandlersVerticallyAction;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.DeselectAllHandlersAction;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.SelectHandlersAction;
 import org.vertexarmy.dsr.math.Algorithms;
 
 /**
@@ -73,28 +71,31 @@ public class EditModeSelect extends InputAdapter implements EditMode {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (dragHelper.isDragging()) {
+        if (!dragHelper.isDragging()) {
+            return false;
+        }
 
+        dragHelper.notifyMouseMoved(mouseWorld(screenX, screenY));
+        Vector2 vertexPosition = new Vector2();
+        Rectangle selectionRect = Algorithms.createRectangle(dragHelper.getDragStartPosition(), dragHelper.getLastPosition());
 
-            dragHelper.notifyMouseMoved(mouseWorld(screenX, screenY));
-            Vector2 vertexPosition = new Vector2();
-            Rectangle selectionRect = Algorithms.createRectangle(dragHelper.getDragStartPosition(), dragHelper.getLastPosition());
+        for (VertexHandler handler : polygonEditor.getVertexHandlers()) {
+            vertexPosition.set(polygonEditor.getVertex(handler));
 
-            for (VertexHandler handler : polygonEditor.getVertexHandlers()) {
-                vertexPosition.set(polygonEditor.getPolygon().getVertices()[handler.getVertexIndex() * 2], polygonEditor.getPolygon().getVertices()[handler.getVertexIndex() * 2 + 1]);
-                if (selectionRect.contains(vertexPosition)) {
-                    if (!handler.isSelected()) {
-                        newlySelectedHandlers.add(handler);
-                    }
-                    handler.setSelected(true);
-                } else if (newlySelectedHandlers.contains(handler)) {
-                    handler.setSelected(false);
-                }
+            boolean selectionCoversHandler = selectionRect.contains(vertexPosition);
+
+            if (selectionCoversHandler && !handler.isSelected()) {
+                newlySelectedHandlers.add(handler);
+                handler.setSelected(true);
             }
 
-            return true;
+            if (!selectionCoversHandler && newlySelectedHandlers.contains(handler)) {
+                handler.setSelected(false);
+                newlySelectedHandlers.remove(handler);
+            }
         }
-        return false;
+
+        return true;
     }
 
     @Override
