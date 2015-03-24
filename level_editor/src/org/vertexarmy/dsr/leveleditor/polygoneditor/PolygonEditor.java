@@ -3,14 +3,13 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.Maps;
-
 import java.util.List;
 import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
+import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
 import org.vertexarmy.dsr.math.Polygon;
 
@@ -70,7 +69,7 @@ public class PolygonEditor {
             getEditMode().start();
 
         }
-        DebugValues.instance().setValue("edit mode", editEditModeType.name());
+        DebugValues.instance().setValue(DebugItems.EDIT_MODE, editEditModeType.name());
     }
 
     VertexHandler getHoveredVertexHandler() {

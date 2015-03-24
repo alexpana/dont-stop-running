@@ -32,7 +32,7 @@ public class AlignHandlersVerticallyAction extends ActionManager.ActionAdapter {
     public void doAction() {
         float medianX = 0;
         List<VertexHandler> selectedHandlers = polygonEditor.getSelectedHandlers();
-        if (selectedHandlers.size() > 0) {
+        if (!selectedHandlers.isEmpty()) {
             for (VertexHandler handler : selectedHandlers) {
                 medianX += polygonEditor.getVertex(handler).x;
             }

@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
+import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.AlignHandlersHorizontallyAction;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.AlignHandlersVerticallyAction;
@@ -136,19 +137,19 @@ public class EditModeSelect extends InputAdapter implements EditMode {
 
     @Override
     public void start() {
-        DebugValues.instance().setValue("multiple select", String.valueOf(multipleSelections));
+        DebugValues.instance().setValue(DebugItems.MULTIPLE_SELECT, String.valueOf(multipleSelections));
     }
 
     @Override
     public void stop() {
-        DebugValues.instance().clearValue("multiple select");
+        DebugValues.instance().clearValue(DebugItems.MULTIPLE_SELECT);
         dragHelper.endDrag();
         clearSelection();
     }
 
     @Override
     public void render() {
-        DebugValues.instance().setValue("multiple select", String.valueOf(multipleSelections));
+        DebugValues.instance().setValue(DebugItems.MULTIPLE_SELECT, String.valueOf(multipleSelections));
         if (dragHelper.isDragging()) {
             ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
             float x1 = dragHelper.getDragStartPosition().x;

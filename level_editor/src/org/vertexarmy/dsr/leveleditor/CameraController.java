@@ -17,7 +17,7 @@ import org.vertexarmy.dsr.math.Algorithms;
 class CameraController extends InputAdapter implements InputComponent {
     private static final float[] ZOOM_STEPS = new float[]{0.1f, 0.25f, 0.33f, 0.5f, 0.66f, 0.75f, 1.0f, 1.5f, 2f, 3f, 4f, 5f};
 
-    private static final int ZOOM_DEFAULT_LEVEL = 6; // a zoom of 1.0
+    private static final int DEFAULT_ZOOM_LEVEL_INDEX = 6;
 
     private final Vector3 tmp = new Vector3();
 
@@ -27,7 +27,7 @@ class CameraController extends InputAdapter implements InputComponent {
 
     private boolean enableCameraPanning;
 
-    private int zoomStep = ZOOM_DEFAULT_LEVEL;
+    private int zoomStepIndex = DEFAULT_ZOOM_LEVEL_INDEX;
 
     public CameraController() {
     }
@@ -89,8 +89,8 @@ class CameraController extends InputAdapter implements InputComponent {
     @Override
     public boolean scrolled(int amount) {
         if (enableScrolling) {
-            zoomStep = (int) Algorithms.clamp(zoomStep - Math.signum(amount), 0, ZOOM_STEPS.length - 1);
-            RenderSystem.instance().setZoom(ZOOM_STEPS[zoomStep]);
+            zoomStepIndex = (int) Algorithms.clamp(zoomStepIndex - Math.signum(amount), 0, ZOOM_STEPS.length - 1);
+            RenderSystem.instance().setZoom(ZOOM_STEPS[zoomStepIndex]);
         }
         return false;
     }

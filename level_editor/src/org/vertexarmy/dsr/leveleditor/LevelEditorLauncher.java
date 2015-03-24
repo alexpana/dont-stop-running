@@ -5,6 +5,8 @@ package org.vertexarmy.dsr.leveleditor;
  * on 3/6/2015.
  */
 public class LevelEditorLauncher {
+    private LevelEditorLauncher() {
+    }
 
     public static void main(String[] arguments) {
         System.out.println("Running level editor");

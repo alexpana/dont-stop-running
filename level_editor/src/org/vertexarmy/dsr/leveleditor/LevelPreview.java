@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.vertexarmy.dsr.core.Root;
@@ -32,7 +31,7 @@ import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
 
 class LevelPreview extends Game {
-    private final static SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
+    private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
 
     private final Root root = new Root();
 
@@ -84,7 +83,7 @@ class LevelPreview extends Game {
                     polygonSpriteBatch.end();
                 }
 
-                DebugValues.instance().setValue("fps", String.valueOf(Gdx.graphics.getFramesPerSecond()));
+                DebugValues.instance().setValue(DebugItems.FPS, String.valueOf(Gdx.graphics.getFramesPerSecond()));
             }
         });
 
@@ -119,16 +118,16 @@ class LevelPreview extends Game {
     private void attemptToLoadLevel() {
         if (levelToLoad != null) {
             LevelLoader loader = new LevelLoader(levelToLoad);
-            Level level = null;
+            Level newLevel = null;
 
             try {
-                level = loader.load();
-            } catch (LevelLoader.CorruptLevel | IOException e) {
+                newLevel = loader.load();
+            } catch (LevelLoader.CorruptLevel e) {
                 Gdx.app.error("LevelLauncher", "Could not load SVG file. Reason: " + e.getMessage());
             }
 
-            if (level != null) {
-                setLevel(level, levelToLoad);
+            if (newLevel != null) {
+                setLevel(newLevel, levelToLoad);
             }
         }
     }
@@ -147,12 +146,12 @@ class LevelPreview extends Game {
         Camera camera = RenderSystem.instance().getCamera();
         float zoom = RenderSystem.instance().getZoom();
 
-        DebugValues.instance().setValue("camera position", (int) camera.position.x + ", " + (int) camera.position.y);
-        DebugValues.instance().setValue("zoom", String.valueOf(zoom * 100) + " %");
-        DebugValues.instance().setValue("mouse (vp)", Gdx.input.getX() + ", " + Gdx.input.getY());
+        DebugValues.instance().setValue(DebugItems.CAMERA_POSITION, (int) camera.position.x + ", " + (int) camera.position.y);
+        DebugValues.instance().setValue(DebugItems.ZOOM, String.valueOf(zoom * 100) + " %");
+        DebugValues.instance().setValue(DebugItems.MOUSE_VIEWPORT, Gdx.input.getX() + ", " + Gdx.input.getY());
 
         Vector2 mouseWorld = RenderSystem.instance().screenToWorld(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
-        DebugValues.instance().setValue("mouse (world)", (int) mouseWorld.x + ", " + (int) mouseWorld.y);
+        DebugValues.instance().setValue(DebugItems.MOUSE_WORLD, (int) mouseWorld.x + ", " + (int) mouseWorld.y);
 
         terrainSprite = SPRITE_FACTORY.createSprite(level.getTerrainPatches().get(0));
         terrainSprite.setColor(Color.BLACK);
@@ -167,7 +166,7 @@ class LevelPreview extends Game {
 
     void setLevel(Level level, String levelName) {
         this.level = level;
-        DebugValues.instance().setValue("loaded level", levelName);
+        DebugValues.instance().setValue(DebugItems.LOADED_LEVEL, levelName);
 
         terrainSprite = SPRITE_FACTORY.createSprite(level.getTerrainPatches().get(0));
         terrainSprite.setColor(Color.BLACK);

@@ -20,10 +20,15 @@ class LevelLoader {
         this.filename = filename;
     }
 
-    public Level load() throws CorruptLevel, IOException {
+    public Level load() throws CorruptLevel {
         Gdx.app.log("LevelLoader", "Loading level " + filename);
 
-        SVGParser parser = SVGParser.fromFilename(filename);
+        SVGParser parser;
+        try {
+            parser = SVGParser.fromFilename(filename);
+        } catch (IOException e) {
+            throw new CorruptLevel(e);
+        }
 
         Node terrain = parser.xpath("//*[@id='terrain']/@d").first();
         if (terrain == null) {
@@ -54,6 +59,10 @@ class LevelLoader {
     public static class CorruptLevel extends Exception {
         public CorruptLevel(String message) {
             super(message);
+        }
+
+        public CorruptLevel(Throwable cause) {
+            super(cause);
         }
     }
 }

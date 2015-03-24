@@ -35,7 +35,7 @@ public class PolygonBuilder {
                 float y2 = vertices.get(vertices.size() - 1 - i);
                 vertices.set(i, x2);
                 vertices.set(vertices.size() - 1 - (i + 1), x1);
-                vertices.set((i + 1), y2);
+                vertices.set(i + 1, y2);
                 vertices.set(vertices.size() - 1 - i, y1);
             }
             return new Polygon(vertices);
@@ -61,10 +61,10 @@ public class PolygonBuilder {
         // m - relative positions
         // M - absolute position
 
-        value = value.substring(2, value.length() - 2);
+        String trimmedValue = value.substring(2, value.length() - 2);
 
         Iterable<Float> vertexIterable = Iterables.transform(
-                Arrays.asList(value.split(" +|,")),
+                Arrays.asList(trimmedValue.split(" +|,")),
                 new Function<String, Float>() {
                     @Nullable
                     @Override

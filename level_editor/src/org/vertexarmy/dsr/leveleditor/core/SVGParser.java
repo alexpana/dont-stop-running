@@ -19,17 +19,18 @@ import org.w3c.dom.Node;
  */
 public class SVGParser {
     private static final SAXSVGDocumentFactory DOCUMENT_FACTORY = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName());
+
     private static final XPath XPATH = XPathFactory.newInstance().newXPath();
 
     private final Document document;
 
+    private SVGParser(Document doc) {
+        document = doc;
+    }
+
     public static SVGParser fromFilename(String filename) throws IOException {
         Document doc = DOCUMENT_FACTORY.createDocument(new File(filename).toURI().toURL().toString());
         return new SVGParser(doc);
-    }
-
-    private SVGParser(Document doc) {
-        document = doc;
     }
 
     public NodeList xpath(String xpath) {
