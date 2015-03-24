@@ -9,8 +9,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
+
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.level_editor.DebugValues;
@@ -37,10 +40,10 @@ public class EditModeSelect extends InputAdapter implements EditMode {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         dragHelper.beginDrag(mouseWorld(screenX, screenY));
-        newlySelectedHandlers.clear();
         if (!multipleSelections) {
             clearSelection();
         }
+        newlySelectedHandlers.clear();
 
         return true;
     }
@@ -55,6 +58,10 @@ public class EditModeSelect extends InputAdapter implements EditMode {
                 multipleSelections = false;
             }
 
+            if (!newlySelectedHandlers.isEmpty()) {
+                ActionManager.instance().runAction(createSelectionAction(newlySelectedHandlers));
+            }
+
             return true;
         }
         return false;
@@ -63,6 +70,8 @@ public class EditModeSelect extends InputAdapter implements EditMode {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (dragHelper.isDragging()) {
+
+
             dragHelper.notifyMouseMoved(mouseWorld(screenX, screenY));
             Vector2 vertexPosition = new Vector2();
             Rectangle selectionRect = Algorithms.createRectangle(dragHelper.getDragStartPosition(), dragHelper.getLastPosition());
@@ -187,12 +196,52 @@ public class EditModeSelect extends InputAdapter implements EditMode {
     }
 
     private void clearSelection() {
-        for (VertexHandler handler : polygonEditor.getVertexHandlers()) {
-            handler.setSelected(false);
+        if (!polygonEditor.getSelectedHandlers().isEmpty()) {
+            ActionManager.instance().runAction(createDeselectAllAction());
         }
     }
 
     private Vector2 mouseWorld(int screenX, int screenY) {
         return RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
+    }
+
+    private ActionManager.Action createSelectionAction(final List<VertexHandler> selectHandlers) {
+        return new ActionManager.Action() {
+            private final List<VertexHandler> selectedHandlers = Lists.newArrayList(selectHandlers);
+
+            @Override
+            public void doAction() {
+                for (VertexHandler vertexHandler : selectedHandlers) {
+                    vertexHandler.setSelected(true);
+                }
+            }
+
+            @Override
+            public void undoAction() {
+                for (VertexHandler vertexHandler : selectedHandlers) {
+                    vertexHandler.setSelected(false);
+                }
+            }
+        };
+    }
+
+    private ActionManager.Action createDeselectAllAction() {
+        return new ActionManager.Action() {
+            private final List<VertexHandler> selectedHandlers = Lists.newArrayList(polygonEditor.getSelectedHandlers());
+
+            @Override
+            public void doAction() {
+                for (VertexHandler vertexHandler : polygonEditor.getVertexHandlers()) {
+                    vertexHandler.setSelected(false);
+                }
+            }
+
+            @Override
+            public void undoAction() {
+                for (VertexHandler vertexHandler : selectedHandlers) {
+                    vertexHandler.setSelected(true);
+                }
+            }
+        };
     }
 }

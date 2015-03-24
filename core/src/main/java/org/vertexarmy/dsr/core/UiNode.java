@@ -1,7 +1,6 @@
 package org.vertexarmy.dsr.core;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -43,7 +42,27 @@ public class UiNode extends Node {
         addComponent(ComponentType.INPUT, new InputComponent() {
             @Override
             public InputProcessor getInputAdapter() {
-                return stage;
+                return new InputMultiplexer(stage, new InputAdapter() {
+                    public boolean keyDown(int keycode) {
+                        if (isUndoShortcut(keycode)) {
+                            return ActionManager.instance().undo();
+                        }
+
+                        if (isRedoShortcut(keycode)) {
+                            return ActionManager.instance().redo();
+                        }
+
+                        return false;
+                    }
+
+                    private boolean isUndoShortcut(int keycode) {
+                        return Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && keycode == Input.Keys.Z;
+                    }
+
+                    private boolean isRedoShortcut(int keycode) {
+                        return Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && keycode == Input.Keys.Z;
+                    }
+                });
             }
         });
 
