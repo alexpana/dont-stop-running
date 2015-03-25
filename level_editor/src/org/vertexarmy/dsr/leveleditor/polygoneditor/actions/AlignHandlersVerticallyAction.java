@@ -39,7 +39,8 @@ public class AlignHandlersVerticallyAction extends ActionManager.ActionAdapter {
 
             medianX /= selectedHandlers.size();
             for (VertexHandler handler : selectedHandlers) {
-                polygonEditor.getPolygon().getVertices()[handler.getVertexIndex() * 2] = medianX;
+                Vector2 originalPosition = polygonEditor.getVertex(handler);
+                polygonEditor.setVertex(handler, medianX, originalPosition.y);
             }
         }
     }

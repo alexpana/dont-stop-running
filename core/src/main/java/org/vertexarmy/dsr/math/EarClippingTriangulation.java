@@ -79,16 +79,10 @@ public class EarClippingTriangulation {
     private static CircularDoublyLinkedList<PolygonVertex> createVectorLinkedList(Polygon polygon) {
         CircularDoublyLinkedList<PolygonVertex> vertexList = new CircularDoublyLinkedList<>();
 
-        int i = 0;
         short polygonIndex = 0;
-        float[] vertex = new float[2];
-        for (float element : polygon.getVertices()) {
-            vertex[i++] = element;
-            if (i == 2) {
-                vertexList.add(new PolygonVertex(new Vector2(vertex[0], vertex[1]), polygonIndex));
-                polygonIndex += 1;
-                i = 0;
-            }
+        for (Vector2 vertex : polygon.getVertices()) {
+            vertexList.add(new PolygonVertex(vertex.cpy(), polygonIndex));
+            polygonIndex += 1;
         }
         return vertexList;
     }

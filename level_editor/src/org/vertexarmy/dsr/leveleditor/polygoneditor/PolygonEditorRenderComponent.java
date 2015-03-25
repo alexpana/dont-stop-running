@@ -2,7 +2,10 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
 import java.util.List;
+
+import com.badlogic.gdx.math.Vector2;
 import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.math.Polygon;
@@ -51,8 +54,7 @@ class PolygonEditorRenderComponent extends RenderComponent {
 
     private void drawHandler(VertexHandler handler) {
         float zoom = RenderSystem.instance().getZoom();
-        float x = polygon.getVertices()[handler.getVertexIndex() * 2];
-        float y = polygon.getVertices()[handler.getVertexIndex() * 2 + 1];
+        Vector2 vertex = polygon.getVertex(handler.getVertexIndex());
 
         if (handler.isDragged() || handler.isHovered()) {
             shapeRenderer.setColor(DRAGGED_VERTEX_HANDLER_COLOR);
@@ -61,7 +63,7 @@ class PolygonEditorRenderComponent extends RenderComponent {
         } else {
             shapeRenderer.setColor(DEFAULT_VERTEX_HANDLER_COLOR);
         }
-        drawRect(x, y, handler.getHitSize() / zoom);
+        drawRect(vertex.x, vertex.y, handler.getHitSize() / zoom);
     }
 
     private void drawRect(float x, float y, float size) {
@@ -69,11 +71,9 @@ class PolygonEditorRenderComponent extends RenderComponent {
     }
 
     private void drawEdge(int indexFrom, int indexTo) {
-        float x1 = polygon.getVertices()[indexFrom * 2];
-        float y1 = polygon.getVertices()[indexFrom * 2 + 1];
-        float x2 = polygon.getVertices()[indexTo * 2];
-        float y2 = polygon.getVertices()[indexTo * 2 + 1];
+        Vector2 from = polygon.getVertex(indexFrom);
+        Vector2 to = polygon.getVertex(indexTo);
 
-        shapeRenderer.line(x1, y1, x2, y2);
+        shapeRenderer.line(from.x, from.y, to.x, to.y);
     }
 }

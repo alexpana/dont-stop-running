@@ -1,69 +1,78 @@
 package org.vertexarmy.dsr.math;
 
-import lombok.Getter;
+import com.badlogic.gdx.math.Vector2;
+import com.beust.jcommander.internal.Lists;
+
+import java.util.List;
 
 /**
  * created by Alex
  * on 3/6/2015.
  */
 public class Polygon {
-    private static final int MAX_VERTEX_COUNT = 64;
-
-    @Getter
-    private float[] vertices;
-
-    private int size = 0;
-
-    public Polygon() {
-        this(MAX_VERTEX_COUNT * 2);
-    }
-
-    public Polygon(int vertexCount) {
-        vertices = new float[vertexCount];
-        size = 0;
-    }
+    private final List<Vector2> vertexList = Lists.newArrayList();
 
     public Polygon(float[] vertices) {
-        this.vertices = vertices;
-        size = vertices.length;
+        setVertices(vertices);
+
     }
 
     public Polygon(Iterable<Float> vertexIterable) {
         int i = 0;
         float[] vertex = new float[2];
 
-        this.size = 0;
-        for (float element : vertexIterable) {
-            size += 1;
-        }
-
-        this.vertices = new float[this.size];
-        this.size = 0;
-
         for (float element : vertexIterable) {
             vertex[i++] = element;
             if (i == 2) {
-                addVertex(vertex[0], vertex[1]);
+                vertexList.add(new Vector2(vertex[0], vertex[1]));
                 i = 0;
             }
         }
     }
 
     public void setVertices(float[] vertices) {
-        this.vertices = vertices;
-        size = vertices.length;
+        for (int i = 0; i < vertices.length / 2; ++i) {
+            vertexList.add(new Vector2(vertices[i * 2], vertices[i * 2 + 1]));
+        }
     }
 
     public int getVertexCount() {
-        return size / 2;
+        return vertexList.size();
     }
 
     public void addVertex(float x, float y) {
-        if (size == vertices.length) {
-            return;
+        vertexList.add(new Vector2(x, y));
+    }
+
+    public void addVertex(int index, Vector2 position) {
+        vertexList.add(index, position);
+    }
+
+    public void setVertex(int index, Vector2 position) {
+        vertexList.set(index, position);
+    }
+
+    public void removeVertex(int index) {
+        vertexList.remove(index);
+    }
+
+    public Vector2 getVertex(int index) {
+        return vertexList.get(index);
+    }
+
+    public List<Vector2> getVertices() {
+        return vertexList;
+    }
+
+    public float[] getVertexArray() {
+        float[] vertexArray = new float[getVertexCount() * 2];
+        int i = 0;
+        for (Vector2 vertex : vertexList) {
+            vertexArray[i * 2] = vertex.x;
+            vertexArray[i * 2 + 1] = vertex.y;
+            i += 1;
         }
-        vertices[size] = x;
-        vertices[size + 1] = y;
-        size += 2;
+
+        return vertexArray;
     }
 }

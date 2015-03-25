@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import org.vertexarmy.dsr.math.Polygon;
 
 /**
@@ -21,8 +22,8 @@ public class GraphicsPolygon {
     private int indexCount = 0;
 
     public GraphicsPolygon(Polygon polygon) {
-        for (int i = 0; i < polygon.getVertexCount(); ++i) {
-            addVertexP(polygon.getVertices()[2 * i], polygon.getVertices()[2 * i + 1]);
+        for (Vector2 vertex : polygon.getVertices()) {
+            addVertexP(vertex.x, vertex.y);
         }
     }
 

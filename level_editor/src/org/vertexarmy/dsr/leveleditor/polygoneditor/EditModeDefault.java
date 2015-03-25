@@ -169,12 +169,11 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         for (VertexHandler handler : polygonEditor.getVertexHandlers()) {
-            float xp = polygonEditor.getPolygon().getVertices()[handler.getVertexIndex() * 2];
-            float yp = polygonEditor.getPolygon().getVertices()[handler.getVertexIndex() * 2 + 1];
+            Vector2 vertex = polygonEditor.getVertex(handler);
             Vector2 m = mouseWorld(screenX, screenY);
 
-            handler.setHovered(Math.abs(xp - m.x) < handler.getHitSize() / 2 / RenderSystem.instance().getZoom() &&
-                    Math.abs(yp - m.y) < handler.getHitSize() / 2 / RenderSystem.instance().getZoom());
+            handler.setHovered(Math.abs(vertex.x - m.x) < handler.getHitSize() / 2 / RenderSystem.instance().getZoom() &&
+                    Math.abs(vertex.y - m.y) < handler.getHitSize() / 2 / RenderSystem.instance().getZoom());
         }
 
         return false;

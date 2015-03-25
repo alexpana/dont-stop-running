@@ -29,11 +29,10 @@ public class PolygonEditor {
     @Getter
     private final Node node;
 
-
     public static enum EditModeType {
         DEFAULT,
         ADD_VERTEX,
-        DELETE_VERTEX
+        DELETE_VERTEX;
     }
 
     private EditModeType currentEditModeType = EditModeType.DEFAULT;
@@ -103,7 +102,7 @@ public class PolygonEditor {
     }
 
     public Vector2 getVertex(VertexHandler handler) {
-        return new Vector2(polygon.getVertices()[handler.getVertexIndex() * 2], polygon.getVertices()[handler.getVertexIndex() * 2 + 1]);
+        return polygon.getVertex(handler.getVertexIndex());
     }
 
     public void setVertex(VertexHandler handler, Vector2 position) {
@@ -111,7 +110,14 @@ public class PolygonEditor {
     }
 
     public void setVertex(VertexHandler handler, float x, float y) {
-        polygon.getVertices()[handler.getVertexIndex() * 2] = x;
-        polygon.getVertices()[handler.getVertexIndex() * 2 + 1] = y;
+        polygon.setVertex(handler.getVertexIndex(), new Vector2(x, y));
+    }
+
+    public void addVertex(int index, Vector2 position) {
+        polygon.addVertex(index, position);
+    }
+
+    public void removeVertex(int index) {
+        polygon.removeVertex(index);
     }
 }

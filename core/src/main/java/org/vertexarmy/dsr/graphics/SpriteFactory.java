@@ -30,7 +30,7 @@ public class SpriteFactory {
 
         PolygonRegion polygonRegion = new PolygonRegion(
                 new TextureRegion(GraphicsUtils.getColorTexture(Color.WHITE), 1, 1),
-                polygon.getVertices(),
+                polygon.getVertexArray(),
                 indices);
 
         PolygonSprite sprite = new PolygonSprite(polygonRegion);
@@ -50,7 +50,7 @@ public class SpriteFactory {
 
         PolygonRegion polygonRegion = new PolygonRegion(
                 new TextureRegion(GraphicsUtils.getColorTexture(Color.WHITE), 1, 1),
-                polygon.getVertices(),
+                polygon.getVertexArray(),
                 indices3);
 
         PolygonSprite sprite = new PolygonSprite(polygonRegion);
