@@ -96,4 +96,27 @@ public final class ActionManager {
             return false;
         }
     }
+
+    public static class ReverseAction implements Action {
+        private final Action action;
+
+        public ReverseAction(Action action) {
+            this.action = action;
+        }
+
+        @Override
+        public void doAction() {
+            action.undoAction();
+        }
+
+        @Override
+        public void undoAction() {
+            action.doAction();
+        }
+
+        @Override
+        public boolean isValid() {
+            return action.isValid();
+        }
+    }
 }
