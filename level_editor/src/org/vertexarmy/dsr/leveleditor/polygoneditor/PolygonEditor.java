@@ -3,8 +3,10 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.Maps;
+
 import java.util.List;
 import java.util.Map;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.component.ComponentType;
@@ -30,12 +32,11 @@ public class PolygonEditor {
 
     public static enum EditModeType {
         DEFAULT,
-        SELECT,
         ADD_VERTEX,
         DELETE_VERTEX
     }
 
-    private EditModeType currentEditModeType = EditModeType.SELECT;
+    private EditModeType currentEditModeType = EditModeType.DEFAULT;
 
     private final Map<EditModeType, EditMode> editModes = Maps.newHashMap();
 
@@ -47,7 +48,6 @@ public class PolygonEditor {
         }
 
         editModes.put(EditModeType.DEFAULT, new EditModeDefault(this));
-        editModes.put(EditModeType.SELECT, new EditModeSelect(this));
         editModes.put(EditModeType.ADD_VERTEX, new EditModeDefault(this));
         editModes.put(EditModeType.DELETE_VERTEX, new EditModeDefault(this));
 
