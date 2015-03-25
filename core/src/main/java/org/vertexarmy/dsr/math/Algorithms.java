@@ -65,6 +65,30 @@ public class Algorithms {
         return true;
     }
 
+    public static float min(float element, float... elements) {
+        float min = element;
+
+        for (float e : elements) {
+            if (e < min) {
+                min = e;
+            }
+        }
+
+        return min;
+    }
+
+    public static float max(float element, float... elements) {
+        float max = element;
+
+        for (float e : elements) {
+            if (e > max) {
+                max = e;
+            }
+        }
+
+        return max;
+    }
+
     public static float clamp(float value, float min, float max) {
         return Math.min(max, Math.max(value, min));
     }
@@ -88,5 +112,22 @@ public class Algorithms {
         final float deltaX = a.x - b.x;
         final float deltaY = a.y - b.y;
         return deltaX * deltaX + deltaY * deltaY;
+    }
+
+    public static float vertexToEdgeDistance(Vector2 edgeA, Vector2 edgeB, Vector2 vertex) {
+        Vector2 projection = vertexToEdgeProjection(edgeA, edgeB, vertex);
+
+        return (float) Math.sqrt(min(distanceSq(edgeA, vertex), distanceSq(edgeB, vertex), distanceSq(projection, vertex)));
+    }
+
+    public static Vector2 vertexToEdgeProjection(Vector2 edgeA, Vector2 edgeB, Vector2 vertex) {
+        Vector2 edgeVector = edgeA.cpy().sub(edgeB);
+        Vector2 vertexVector = vertex.cpy().sub(edgeB);
+
+        return edgeVector.scl(edgeVector.dot(vertexVector));
+    }
+
+    public static boolean segmentContainsVertex(Vector2 segmentA, Vector2 segmentB, Vector2 vertex) {
+        return false;
     }
 }
