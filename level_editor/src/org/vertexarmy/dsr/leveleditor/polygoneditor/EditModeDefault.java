@@ -32,6 +32,10 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     private final List<VertexHandler> newlySelectedHandlers = Lists.newArrayList();
 
+    private final List<Vector2> originalVertexPositions = Lists.newArrayList();
+
+    private final List<Vector2> newVertexPositions = Lists.newArrayList();
+
     private final PolygonEditor polygonEditor;
 
     private final Vector2 originalVertexPosition = new Vector2();
@@ -67,15 +71,26 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         VertexHandler hoveredHandler = polygonEditor.getHoveredVertexHandler();
 
-        if (hoveredHandler != null) {
-            newVertexPosition.set(polygonEditor.getVertex(hoveredHandler));
+        if (moveVertexDragHelper.isDragging()) {
+
+            if (multipleHandlersSelected()) {
+                newVertexPositions.clear();
+                for (VertexHandler selectedHandler : polygonEditor.getSelectedHandlers()) {
+                    newVertexPositions.add(polygonEditor.getVertex(selectedHandler));
+                }
+                ActionManager.instance().runAction(new MoveMultipleHandlersAction(
+                        polygonEditor,
+                        polygonEditor.getSelectedHandlers(),
+                        originalVertexPositions,
+                        newVertexPositions));
+            } else {
+                newVertexPosition.set(polygonEditor.getVertex(hoveredHandler));
+                ActionManager.instance().runAction(new MoveHandlerAction(polygonEditor, hoveredHandler, originalVertexPosition, newVertexPosition));
+            }
 
             hoveredHandler.setDragged(false);
             moveVertexDragHelper.endDrag();
 
-            if (Vector2.dst2(newVertexPosition.x, newVertexPosition.y, originalVertexPosition.x, originalVertexPosition.y) > 1) {
-                ActionManager.instance().runAction(new MoveHandlerAction(polygonEditor, hoveredHandler, originalVertexPosition, newVertexPosition));
-            }
 
             return true;
         }
@@ -92,6 +107,12 @@ public class EditModeDefault extends InputAdapter implements EditMode {
                 ActionManager.instance().runAction(new SelectHandlersAction(newlySelectedHandlers));
             }
 
+            // preserve original positions
+            originalVertexPositions.clear();
+            for (VertexHandler selectedHandler : polygonEditor.getSelectedHandlers()) {
+                originalVertexPositions.add(polygonEditor.getVertex(selectedHandler));
+            }
+
             return true;
         }
 
@@ -100,14 +121,19 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        VertexHandler draggedHandler = polygonEditor.getDraggedVertexHandler();
-
-        if (draggedHandler != null) {
-            int i = draggedHandler.getVertexIndex();
+        if (moveVertexDragHelper.isDragging()) {
             Vector2 dragOffset = moveVertexDragHelper.getDragOffset(mouseWorld(screenX, screenY));
             moveVertexDragHelper.reset(mouseWorld(screenX, screenY));
-            polygonEditor.getPolygon().getVertices()[i * 2] += dragOffset.x;
-            polygonEditor.getPolygon().getVertices()[i * 2 + 1] += dragOffset.y;
+
+            if (multipleHandlersSelected()) {
+                for (VertexHandler selectedHandler : polygonEditor.getSelectedHandlers()) {
+                    polygonEditor.setVertex(selectedHandler, polygonEditor.getVertex(selectedHandler).cpy().add(dragOffset));
+                }
+            } else {
+                VertexHandler draggedHandler = polygonEditor.getDraggedVertexHandler();
+                polygonEditor.setVertex(draggedHandler, polygonEditor.getVertex(draggedHandler).cpy().add(dragOffset));
+            }
+
             return true;
         }
 
@@ -134,6 +160,10 @@ public class EditModeDefault extends InputAdapter implements EditMode {
         }
 
         return false;
+    }
+
+    private boolean multipleHandlersSelected() {
+        return !polygonEditor.getSelectedHandlers().isEmpty();
     }
 
     @Override
@@ -229,9 +259,8 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     }
 
     private void clearSelection() {
-        if (!polygonEditor.getSelectedHandlers().isEmpty()) {
-            ActionManager.instance().runAction(new DeselectAllHandlersAction(polygonEditor.getVertexHandlers(), polygonEditor.getSelectedHandlers()));
-        }
+        ActionManager.instance().runAction(new DeselectAllHandlersAction(polygonEditor.getVertexHandlers(), polygonEditor.getSelectedHandlers()));
+        originalVertexPositions.clear();
     }
 
     private Vector2 mouseWorld(int screenX, int screenY) {
