@@ -3,10 +3,9 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.Maps;
-
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.component.ComponentType;
@@ -29,10 +28,10 @@ public class PolygonEditor {
     @Getter
     private final Node node;
 
-    public static enum EditModeType {
+    public enum EditModeType {
         DEFAULT,
         ADD_VERTEX,
-        DELETE_VERTEX;
+        DELETE_VERTEX
     }
 
     private EditModeType currentEditModeType = EditModeType.DEFAULT;
@@ -42,9 +41,7 @@ public class PolygonEditor {
     public PolygonEditor(Polygon polygon) {
         this.polygon = polygon;
 
-        for (int i = 0; i < polygon.getVertexCount(); ++i) {
-            vertexHandlers.add(new VertexHandler(i));
-        }
+        updateVertexHandlers();
 
         editModes.put(EditModeType.DEFAULT, new EditModeDefault(this));
         editModes.put(EditModeType.ADD_VERTEX, new EditModeDefault(this));
@@ -114,10 +111,51 @@ public class PolygonEditor {
     }
 
     public void addVertex(int index, Vector2 position) {
-        polygon.addVertex(index, position);
+        // TODO: implement !
+        updateVertexHandlers();
     }
 
     public void removeVertex(int index) {
-        polygon.removeVertex(index);
+        VertexHandler vertexHandler = findHanderByIndex(index);
+
+        if (vertexHandler != null) {
+            removeVertices(Collections.singletonList(vertexHandler));
+        }
+    }
+
+    public void removeVertices(List<VertexHandler> vertexHandlers) {
+        List<Integer> indexList = Lists.newArrayList();
+        for (VertexHandler vertexHandler : vertexHandlers) {
+            indexList.add(vertexHandler.getVertexIndex());
+        }
+
+        Collections.sort(indexList);
+
+        for (int i = 1; i < indexList.size(); ++i) {
+            polygon.removeVertex(indexList.get(i) - i);
+        }
+
+        updateVertexHandlers();
+    }
+
+    public void setVertices(List<Vector2> vertices) {
+        polygon.setVertices(vertices);
+        updateVertexHandlers();
+    }
+
+    private void updateVertexHandlers() {
+        vertexHandlers.clear();
+        for (int i = 0; i < polygon.getVertexCount(); ++i) {
+            vertexHandlers.add(new VertexHandler(i));
+        }
+    }
+
+    private VertexHandler findHanderByIndex(int index) {
+        for (VertexHandler handler : vertexHandlers) {
+            if (handler.getVertexIndex() == index) {
+                return handler;
+            }
+        }
+        return null;
     }
 }

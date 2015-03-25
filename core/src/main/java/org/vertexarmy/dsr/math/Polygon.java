@@ -2,7 +2,6 @@ package org.vertexarmy.dsr.math;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
-
 import java.util.List;
 
 /**
@@ -14,7 +13,6 @@ public class Polygon {
 
     public Polygon(float[] vertices) {
         setVertices(vertices);
-
     }
 
     public Polygon(Iterable<Float> vertexIterable) {
@@ -31,9 +29,15 @@ public class Polygon {
     }
 
     public void setVertices(float[] vertices) {
+        vertexList.clear();
         for (int i = 0; i < vertices.length / 2; ++i) {
             vertexList.add(new Vector2(vertices[i * 2], vertices[i * 2 + 1]));
         }
+    }
+
+    public void setVertices(List<Vector2> vertices) {
+        vertexList.clear();
+        vertexList.addAll(vertices);
     }
 
     public int getVertexCount() {

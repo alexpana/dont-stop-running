@@ -36,6 +36,6 @@ public class DeselectAllHandlersAction extends ActionManager.ActionAdapter {
 
     @Override
     public boolean isValid() {
-        return !allHandlers.isEmpty();
+        return !selectedHandlers.isEmpty();
     }
 }
