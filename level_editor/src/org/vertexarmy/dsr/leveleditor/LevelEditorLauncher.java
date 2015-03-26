@@ -12,6 +12,6 @@ public class LevelEditorLauncher {
         System.out.println("Running level editor");
 
         final String levelName = arguments.length > 0 ? arguments[0] : null;
-        LevelPreview.launch(levelName);
+        LevelEditor.launch(levelName);
     }
 }

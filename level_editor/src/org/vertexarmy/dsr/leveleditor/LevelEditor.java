@@ -12,12 +12,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import java.util.HashMap;
 import java.util.Map;
+import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Root;
 import org.vertexarmy.dsr.core.UiNode;
 import org.vertexarmy.dsr.core.component.ComponentType;
@@ -34,7 +34,7 @@ import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
 import org.vertexarmy.dsr.leveleditor.ui.IconRepository;
 import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
 
-class LevelPreview extends Game {
+class LevelEditor extends Game {
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
 
     private final Root root = new Root();
@@ -55,7 +55,7 @@ class LevelPreview extends Game {
 
     private DebugValuesPanel debugValuesPanel;
 
-    private LevelPreview(String level) {
+    private LevelEditor(String level) {
         levelToLoad = level;
     }
 
@@ -191,6 +191,7 @@ class LevelPreview extends Game {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = 1024;
         config.height = 800;
-        new LwjglApplication(new LevelPreview(level), config);
+        config.title = "Dont Stop Running - Level Editor - " + Version.value();
+        new LwjglApplication(new LevelEditor(level), config);
     }
 }
