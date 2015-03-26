@@ -120,14 +120,27 @@ public class Algorithms {
         return (float) Math.sqrt(min(distanceSq(edgeA, vertex), distanceSq(edgeB, vertex), distanceSq(projection, vertex)));
     }
 
+    public static float vertexToEdgeDistance(Edge edge, Vector2 vertex) {
+        return vertexToEdgeDistance(edge.start, edge.end, vertex);
+    }
+
     public static Vector2 vertexToEdgeProjection(Vector2 edgeA, Vector2 edgeB, Vector2 vertex) {
         Vector2 edgeVector = edgeA.cpy().sub(edgeB);
+
+        Vector2 edgeVectorNormalized = edgeVector.cpy().nor();
+
         Vector2 vertexVector = vertex.cpy().sub(edgeB);
 
-        return edgeVector.scl(edgeVector.dot(vertexVector));
+        return edgeVectorNormalized.scl(vertexVector.dot(edgeVectorNormalized)).add(edgeB);
+    }
+
+    public static Vector2 vertexToEdgeProjection(Edge edge, Vector2 vertex) {
+        return vertexToEdgeProjection(edge.start, edge.end, vertex);
     }
 
     public static boolean segmentContainsVertex(Vector2 segmentA, Vector2 segmentB, Vector2 vertex) {
-        return false;
+        float segmentLengthSquared = Algorithms.distanceSq(segmentA, segmentB);
+
+        return Algorithms.distanceSq(segmentA, vertex) <= segmentLengthSquared &&Algorithms.distanceSq(segmentB, vertex) <= segmentLengthSquared;
     }
 }

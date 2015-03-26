@@ -7,7 +7,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +18,6 @@ import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
 import org.vertexarmy.dsr.math.Polygon;
-
-import javax.annotation.Nullable;
 
 /**
  * created by Alex
@@ -39,7 +36,6 @@ public class PolygonEditor {
     public enum EditModeType {
         DEFAULT,
         ADD_VERTEX,
-        DELETE_VERTEX
     }
 
     private EditModeType currentEditModeType = EditModeType.DEFAULT;
@@ -52,8 +48,7 @@ public class PolygonEditor {
         updateVertexHandlers();
 
         editModes.put(EditModeType.DEFAULT, new EditModeDefault(this));
-        editModes.put(EditModeType.ADD_VERTEX, new EditModeDefault(this));
-        editModes.put(EditModeType.DELETE_VERTEX, new EditModeDefault(this));
+        editModes.put(EditModeType.ADD_VERTEX, new EditModeAddVertex(this));
 
         setEditMode(EditModeType.DEFAULT);
 
@@ -119,7 +114,7 @@ public class PolygonEditor {
     }
 
     public void addVertex(int index, Vector2 position) {
-        // TODO: implement !
+        polygon.addVertex(index, position);
         updateVertexHandlers();
     }
 
@@ -139,7 +134,7 @@ public class PolygonEditor {
 
         Collections.sort(indexList);
 
-        for (int i = 1; i < indexList.size(); ++i) {
+        for (int i = 0; i < indexList.size(); ++i) {
             polygon.removeVertex(indexList.get(i) - i);
         }
 

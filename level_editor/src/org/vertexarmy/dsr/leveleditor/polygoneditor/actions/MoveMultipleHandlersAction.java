@@ -49,7 +49,7 @@ public class MoveMultipleHandlersAction extends ActionManager.ActionAdapter {
 
     @Override
     public boolean isValid() {
-        return originalPositions.size() >= 2 && Algorithms.distanceSq(originalPositions.get(0), newPositions.get(0)) >= 1;
+        return !originalPositions.isEmpty() && Algorithms.distanceSq(originalPositions.get(0), newPositions.get(0)) >= 1;
 
     }
 }

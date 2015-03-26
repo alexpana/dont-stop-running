@@ -2,6 +2,7 @@ package org.vertexarmy.dsr.math;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
+
 import java.util.List;
 
 /**
@@ -49,7 +50,11 @@ public class Polygon {
     }
 
     public void addVertex(int index, Vector2 position) {
-        vertexList.add(index, position);
+        if (index == vertexList.size()) {
+            vertexList.add(position);
+        } else {
+            vertexList.add(index, position);
+        }
     }
 
     public void setVertex(int index, Vector2 position) {
@@ -78,5 +83,14 @@ public class Polygon {
         }
 
         return vertexArray;
+    }
+
+    public List<Edge> getEdgeList() {
+        List<Edge> edges = Lists.newArrayList();
+        for (int i = 1; i < vertexList.size(); ++i) {
+            edges.add(new Edge(vertexList.get(i - 1), vertexList.get(i)));
+        }
+        edges.add(new Edge(vertexList.get(vertexList.size() - 1), vertexList.get(0)));
+        return edges;
     }
 }

@@ -21,7 +21,6 @@ class PolygonEditorInputComponent implements InputComponent, InputProcessor {
 
         hotkeys.put(Input.Keys.NUM_1, PolygonEditor.EditModeType.DEFAULT);
         hotkeys.put(Input.Keys.NUM_2, PolygonEditor.EditModeType.ADD_VERTEX);
-        hotkeys.put(Input.Keys.NUM_3, PolygonEditor.EditModeType.DELETE_VERTEX);
     }
 
     @Override
