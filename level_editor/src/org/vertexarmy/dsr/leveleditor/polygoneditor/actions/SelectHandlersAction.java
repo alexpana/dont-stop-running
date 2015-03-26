@@ -2,6 +2,7 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor.actions;
 
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.VertexHandler;
 
 import java.util.List;
@@ -11,23 +12,26 @@ import java.util.List;
  * on 24.03.2015.
  */
 public class SelectHandlersAction extends ActionManager.ActionAdapter {
+    private final PolygonEditor polygonEditor;
+
     private final List<VertexHandler> selectedHandlers = Lists.newArrayList();
 
-    public SelectHandlersAction(List<VertexHandler> selectedHandlers) {
+    public SelectHandlersAction(PolygonEditor polygonEditor, List<VertexHandler> selectedHandlers) {
+        this.polygonEditor = polygonEditor;
         this.selectedHandlers.addAll(selectedHandlers);
     }
 
     @Override
     public void doAction() {
         for (VertexHandler vertexHandler : selectedHandlers) {
-            vertexHandler.setSelected(true);
+            polygonEditor.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(true);
         }
     }
 
     @Override
     public void undoAction() {
         for (VertexHandler vertexHandler : selectedHandlers) {
-            vertexHandler.setSelected(false);
+            polygonEditor.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(false);
         }
     }
 

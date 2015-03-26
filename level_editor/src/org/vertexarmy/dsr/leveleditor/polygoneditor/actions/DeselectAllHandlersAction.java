@@ -2,6 +2,7 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor.actions;
 
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.VertexHandler;
 
 import java.util.List;
@@ -11,26 +12,29 @@ import java.util.List;
  * on 24.03.2015.
  */
 public class DeselectAllHandlersAction extends ActionManager.ActionAdapter {
+    private final PolygonEditor polygonEditor;
+
+    private final List<VertexHandler> allHandlers = Lists.newArrayList();
+
     private final List<VertexHandler> selectedHandlers = Lists.newArrayList();
 
-    private List<VertexHandler> allHandlers;
-
-    public DeselectAllHandlersAction(List<VertexHandler> allHandlers, List<VertexHandler> selectedHandlers) {
-        this.allHandlers = allHandlers;
+    public DeselectAllHandlersAction(PolygonEditor polygonEditor, List<VertexHandler> allHandlers, List<VertexHandler> selectedHandlers) {
+        this.polygonEditor = polygonEditor;
+        this.allHandlers.addAll(allHandlers);
         this.selectedHandlers.addAll(selectedHandlers);
     }
 
     @Override
     public void doAction() {
         for (VertexHandler vertexHandler : allHandlers) {
-            vertexHandler.setSelected(false);
+            polygonEditor.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(false);
         }
     }
 
     @Override
     public void undoAction() {
         for (VertexHandler vertexHandler : selectedHandlers) {
-            vertexHandler.setSelected(true);
+            polygonEditor.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(true);
         }
     }
 

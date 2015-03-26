@@ -9,7 +9,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
+
 import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
@@ -109,7 +112,7 @@ public class EditModeDefault extends InputAdapter implements EditMode {
             }
 
             if (!newlySelectedHandlers.isEmpty()) {
-                ActionManager.instance().runAction(new SelectHandlersAction(newlySelectedHandlers));
+                ActionManager.instance().runAction(new SelectHandlersAction(polygonEditor, newlySelectedHandlers));
             }
 
             // preserve original positions
@@ -204,21 +207,27 @@ public class EditModeDefault extends InputAdapter implements EditMode {
         }
 
         if (keycode == Input.Keys.FORWARD_DEL) {
-            List<Vector2> allVertices = Lists.newArrayList();
-            List<Vector2> remainingVertices = Lists.newArrayList();
-
-            for (VertexHandler handler : polygonEditor.getVertexHandlers()) {
-                allVertices.add(polygonEditor.getVertex(handler));
-                if (!handler.isSelected()) {
-                    remainingVertices.add(polygonEditor.getVertex(handler));
-                }
-            }
-
-            ActionManager.instance().runAction(new RemoveVerticesAction(polygonEditor, allVertices, remainingVertices));
+            deleteSelectedVertices();
             return true;
         }
 
         return false;
+    }
+
+    private void deleteSelectedVertices() {
+        List<Vector2> allVertices = Lists.newArrayList();
+        List<Vector2> remainingVertices = Lists.newArrayList();
+
+        for (VertexHandler handler : polygonEditor.getVertexHandlers()) {
+            allVertices.add(polygonEditor.getVertex(handler));
+            if (!handler.isSelected()) {
+                remainingVertices.add(polygonEditor.getVertex(handler));
+            }
+        }
+
+        ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.of(
+                new DeselectAllHandlersAction(polygonEditor, polygonEditor.getVertexHandlers(), polygonEditor.getSelectedHandlers()),
+                new RemoveVerticesAction(polygonEditor, allVertices, remainingVertices))));
     }
 
     @Override
@@ -278,7 +287,7 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     }
 
     private void clearSelection() {
-        ActionManager.instance().runAction(new DeselectAllHandlersAction(polygonEditor.getVertexHandlers(), polygonEditor.getSelectedHandlers()));
+        ActionManager.instance().runAction(new DeselectAllHandlersAction(polygonEditor, polygonEditor.getVertexHandlers(), polygonEditor.getSelectedHandlers()));
         originalVertexPositions.clear();
     }
 

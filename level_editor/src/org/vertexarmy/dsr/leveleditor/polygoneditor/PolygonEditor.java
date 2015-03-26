@@ -2,10 +2,16 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.component.ComponentType;
@@ -13,6 +19,8 @@ import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
 import org.vertexarmy.dsr.math.Polygon;
+
+import javax.annotation.Nullable;
 
 /**
  * created by Alex
@@ -116,7 +124,7 @@ public class PolygonEditor {
     }
 
     public void removeVertex(int index) {
-        VertexHandler vertexHandler = findHanderByIndex(index);
+        VertexHandler vertexHandler = findHandlerByIndex(index);
 
         if (vertexHandler != null) {
             removeVertices(Collections.singletonList(vertexHandler));
@@ -150,12 +158,20 @@ public class PolygonEditor {
         }
     }
 
-    private VertexHandler findHanderByIndex(int index) {
+    public VertexHandler findHandlerByIndex(int index) {
         for (VertexHandler handler : vertexHandlers) {
             if (handler.getVertexIndex() == index) {
                 return handler;
             }
         }
         return null;
+    }
+
+    public List<Integer> getHandlerIndices(List<VertexHandler> handlers) {
+        return ImmutableList.copyOf(Iterables.transform(handlers, new Function<VertexHandler, Integer>() {
+            public Integer apply(VertexHandler input) {
+                return input.getVertexIndex();
+            }
+        }));
     }
 }
