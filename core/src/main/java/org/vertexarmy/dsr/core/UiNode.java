@@ -33,7 +33,7 @@ public class UiNode extends Node {
 
         contentTable = new Table();
         contentTable.setFillParent(true);
-        contentTable.pad(4, 4, 4, 4);
+//        contentTable.pad(4, 4, 4, 4);
 
         stage.addActor(contentTable);
 

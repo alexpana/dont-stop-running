@@ -29,6 +29,8 @@ import org.vertexarmy.dsr.game.Tiles;
 import org.vertexarmy.dsr.graphics.ShaderRepository;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
+import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
+import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
 
 class LevelPreview extends Game {
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
@@ -39,8 +41,6 @@ class LevelPreview extends Game {
 
     private Level level;
 
-    private DebugValuesPanel debugValuesPanel;
-
     private final String levelToLoad;
 
     private PolygonSprite terrainSprite;
@@ -48,6 +48,10 @@ class LevelPreview extends Game {
     private PolygonEditor terrainPolygonEditor;
 
     private UiNode uiNode;
+
+    private Toolbox toolbox;
+
+    private DebugValuesPanel debugValuesPanel;
 
     private LevelPreview(String level) {
         levelToLoad = level;
@@ -134,7 +138,11 @@ class LevelPreview extends Game {
 
     private void createUI() {
         debugValuesPanel = new DebugValuesPanel(uiNode.getUiSkin());
-        uiNode.getContentTable().add(debugValuesPanel);
+        toolbox = new Toolbox(uiNode.getUiSkin());
+        uiNode.getContentTable().add(toolbox).expandX().fill().row();
+        uiNode.getContentTable().add(debugValuesPanel).left().row();
+
+//        uiNode.getStage().setDebugAll(true);
     }
 
     @Override

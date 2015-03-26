@@ -16,6 +16,7 @@ public class EarClippingTriangulation {
         public final short index;
     }
 
+    @SuppressWarnings("UnusedAssignment")
     public static short[] triangulate(Polygon polygon) {
         short[] indices = new short[(polygon.getVertexCount() - 2) * 3];
 

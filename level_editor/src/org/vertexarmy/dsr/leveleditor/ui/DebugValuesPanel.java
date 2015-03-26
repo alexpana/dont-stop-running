@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor;
+package org.vertexarmy.dsr.leveleditor.ui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -7,13 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import org.vertexarmy.dsr.graphics.GraphicsUtils;
+import org.vertexarmy.dsr.leveleditor.DebugValues;
 
 /**
  * created by Alex
  * on 3/20/2015.
  */
-class DebugValuesPanel extends Table {
-    public static final int TABLE_PADDING = 10;
+public class DebugValuesPanel extends Table {
+    public static final int TABLE_PADDING = 4;
 
     public static final int KEY_VALUE_PADDING = 4;
 
