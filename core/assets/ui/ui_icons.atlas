@@ -1,0 +1,55 @@
+ui_icons.png
+size: 85,85
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+alignv
+  rotate: false
+  xy: 0, 0
+  size: 21, 21
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+alignh
+  rotate: false
+  xy: 21, 0
+  size: 21, 21
+  orig: 21, 0
+  offset: 0, 0
+  index: -1
+file_open
+  rotate: false
+  xy: 42, 0
+  size: 21, 21
+  orig: 42, 0
+  offset: 0, 0
+  index: -1
+file_save
+  rotate: false
+  xy: 63, 0
+  size: 21, 21
+  orig: 63, 0
+  offset: 0, 0
+  index: -1
+bg_up
+  rotate: false
+  xy: 0, 21
+  size: 21, 21
+  orig: 0, 21
+  offset: 0, 0
+  index: -1
+bg_over
+  rotate: false
+  xy: 21, 21
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+bg_down
+  rotate: false
+  xy: 42, 21
+  size: 21, 21
+  orig: 42, 21
+  offset: 0, 0
+  index: -1
+

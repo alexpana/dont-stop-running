@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -30,6 +31,7 @@ import org.vertexarmy.dsr.graphics.ShaderRepository;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
 import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
+import org.vertexarmy.dsr.leveleditor.ui.IconRepository;
 import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
 
 class LevelPreview extends Game {
@@ -62,6 +64,8 @@ class LevelPreview extends Game {
         root.initialize();
 
         ShaderRepository.instance().initialize();
+
+        IconRepository.instance().initialize();
 
         root.addNode(new Node(ComponentType.INPUT, new CameraController()));
 
