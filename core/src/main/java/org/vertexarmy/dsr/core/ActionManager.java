@@ -1,7 +1,10 @@
 package org.vertexarmy.dsr.core;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 
 /**
  * Created by alex
@@ -117,6 +120,44 @@ public final class ActionManager {
         @Override
         public boolean isValid() {
             return action.isValid();
+        }
+    }
+
+    public static class CompositeAction implements Action {
+
+        private final List<Action> actionList;
+
+        public CompositeAction(List<Action> actionList) {
+            this.actionList = actionList;
+        }
+
+        @Override
+        public void doAction() {
+            for (Action action : actionList) {
+                action.doAction();
+            }
+        }
+
+        @Override
+        public void undoAction() {
+            for (Action action : Lists.reverse(actionList)) {
+                action.undoAction();
+            }
+        }
+
+        @Override
+        public boolean isValid() {
+            if (actionList.isEmpty()) {
+                return false;
+            }
+
+            for (Action action : actionList) {
+                if (!action.isValid()) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
