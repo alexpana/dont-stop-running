@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.google.common.base.Function;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
@@ -38,21 +39,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 class LevelEditor extends Game {
+    private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
+
     private final Log log = Log.create();
 
     private final JFileChooser fileChooser = new JFileChooser();
-
-    private File boundLevelFile;
-
-    private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
 
     private final Root root = new Root();
 
     private final Map<Tiles, TextureRegion> tiles = new HashMap<>();
 
-    private Level level;
+    private final Function<LevelEditor, Boolean> initTask;
 
-    private final String levelToLoad;
+    private File boundLevelFile;
+
+    private Level level;
 
     private PolygonSprite terrainSprite;
 
@@ -64,8 +65,8 @@ class LevelEditor extends Game {
 
     private DebugValuesPanel debugValuesPanel;
 
-    private LevelEditor(String level) {
-        levelToLoad = level;
+    private LevelEditor(Function<LevelEditor, Boolean> initTask) {
+        this.initTask = initTask;
     }
 
     @Override
@@ -122,7 +123,7 @@ class LevelEditor extends Game {
 
 
                         if (isOpenShortcut(keycode)) {
-                            openLevel();
+                            openLevelFile();
                             return true;
                         }
 
@@ -149,24 +150,7 @@ class LevelEditor extends Game {
 
         createUI();
 
-        attemptToLoadLevel();
-    }
-
-    private void attemptToLoadLevel() {
-        if (levelToLoad != null) {
-            LevelLoader loader = new LevelLoader(levelToLoad);
-            Level newLevel = null;
-
-            try {
-                newLevel = loader.load();
-            } catch (LevelLoader.CorruptLevel e) {
-                log.error("Could not load SVG file. Reason: " + e.getMessage());
-            }
-
-            if (newLevel != null) {
-                setLevel(newLevel, levelToLoad);
-            }
-        }
+        initTask.apply(this);
     }
 
     private void createUI() {
@@ -174,7 +158,7 @@ class LevelEditor extends Game {
         toolbox = new Toolbox(uiNode.getUiSkin(), new Toolbox.Listener() {
             @Override
             public void loadFileRequested() {
-                openLevel();
+                openLevelFile();
             }
 
             @Override
@@ -187,21 +171,31 @@ class LevelEditor extends Game {
         uiNode.getContentTable().add(debugValuesPanel).left().row();
     }
 
-    private void openLevel() {
+    private void openLevelFile() {
         fileChooser.showOpenDialog(null);
         File selectedFile = fileChooser.getSelectedFile();
         if (selectedFile != null) {
             try {
-                FileInputStream inputStream = new FileInputStream(selectedFile);
-                Level level = Serialization.deserialize(inputStream);
-                setLevel(level, selectedFile.getName());
+                loadLevel(selectedFile);
 
-                boundLevelFile = selectedFile;
-
-                log.debug("Opened level " + boundLevelFile.getAbsolutePath());
+                log.info("Opened level " + boundLevelFile.getAbsolutePath());
             } catch (Exception ignored) {
                 ignored.printStackTrace();
             }
+        }
+    }
+
+    public void loadLevel(File selectedFile) {
+        try {
+            FileInputStream inputStream = new FileInputStream(selectedFile);
+
+            Level level = Serialization.deserialize(inputStream);
+
+            setLevel(level);
+
+            setBoundLevelFile(selectedFile);
+        } catch (Exception e) {
+            log.exception(e);
         }
     }
 
@@ -215,7 +209,7 @@ class LevelEditor extends Game {
             try {
                 FileOutputStream outputStream = new FileOutputStream(boundLevelFile);
                 Serialization.serialize(outputStream, level);
-                log.debug("Saved level " + boundLevelFile.getAbsolutePath());
+                log.info("Saved level " + boundLevelFile.getAbsolutePath());
             } catch (Exception ignored) {
                 ignored.printStackTrace();
             }
@@ -245,8 +239,10 @@ class LevelEditor extends Game {
         Vector2 mouseWorld = RenderSystem.instance().screenToWorld(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
         DebugValues.instance().setValue(DebugItems.MOUSE_WORLD, (int) mouseWorld.x + ", " + (int) mouseWorld.y);
 
-        terrainSprite = SPRITE_FACTORY.createSprite(level.getTerrainPatches().get(0));
-        terrainSprite.setColor(Color.BLACK);
+        if (level != null) {
+            terrainSprite = SPRITE_FACTORY.createSprite(level.getTerrainPatches().get(0));
+            terrainSprite.setColor(Color.BLACK);
+        }
     }
 
     @Override
@@ -256,9 +252,8 @@ class LevelEditor extends Game {
         uiNode.getStage().getViewport().update(w, h, true);
     }
 
-    void setLevel(Level level, String levelName) {
+    void setLevel(Level level) {
         this.level = level;
-        DebugValues.instance().setValue(DebugItems.LOADED_LEVEL, levelName);
 
         terrainSprite = SPRITE_FACTORY.createSprite(level.getTerrainPatches().get(0));
         terrainSprite.setColor(Color.BLACK);
@@ -270,11 +265,11 @@ class LevelEditor extends Game {
         root.addNode(terrainPolygonEditor.getNode());
     }
 
-    public static void launch(String level) {
+    public static void launch(Function<LevelEditor, Boolean> initTask) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = 1024;
         config.height = 800;
         config.title = "Level Editor - " + Version.value();
-        new LwjglApplication(new LevelEditor(level), config);
+        new LwjglApplication(new LevelEditor(initTask), config);
     }
 }

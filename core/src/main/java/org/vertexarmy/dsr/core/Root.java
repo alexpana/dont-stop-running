@@ -1,5 +1,7 @@
 package org.vertexarmy.dsr.core;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.InputComponent;
 import org.vertexarmy.dsr.core.component.Node;
@@ -23,6 +25,8 @@ public class Root {
     public void initialize() {
         inputSystem.initialize();
         renderSystem.initialize();
+
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
     }
 
     public void addNode(Node node) {
