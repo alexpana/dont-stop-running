@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 class LevelEditor extends Game {
+    private final JFileChooser fileChooser = new JFileChooser();
+
     private File boundLevelFile;
 
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
@@ -110,11 +112,26 @@ class LevelEditor extends Game {
                             return true;
                         }
 
-                        // TODO: handle Ctrl+S
+                        if (isSaveShortcut(keycode)) {
+                            saveLevel(false);
+                            return true;
+                        }
 
-                        // TODO: handle Ctrl+O
+
+                        if (isOpenShortcut(keycode)) {
+                            openLevel();
+                            return true;
+                        }
 
                         return false;
+                    }
+
+                    private boolean isOpenShortcut(int keycode) {
+                        return Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && keycode == Input.Keys.O;
+                    }
+
+                    private boolean isSaveShortcut(int keycode) {
+                        return Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && keycode == Input.Keys.S;
                     }
                 };
             }
@@ -152,43 +169,54 @@ class LevelEditor extends Game {
     private void createUI() {
         debugValuesPanel = new DebugValuesPanel(uiNode.getUiSkin());
         toolbox = new Toolbox(uiNode.getUiSkin(), new Toolbox.Listener() {
-            private final JFileChooser fileChooser = new JFileChooser();
-
             @Override
             public void loadFileRequested() {
-                fileChooser.showOpenDialog(null);
-                File selectedFile = fileChooser.getSelectedFile();
-                if (selectedFile != null) {
-                    try {
-                        FileInputStream inputStream = new FileInputStream(selectedFile);
-                        Level level = Serialization.deserialize(inputStream);
-                        setLevel(level, selectedFile.getName());
-                    } catch (Exception ignored) {
-                        ignored.printStackTrace();
-                    }
-                }
+                openLevel();
             }
 
             @Override
             public void saveFileRequested() {
-                if (boundLevelFile == null) {
-                    fileChooser.showSaveDialog(null);
-                    setBoundLevelFile(fileChooser.getSelectedFile());
-                }
-
-                if (boundLevelFile != null) {
-                    try {
-                        FileOutputStream outputStream = new FileOutputStream(boundLevelFile);
-                        Serialization.serialize(outputStream, level);
-                    } catch (Exception ignored) {
-                        ignored.printStackTrace();
-                    }
-                }
+                saveLevel(true);
             }
         });
 
         uiNode.getContentTable().add(toolbox).expandX().fill().row();
         uiNode.getContentTable().add(debugValuesPanel).left().row();
+    }
+
+    private void openLevel() {
+        fileChooser.showOpenDialog(null);
+        File selectedFile = fileChooser.getSelectedFile();
+        if (selectedFile != null) {
+            try {
+                FileInputStream inputStream = new FileInputStream(selectedFile);
+                Level level = Serialization.deserialize(inputStream);
+                setLevel(level, selectedFile.getName());
+
+                boundLevelFile = selectedFile;
+
+                Gdx.app.log("Level Editor", "Opened level " + boundLevelFile.getAbsolutePath());
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
+            }
+        }
+    }
+
+    private void saveLevel(boolean forceShowDialog) {
+        if (boundLevelFile == null || forceShowDialog) {
+            fileChooser.showSaveDialog(null);
+            setBoundLevelFile(fileChooser.getSelectedFile());
+        }
+
+        if (boundLevelFile != null) {
+            try {
+                FileOutputStream outputStream = new FileOutputStream(boundLevelFile);
+                Serialization.serialize(outputStream, level);
+                Gdx.app.log("Level Editor", "Saved level " + boundLevelFile.getAbsolutePath());
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
+            }
+        }
     }
 
     private void setBoundLevelFile(File selectedFile) {

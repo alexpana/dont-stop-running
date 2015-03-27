@@ -4,6 +4,7 @@
 ### Added
 - This CHANGELOG
 - Support for serialization of generic objects
+- Support for saving and loading levels
 
 ## [1.0] - 2015-03-27
 ### Added
