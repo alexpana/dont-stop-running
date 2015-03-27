@@ -2,14 +2,17 @@ package org.vertexarmy.dsr.math;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
+import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * created by Alex
  * on 3/6/2015.
  */
-public class Polygon {
+@EqualsAndHashCode
+public class Polygon implements Serializable {
     private final List<Vector2> vertexList = Lists.newArrayList();
 
     public Polygon(float[] vertices) {
