@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import org.vertexarmy.dsr.Version;
+import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
 import org.vertexarmy.dsr.core.Serialization;
 import org.vertexarmy.dsr.core.UiNode;
@@ -37,6 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 class LevelEditor extends Game {
+    private final Log log = Log.create();
+
     private final JFileChooser fileChooser = new JFileChooser();
 
     private File boundLevelFile;
@@ -157,7 +160,7 @@ class LevelEditor extends Game {
             try {
                 newLevel = loader.load();
             } catch (LevelLoader.CorruptLevel e) {
-                Gdx.app.error("LevelLauncher", "Could not load SVG file. Reason: " + e.getMessage());
+                log.error("Could not load SVG file. Reason: " + e.getMessage());
             }
 
             if (newLevel != null) {
@@ -195,7 +198,7 @@ class LevelEditor extends Game {
 
                 boundLevelFile = selectedFile;
 
-                Gdx.app.log("Level Editor", "Opened level " + boundLevelFile.getAbsolutePath());
+                log.debug("Opened level " + boundLevelFile.getAbsolutePath());
             } catch (Exception ignored) {
                 ignored.printStackTrace();
             }
@@ -212,7 +215,7 @@ class LevelEditor extends Game {
             try {
                 FileOutputStream outputStream = new FileOutputStream(boundLevelFile);
                 Serialization.serialize(outputStream, level);
-                Gdx.app.log("Level Editor", "Saved level " + boundLevelFile.getAbsolutePath());
+                log.debug("Saved level " + boundLevelFile.getAbsolutePath());
             } catch (Exception ignored) {
                 ignored.printStackTrace();
             }
