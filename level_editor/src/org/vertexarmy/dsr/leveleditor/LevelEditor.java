@@ -1,10 +1,6 @@
 package org.vertexarmy.dsr.leveleditor;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
@@ -15,10 +11,9 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import java.util.HashMap;
-import java.util.Map;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Root;
+import org.vertexarmy.dsr.core.Serialization;
 import org.vertexarmy.dsr.core.UiNode;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.InputComponent;
@@ -34,7 +29,16 @@ import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
 import org.vertexarmy.dsr.leveleditor.ui.IconRepository;
 import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
 
+import javax.swing.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 class LevelEditor extends Game {
+    private File boundLevelFile;
+
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
 
     private final Root root = new Root();
@@ -105,6 +109,11 @@ class LevelEditor extends Game {
                             uiNode.getContentTable().setVisible(!uiNode.getContentTable().isVisible());
                             return true;
                         }
+
+                        // TODO: handle Ctrl+S
+
+                        // TODO: handle Ctrl+O
+
                         return false;
                     }
                 };
@@ -142,11 +151,51 @@ class LevelEditor extends Game {
 
     private void createUI() {
         debugValuesPanel = new DebugValuesPanel(uiNode.getUiSkin());
-        toolbox = new Toolbox(uiNode.getUiSkin());
+        toolbox = new Toolbox(uiNode.getUiSkin(), new Toolbox.Listener() {
+            private final JFileChooser fileChooser = new JFileChooser();
+
+            @Override
+            public void loadFileRequested() {
+                fileChooser.showOpenDialog(null);
+                File selectedFile = fileChooser.getSelectedFile();
+                if (selectedFile != null) {
+                    try {
+                        FileInputStream inputStream = new FileInputStream(selectedFile);
+                        Level level = Serialization.deserialize(inputStream);
+                        setLevel(level, selectedFile.getName());
+                    } catch (Exception ignored) {
+                        ignored.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void saveFileRequested() {
+                if (boundLevelFile == null) {
+                    fileChooser.showSaveDialog(null);
+                    setBoundLevelFile(fileChooser.getSelectedFile());
+                }
+
+                if (boundLevelFile != null) {
+                    try {
+                        FileOutputStream outputStream = new FileOutputStream(boundLevelFile);
+                        Serialization.serialize(outputStream, level);
+                    } catch (Exception ignored) {
+                        ignored.printStackTrace();
+                    }
+                }
+            }
+        });
+
         uiNode.getContentTable().add(toolbox).expandX().fill().row();
         uiNode.getContentTable().add(debugValuesPanel).left().row();
+    }
 
-//        uiNode.getStage().setDebugAll(true);
+    private void setBoundLevelFile(File selectedFile) {
+        boundLevelFile = selectedFile;
+        if (boundLevelFile != null) {
+            Gdx.graphics.setTitle(boundLevelFile.getAbsolutePath() + " - Level Editor - " + Version.value());
+        }
     }
 
     @Override
@@ -183,6 +232,9 @@ class LevelEditor extends Game {
         terrainSprite = SPRITE_FACTORY.createSprite(level.getTerrainPatches().get(0));
         terrainSprite.setColor(Color.BLACK);
 
+        if (terrainPolygonEditor != null) {
+            root.removeNode(terrainPolygonEditor.getNode());
+        }
         terrainPolygonEditor = new PolygonEditor(level.getTerrainPatches().get(0));
         root.addNode(terrainPolygonEditor.getNode());
     }
@@ -191,7 +243,7 @@ class LevelEditor extends Game {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = 1024;
         config.height = 800;
-        config.title = "Dont Stop Running - Level Editor - " + Version.value();
+        config.title = "Level Editor - " + Version.value();
         new LwjglApplication(new LevelEditor(level), config);
     }
 }
