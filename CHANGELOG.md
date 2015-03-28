@@ -6,6 +6,7 @@
 - Support for serialization of generic objects
 - Support for saving and loading levels
 - Internal logging class
+- Added new pixel font (marke eigenbau) and a bitmap font converter from xml (NGL) to fnt
 
 ## [1.0] - 2015-03-27
 ### Added
