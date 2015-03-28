@@ -1,12 +1,14 @@
 # Change Log
 
-## [Unreleased][unreleased]
+## [1.1] 2015-03-28
 ### Added
 - This CHANGELOG
 - Support for serialization of generic objects
 - Support for saving and loading levels
 - Internal logging class
 - Added new pixel font (marke eigenbau) and a bitmap font converter from xml (NGL) to fnt
+- Added FontRepository for quickly adding and searching fonts
+- Added a grid to the editor
 
 ## [1.0] - 2015-03-27
 ### Added

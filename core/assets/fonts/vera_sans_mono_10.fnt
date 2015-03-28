@@ -1,6 +1,6 @@
 info face="BitstreamVeraSansMono" size=-10 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1 outline=1
 common lineHeight=11 base=9 scaleW=256 scaleH=256 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0
-page id=0 file="vera_sans_mono_10_0.tga"
+page id=0 file="vera_sans_mono_10.tga"
 chars count=191
 char id=32   x=162   y=52    width=3     height=3     xoffset=-1    yoffset=8     xadvance=6     page=0  chnl=15
 char id=33   x=75    y=46    width=3     height=9     xoffset=2     yoffset=1     xadvance=6     page=0  chnl=15

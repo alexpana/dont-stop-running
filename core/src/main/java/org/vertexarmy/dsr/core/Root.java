@@ -2,6 +2,9 @@ package org.vertexarmy.dsr.core;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import org.vertexarmy.dsr.core.assets.FontRepository;
+import org.vertexarmy.dsr.core.assets.IconRepository;
+import org.vertexarmy.dsr.core.assets.ShaderRepository;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.InputComponent;
 import org.vertexarmy.dsr.core.component.Node;
@@ -23,10 +26,17 @@ public class Root {
     }
 
     public void initialize() {
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
         inputSystem.initialize();
         renderSystem.initialize();
 
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        ShaderRepository.instance().initialize();
+
+        IconRepository.instance().initialize();
+
+        FontRepository.instance().initialize();
+
     }
 
     public void addNode(Node node) {

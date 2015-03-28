@@ -1,8 +1,9 @@
-package org.vertexarmy.dsr.leveleditor.ui;
+package org.vertexarmy.dsr.core.assets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import org.vertexarmy.dsr.core.Log;
 
 /**
  * created by Alex
@@ -11,15 +12,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class IconRepository {
     private final static IconRepository INSTANCE = new IconRepository();
 
-    private TextureAtlas atlas;
+    private final Log log = Log.create();
 
-    public final static String VERTEX_ALIGN_HORIZONTALLY = "alignh";
-    public final static String VERTEX_ALIGN_VERTICALLY = "alignv";
-    public final static String FILE_OPEN = "file_open";
-    public final static String FILE_SAVE = "file_save";
-    public final static String COMPONENT_UP = "bg_up";
-    public final static String COMPONENT_HOVER = "bg_over";
-    public final static String COMPONENT_PRESSED = "bg_down";
+    private TextureAtlas atlas;
 
     private IconRepository() {
     }
@@ -30,6 +25,7 @@ public class IconRepository {
 
     public void initialize() {
         atlas = new TextureAtlas(Gdx.files.internal("ui/ui_icons.atlas"));
+        log.info("Initialized ok.");
     }
 
     public TextureRegion getIcon(String iconName) {

@@ -6,7 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
+import org.vertexarmy.dsr.core.assets.IconRepository;
 import org.vertexarmy.dsr.graphics.CompositeDrawable;
+import org.vertexarmy.dsr.leveleditor.AssetName;
 
 /**
  * Created by alex
@@ -34,8 +36,8 @@ public class Toolbox extends Table {
     }
 
     private void createComponents() {
-        openLevelButton = createImageButton(IconRepository.FILE_OPEN);
-        saveLevelButton = createImageButton(IconRepository.FILE_SAVE);
+        openLevelButton = createImageButton(AssetName.ICON_FILE_OPEN);
+        saveLevelButton = createImageButton(AssetName.ICON_FILE_SAVE);
     }
 
     private void layoutComponents() {
@@ -77,13 +79,13 @@ public class Toolbox extends Table {
 
     private Drawable createImageOver(String iconName) {
         return new CompositeDrawable(
-                IconRepository.instance().getIcon(IconRepository.COMPONENT_HOVER),
+                IconRepository.instance().getIcon(AssetName.ICON_BACKGROUND_HOVER),
                 IconRepository.instance().getIcon(iconName));
     }
 
     private Drawable createImageDown(String iconName) {
         return new CompositeDrawable(
-                IconRepository.instance().getIcon(IconRepository.COMPONENT_PRESSED),
+                IconRepository.instance().getIcon(AssetName.ICON_BACKGROUND_PRESSED),
                 IconRepository.instance().getIcon(iconName));
     }
 

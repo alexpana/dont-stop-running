@@ -1,8 +1,9 @@
-package org.vertexarmy.dsr.graphics;
+package org.vertexarmy.dsr.core.assets;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.beust.jcommander.internal.Maps;
 import java.util.Map;
+import org.vertexarmy.dsr.core.Log;
 
 /**
  * created by Alex
@@ -13,6 +14,8 @@ public class ShaderRepository {
     private static final ShaderRepository INSTANCE = new ShaderRepository();
 
     private final Map<ShaderInstance, ShaderProgram> shaderMap = Maps.newHashMap();
+
+    private final Log log = Log.create();
 
     public enum ShaderInstance {
         DEFAULT_POS_COL_TEX_PROJ
@@ -31,6 +34,7 @@ public class ShaderRepository {
      */
     public void initialize() {
         shaderMap.put(ShaderInstance.DEFAULT_POS_COL_TEX_PROJ, createDefaultPosColTexProjShader());
+        log.info("Initialized ok.");
     }
 
     public ShaderProgram getShader(ShaderInstance shaderShaderInstance) {
@@ -69,7 +73,7 @@ public class ShaderRepository {
 
         ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
         if (!shader.isCompiled())
-            throw new IllegalArgumentException("Error compiling shader: " + shader.getLog());
+            log.error("Error compiling shader DefaultPosColTexProjShader: " + shader.getLog());
         return shader;
     }
 }

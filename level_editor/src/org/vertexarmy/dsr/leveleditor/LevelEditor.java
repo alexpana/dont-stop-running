@@ -1,6 +1,10 @@
 package org.vertexarmy.dsr.leveleditor;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
@@ -9,14 +13,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.google.common.base.Function;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JFileChooser;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
 import org.vertexarmy.dsr.core.Serialization;
 import org.vertexarmy.dsr.core.UiNode;
+import org.vertexarmy.dsr.core.assets.FontRepository;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.InputComponent;
 import org.vertexarmy.dsr.core.component.Node;
@@ -24,19 +34,10 @@ import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.Level;
 import org.vertexarmy.dsr.game.Tiles;
-import org.vertexarmy.dsr.graphics.ShaderRepository;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
 import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
-import org.vertexarmy.dsr.leveleditor.ui.IconRepository;
 import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
-
-import javax.swing.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 class LevelEditor extends Game {
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
@@ -65,6 +66,8 @@ class LevelEditor extends Game {
 
     private DebugValuesPanel debugValuesPanel;
 
+    private GridRenderer gridRenderer;
+
     private LevelEditor(Function<LevelEditor, Boolean> initTask) {
         this.initTask = initTask;
     }
@@ -73,27 +76,24 @@ class LevelEditor extends Game {
     public void create() {
         root.initialize();
 
-        ShaderRepository.instance().initialize();
-
-        IconRepository.instance().initialize();
+        FontRepository.instance().loadFont(AssetName.FONT_MARKE_8, Gdx.files.internal("fonts/marke_eigenbau_normal_8.fnt"));
+        FontRepository.instance().loadFont(AssetName.FONT_VERA_SANS_MONO_10, Gdx.files.internal("fonts/vera_sans_mono_10.fnt"));
 
         root.addNode(new Node(ComponentType.INPUT, new CameraController()));
 
         uiNode = new UiNode();
         root.addNode(uiNode);
 
+        gridRenderer = new GridRenderer();
+
         Node originNode = new Node(ComponentType.RENDER, new RenderComponent() {
             @Override
             public void render() {
                 doUpdate();
 
-                ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
                 PolygonSpriteBatch polygonSpriteBatch = RenderSystem.instance().getPolygonSpriteBatch();
 
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(Color.YELLOW);
-                shapeRenderer.circle(0, 0, 6);
-                shapeRenderer.end();
+                gridRenderer.renderGrid();
 
                 if (level != null) {
                     polygonSpriteBatch.begin();
@@ -112,6 +112,11 @@ class LevelEditor extends Game {
                     @Override
                     public boolean keyDown(int keycode) {
                         if (keycode == Input.Keys.F1) {
+                            debugValuesPanel.setVisible(!debugValuesPanel.isVisible());
+                            return true;
+                        }
+
+                        if (keycode == Input.Keys.F2) {
                             uiNode.getContentTable().setVisible(!uiNode.getContentTable().isVisible());
                             return true;
                         }
@@ -121,12 +126,10 @@ class LevelEditor extends Game {
                             return true;
                         }
 
-
                         if (isOpenShortcut(keycode)) {
                             openLevelFile();
                             return true;
                         }
-
                         return false;
                     }
 
@@ -267,8 +270,8 @@ class LevelEditor extends Game {
 
     public static void launch(Function<LevelEditor, Boolean> initTask) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 1024;
-        config.height = 800;
+        config.width = 1080;
+        config.height = 900;
         config.title = "Level Editor - " + Version.value();
         new LwjglApplication(new LevelEditor(initTask), config);
     }

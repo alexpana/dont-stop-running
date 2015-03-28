@@ -11,8 +11,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
+import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.component.RenderComponent;
-import org.vertexarmy.dsr.graphics.ShaderRepository;
+import org.vertexarmy.dsr.core.assets.ShaderRepository;
 
 /**
  * created by Alex
@@ -20,6 +21,8 @@ import org.vertexarmy.dsr.graphics.ShaderRepository;
  */
 public class RenderSystem {
     private final static RenderSystem INSTANCE = new RenderSystem();
+
+    private final Log log = Log.create();
 
     private final Multimap<RenderComponent.RenderList, RenderComponent> components = LinkedListMultimap.create();
 
@@ -50,8 +53,6 @@ public class RenderSystem {
     }
 
     public void initialize() {
-        ShaderRepository.instance().initialize();
-
         camera = new OrthographicCamera(800, 600);
 
         shapeRenderer = new ShapeRenderer();
@@ -63,6 +64,8 @@ public class RenderSystem {
         updateCamera();
 
         Gdx.gl.glClearColor(0.22f, 0.23f, 0.23f, 1);
+
+        log.info("Initialized ok.");
     }
 
     public void addRenderComponent(RenderComponent component) {

@@ -1,7 +1,7 @@
 {
   "com.badlogic.gdx.graphics.g2d.BitmapFont": {
     "default-font": {
-      "file": "vera_sans_mono_10.fnt"
+      "file": "../fonts/vera_sans_mono_10.fnt"
     }
   },
   "com.badlogic.gdx.graphics.Color": {

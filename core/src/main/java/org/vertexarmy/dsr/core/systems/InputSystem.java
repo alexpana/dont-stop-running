@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;
 import java.util.List;
+import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.component.InputComponent;
 
 /**
@@ -13,6 +14,8 @@ import org.vertexarmy.dsr.core.component.InputComponent;
  */
 public class InputSystem {
     private static final InputSystem INSTANCE = new InputSystem();
+
+    private final Log log = Log.create();
 
     private final List<InputComponent> components = Lists.newArrayList();
 
@@ -139,5 +142,7 @@ public class InputSystem {
                 return false;
             }
         });
+
+        log.info("Initialized ok.");
     }
 }
