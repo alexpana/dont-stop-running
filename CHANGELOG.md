@@ -6,9 +6,9 @@
 - Support for serialization of generic objects
 - Support for saving and loading levels
 - Internal logging class
-- Added new pixel font (marke eigenbau) and a bitmap font converter from xml (NGL) to fnt
-- Added FontRepository for quickly adding and searching fonts
-- Added a grid to the editor
+- New pixel font (marke eigenbau) and a bitmap font converter from xml (NGL) to fnt
+- FontRepository for quickly adding and searching fonts
+- Background grid for the level editor, with ruler!
 
 ## [1.0] - 2015-03-27
 ### Added
