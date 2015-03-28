@@ -24,8 +24,8 @@ public class DebugValues {
         return INSTANCE;
     }
 
-    public void setValue(String key, String value) {
-        values.put(key, value);
+    public void setValue(String key, Object value) {
+        values.put(key, String.valueOf(value));
         notifyListeners();
     }
 
