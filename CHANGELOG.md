@@ -1,5 +1,9 @@
 # Change Log
 
+## Unreleased
+### Added
+- A maximum height indicator to the level editor grid to signal the peak of the level (default: 800)
+
 ## [1.1] 2015-03-28
 ### Added
 - This CHANGELOG

@@ -14,10 +14,14 @@ import org.vertexarmy.dsr.core.systems.RenderSystem;
  * on 3/28/2015.
  */
 public class GridRenderer {
+    public static final Color MAX_HEIGHT_INDICATOR_COLOR = new Color(0x728ad5ff);
     public static final Color RULER_DEFAULT_COLOR = new Color(0x7d7d7dff);
     public static final Color RULER_ACTIVE_COLOR = Color.WHITE;
 
-    public static final int GRID_SIZE = 30;
+    public static final int GRID_SIZE = 50;
+
+    public static final int MAX_HEIGHT_INDICATOR_VALUE = 800;
+
 
     private final ShapeRenderer shapeRenderer;
     private final SpriteBatch spriteBatch;
@@ -29,7 +33,6 @@ public class GridRenderer {
 
         gridFont = FontRepository.instance().getFont(AssetName.FONT_MARKE_8);
         gridFont.setColor(RULER_DEFAULT_COLOR);
-
     }
 
     public void renderGrid() {
@@ -37,6 +40,7 @@ public class GridRenderer {
 
         boolean xIndicatorRequired = false;
         boolean yIndicatorRequired = false;
+        boolean yMaxIndicatorRequired = false;
 
         float gridSize = GRID_SIZE / RenderSystem.instance().getZoom();
 
@@ -62,6 +66,11 @@ public class GridRenderer {
             if (Math.abs(yStart) < 1) {
                 yIndicatorRequired = true;
             }
+
+            if (Math.abs(yStart - MAX_HEIGHT_INDICATOR_VALUE) < 1) {
+                yMaxIndicatorRequired = true;
+            }
+
             shapeRenderer.line(topLeft.x, yStart, topRight.x, yStart);
             yStart -= gridSize;
         }
@@ -75,6 +84,12 @@ public class GridRenderer {
             shapeRenderer.setColor(new Color(0x49ff4dff));
             shapeRenderer.line(topLeft.x, 0, topRight.x, 0);
         }
+
+        if (yMaxIndicatorRequired) {
+            shapeRenderer.setColor(MAX_HEIGHT_INDICATOR_COLOR);
+            shapeRenderer.line(topLeft.x, MAX_HEIGHT_INDICATOR_VALUE, topRight.x, MAX_HEIGHT_INDICATOR_VALUE);
+        }
+
         shapeRenderer.end();
 
         xStart = ((int) (topLeft.x / gridSize) * gridSize);
@@ -100,6 +115,11 @@ public class GridRenderer {
             }
             gridFont.draw(spriteBatch, String.valueOf((int) yStart), topLeft.x, yStart + gridFont.getLineHeight());
             yStart -= gridSize;
+        }
+
+        if (yMaxIndicatorRequired) {
+            gridFont.setColor(MAX_HEIGHT_INDICATOR_COLOR);
+            gridFont.draw(spriteBatch, String.valueOf(MAX_HEIGHT_INDICATOR_VALUE), topLeft.x, MAX_HEIGHT_INDICATOR_VALUE + gridFont.getLineHeight());
         }
 
         spriteBatch.end();
