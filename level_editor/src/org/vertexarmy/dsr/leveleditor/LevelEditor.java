@@ -22,7 +22,6 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JFileChooser;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
@@ -48,8 +47,6 @@ class LevelEditor extends Game {
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
 
     private final Log log = Log.create();
-
-    private final JFileChooser fileChooser = new JFileChooser();
 
     private final Root root = new Root();
 
@@ -299,9 +296,15 @@ class LevelEditor extends Game {
         List<String> result = Lists.newArrayList();
 
         File levelsDirectory = new File("levels/");
-        for (File possibleLevelFile : levelsDirectory.listFiles()) {
-            if (possibleLevelFile.getAbsolutePath().endsWith(".dat")) {
-                result.add(possibleLevelFile.getName().substring(0, possibleLevelFile.getName().length() - 4));
+        final File[] files = levelsDirectory.listFiles();
+
+        if (files == null) {
+            log.error("Could not read the levels directory.");
+        } else {
+            for (File possibleLevelFile : files) {
+                if (possibleLevelFile.getAbsolutePath().endsWith(".dat")) {
+                    result.add(possibleLevelFile.getName().substring(0, possibleLevelFile.getName().length() - 4));
+                }
             }
         }
 

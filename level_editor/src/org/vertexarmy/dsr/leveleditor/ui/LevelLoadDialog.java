@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -34,22 +35,29 @@ public class LevelLoadDialog extends Window implements Dialog {
     public LevelLoadDialog(Stage stage, String title, Skin skin) {
         super(title, skin);
         this.stage = stage;
+
         availableLevelsList = new List<>(skin);
+        availableLevelsList.setSize(100, 100);
+//        availableLevelsList.getStyle().
         load = new TextButton("Open", skin);
+
         cancelButton = new TextButton("Cancel", skin);
 
         load.pad(0, 5, 3, 5);
         cancelButton.pad(0, 5, 3, 5);
 
-        availableLevelsList.setItems("forest_01", "forest_02", "forest_03", "dungeon_01", "dungeon_02");
+        ScrollPane scrollPane = new ScrollPane(availableLevelsList, skin);
+        scrollPane.setHeight(300);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.getStyle().vScrollKnob.setMinWidth(7);
+        scrollPane.getStyle().vScroll.setMinWidth(7);
 
-        add(availableLevelsList).padBottom(4).expand().fill().colspan(2).row();
+        add(scrollPane).padBottom(4).expand().fill().colspan(2).row();
         add(load).right().padRight(2);
         add(cancelButton).left();
         setResizable(false);
         setMovable(false);
         setModal(false);
-
         pack();
 
         initListeners();
@@ -110,6 +118,7 @@ public class LevelLoadDialog extends Window implements Dialog {
         setVisible(true);
 
         setWidth(300);
+        setHeight(200);
         setPosition((int) (Gdx.graphics.getWidth() - getWidth()) / 2, Gdx.graphics.getHeight() - getHeight() - 50);
     }
 
