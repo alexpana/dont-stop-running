@@ -12,8 +12,8 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.Log;
-import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.assets.ShaderRepository;
+import org.vertexarmy.dsr.core.component.RenderComponent;
 
 /**
  * created by Alex
@@ -28,6 +28,9 @@ public class RenderSystem {
 
     @Getter
     private Camera camera;
+
+    @Getter
+    private Camera standardCamera;
 
     private int viewportWidth = 800;
 
@@ -55,13 +58,15 @@ public class RenderSystem {
     public void initialize() {
         camera = new OrthographicCamera(800, 600);
 
+        standardCamera = new OrthographicCamera(800, 600);
+
         shapeRenderer = new ShapeRenderer();
 
         polygonSpriteBatch = new PolygonSpriteBatch(128, ShaderRepository.instance().getShader(ShaderRepository.ShaderInstance.DEFAULT_POS_COL_TEX_PROJ));
 
         spriteBatch = new SpriteBatch();
 
-        updateCamera();
+        updateCameras();
 
         Gdx.gl.glClearColor(0.22f, 0.23f, 0.23f, 1);
 
@@ -100,18 +105,19 @@ public class RenderSystem {
     public void setViewportSize(int width, int height) {
         viewportWidth = width;
         viewportHeight = height;
-        updateCamera();
+        updateCameras();
     }
 
     public void setZoom(float zoom) {
         this.zoom = zoom;
-        updateCamera();
+        updateCameras();
     }
 
-    private void updateCamera() {
-        int w = (int) (viewportWidth / zoom);
-        int h = (int) (viewportHeight / zoom);
+    private void updateCameras() {
+        float w = (viewportWidth / zoom);
+        float h = (viewportHeight / zoom);
         camera.projection.setToOrtho(-w / 2, w / 2, -h / 2, h / 2, 0, 1000);
+        standardCamera.projection.setToOrtho(-viewportWidth / 2, viewportWidth / 2, -viewportHeight / 2, viewportHeight / 2, 0, 1000);
     }
 
     public Vector2 screenToWorld(Vector2 screen) {
@@ -119,5 +125,16 @@ public class RenderSystem {
         Vector2 v = new Vector2(screen).sub(new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2));
         v.y *= -1;
         return cameraPosition.add(v.scl(1 / zoom));
+    }
+
+    public Vector2 screenToWorldWithoutZoom(Vector2 screen) {
+        Vector2 cameraPosition = new Vector2(camera.position.x, camera.position.y);
+        Vector2 v = new Vector2(screen).sub(new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2));
+        v.y *= -1;
+        return cameraPosition.add(v);
+    }
+
+    public float screenToWorld(float distance) {
+        return distance * zoom;
     }
 }

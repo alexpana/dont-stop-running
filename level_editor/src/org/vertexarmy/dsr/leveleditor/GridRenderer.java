@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import org.vertexarmy.dsr.core.assets.FontRepository;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 
@@ -14,14 +16,21 @@ import org.vertexarmy.dsr.core.systems.RenderSystem;
  * on 3/28/2015.
  */
 public class GridRenderer {
-    public static final Color MAX_HEIGHT_INDICATOR_COLOR = new Color(0x728ad5ff);
-    public static final Color RULER_DEFAULT_COLOR = new Color(0x7d7d7dff);
-    public static final Color RULER_ACTIVE_COLOR = Color.WHITE;
+    private static final Color GRID_X_INDICATOR_COLOR = new Color(0xff4d4dff);
 
-    public static final int GRID_SIZE = 50;
+    private static final Color GRID_Y_INDICATOR_COLOR = new Color(0x49ff4dff);
 
-    public static final int MAX_HEIGHT_INDICATOR_VALUE = 800;
+    private static final Color GRID_DEFAULT_COLOR = new Color(0x494d4dff);
 
+    private static final Color MAX_HEIGHT_INDICATOR_COLOR = new Color(0x728ad5ff);
+
+    private static final Color RULER_DEFAULT_COLOR = new Color(0x7d7d7dff);
+
+    private static final Color RULER_ACTIVE_COLOR = Color.WHITE;
+
+    private static final int GRID_SIZE = 50;
+
+    private static final int MAX_HEIGHT_INDICATOR_VALUE = 800;
 
     private final ShapeRenderer shapeRenderer;
     private final SpriteBatch spriteBatch;
@@ -36,93 +45,131 @@ public class GridRenderer {
     }
 
     public void renderGrid() {
-        Vector2 mousePosition = RenderSystem.instance().screenToWorld(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
-
-        boolean xIndicatorRequired = false;
-        boolean yIndicatorRequired = false;
-        boolean yMaxIndicatorRequired = false;
-
-        float gridSize = GRID_SIZE / RenderSystem.instance().getZoom();
+        float gridSize = GRID_SIZE;// / RenderSystem.instance().getZoom();
 
         Vector2 topLeft = RenderSystem.instance().screenToWorld(Vector2.Zero);
-        Vector2 topRight = RenderSystem.instance().screenToWorld(new Vector2(Gdx.graphics.getWidth(), 0));
-        Vector2 bottomRight = RenderSystem.instance().screenToWorld(new Vector2(0, Gdx.graphics.getHeight()));
+        Vector2 bottomRight = RenderSystem.instance().screenToWorld(new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
-        float xStart = ((int) (topLeft.x / gridSize) * gridSize);
-        float yStart = ((int) (topLeft.y / gridSize) * gridSize);
+        float screenLeft = topLeft.x;
+        float screenRight = bottomRight.x;
+        float screenTop = topLeft.y;
+        float screenBottom = bottomRight.y;
+
+        float xStart = ((int) (screenLeft / gridSize) * gridSize);
+        float yStart = ((int) (screenTop / gridSize) * gridSize);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(new Color(0x494d4dff));
+        shapeRenderer.setColor(GRID_DEFAULT_COLOR);
 
-        while (xStart <= topRight.x) {
-            if (Math.abs(xStart) < 1) {
-                xIndicatorRequired = true;
-            }
-            shapeRenderer.line(xStart, topLeft.y, xStart, bottomRight.y);
-            xStart += gridSize;
+        for (float x = xStart; x <= screenRight; x += gridSize) {
+            shapeRenderer.line(x, screenTop, x, screenBottom);
         }
 
-        while (yStart >= bottomRight.y) {
-            if (Math.abs(yStart) < 1) {
-                yIndicatorRequired = true;
-            }
-
-            if (Math.abs(yStart - MAX_HEIGHT_INDICATOR_VALUE) < 1) {
-                yMaxIndicatorRequired = true;
-            }
-
-            shapeRenderer.line(topLeft.x, yStart, topRight.x, yStart);
-            yStart -= gridSize;
+        for (float y = yStart; y >= screenBottom; y -= gridSize) {
+            shapeRenderer.line(screenLeft, y, screenRight, y);
         }
 
-        if (xIndicatorRequired) {
-            shapeRenderer.setColor(new Color(0xff4d4dff));
-            shapeRenderer.line(0, topLeft.y, 0, bottomRight.y);
+        if (screenLeft <= 0 && screenRight >= 0) {
+            shapeRenderer.setColor(GRID_X_INDICATOR_COLOR);
+            shapeRenderer.line(0, screenTop, 0, screenBottom);
         }
 
-        if (yIndicatorRequired) {
-            shapeRenderer.setColor(new Color(0x49ff4dff));
-            shapeRenderer.line(topLeft.x, 0, topRight.x, 0);
+        if (screenTop >= 0 && screenBottom <= 0) {
+            shapeRenderer.setColor(GRID_Y_INDICATOR_COLOR);
+            shapeRenderer.line(screenLeft, 0, screenRight, 0);
         }
 
-        if (yMaxIndicatorRequired) {
+        if (screenTop >= MAX_HEIGHT_INDICATOR_VALUE && screenBottom <= MAX_HEIGHT_INDICATOR_VALUE) {
             shapeRenderer.setColor(MAX_HEIGHT_INDICATOR_COLOR);
-            shapeRenderer.line(topLeft.x, MAX_HEIGHT_INDICATOR_VALUE, topRight.x, MAX_HEIGHT_INDICATOR_VALUE);
+            shapeRenderer.line(screenLeft, MAX_HEIGHT_INDICATOR_VALUE, screenRight, MAX_HEIGHT_INDICATOR_VALUE);
         }
 
         shapeRenderer.end();
 
-        xStart = ((int) (topLeft.x / gridSize) * gridSize);
-        yStart = ((int) (topLeft.y / gridSize) * gridSize);
+        drawRulerIndicators();
+    }
+
+    private void drawRulerIndicators() {
+        float zoom = RenderSystem.instance().getZoom();
+        float gridSize = GRID_SIZE * zoom;
+
+        Vector2 topLeft = RenderSystem.instance().screenToWorld(Vector2.Zero);
+        Vector2 bottomRight = RenderSystem.instance().screenToWorld(new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+
+        float screenLeft = topLeft.x;
+        float screenRight = bottomRight.x;
+        float screenTop = topLeft.y;
+        float screenBottom = bottomRight.y;
+
+        float xStart = (((int) (screenLeft * zoom / gridSize) * gridSize));
+        float yStart = (((int) (screenTop * zoom / gridSize) * gridSize));
+
+        int horizontalSteps = zoom < 0.5 ? (zoom < 0.2 ? 4 : 2) : 1;
+
+        Vector2 mousePosition = getMousePosition();
+
+        Matrix4 viewMatrix = RenderSystem.instance().getCamera().view.cpy();
+
+        Vector3 vector3 = new Vector3();
+        viewMatrix.getTranslation(vector3).scl(zoom);
+
+        viewMatrix.setTranslation(vector3);
+
+        spriteBatch.setProjectionMatrix(RenderSystem.instance().getStandardCamera().projection);
+        spriteBatch.setTransformMatrix(viewMatrix);
 
         spriteBatch.begin();
 
-        while (xStart <= topRight.x) {
-            if (mousePosition.x >= xStart && mousePosition.x < xStart + gridSize) {
-                gridFont.setColor(RULER_ACTIVE_COLOR);
-            } else {
-                gridFont.setColor(RULER_DEFAULT_COLOR);
+        // Horizontal ruler
+        for (float x = xStart; x <= screenRight * zoom; x += horizontalSteps * gridSize) {
+            final String indicator = getIndicatorValue(x);
+            if (indicator.equals("0")) {
+                continue;
             }
-            gridFont.draw(spriteBatch, String.valueOf((int) xStart), xStart, bottomRight.y + gridFont.getLineHeight());
-            xStart += gridSize;
+            gridFont.setColor(getRulerColor(mousePosition.x * zoom, x, x + gridSize));
+            gridFont.draw(spriteBatch, indicator, (int) x + 1, (int) ((screenBottom * zoom) + gridFont.getLineHeight()));
         }
 
-        while (yStart >= bottomRight.y) {
-            if (mousePosition.y >= yStart && mousePosition.y < yStart + gridSize) {
-                gridFont.setColor(RULER_ACTIVE_COLOR);
-            } else {
-                gridFont.setColor(RULER_DEFAULT_COLOR);
+        // Vertical ruler
+        for (float y = yStart; y >= screenBottom * zoom; y -= gridSize) {
+            final String indicator = getIndicatorValue(y);
+            if (indicator.equals("0")) {
+                continue;
             }
-            gridFont.draw(spriteBatch, String.valueOf((int) yStart), topLeft.x, yStart + gridFont.getLineHeight());
-            yStart -= gridSize;
+            gridFont.setColor(getRulerColor(mousePosition.y * zoom, y, y + gridSize));
+            gridFont.draw(spriteBatch, indicator, (int) screenLeft * zoom, (int) ((y + gridFont.getLineHeight()) / 1));
         }
 
-        if (yMaxIndicatorRequired) {
+        if (screenTop >= MAX_HEIGHT_INDICATOR_VALUE && screenBottom <= MAX_HEIGHT_INDICATOR_VALUE) {
             gridFont.setColor(MAX_HEIGHT_INDICATOR_COLOR);
-            gridFont.draw(spriteBatch, String.valueOf(MAX_HEIGHT_INDICATOR_VALUE), topLeft.x, MAX_HEIGHT_INDICATOR_VALUE + gridFont.getLineHeight());
+            gridFont.draw(spriteBatch, String.valueOf(MAX_HEIGHT_INDICATOR_VALUE), (int) screenLeft * zoom, MAX_HEIGHT_INDICATOR_VALUE * zoom + gridFont.getLineHeight());
+        }
+
+        if (screenLeft <= 0 && screenRight >= 0) {
+            gridFont.setColor(GRID_X_INDICATOR_COLOR);
+            gridFont.draw(spriteBatch, "0", 1, (int) (screenBottom * zoom + gridFont.getLineHeight()));
+        }
+
+        if (screenTop >= 0 && screenBottom <= 0) {
+            gridFont.setColor(GRID_Y_INDICATOR_COLOR);
+            gridFont.draw(spriteBatch, "0", (int) (screenLeft * zoom), (int) (gridFont.getLineHeight()));
         }
 
         spriteBatch.end();
+    }
 
+    private String getIndicatorValue(float indicator) {
+        float zoom = RenderSystem.instance().getZoom();
+        float actualIndicatorValue = indicator / zoom;
+
+        return String.valueOf(((int) (actualIndicatorValue / GRID_SIZE + Math.signum(actualIndicatorValue) * 0.5) * GRID_SIZE));
+    }
+
+    private Color getRulerColor(float mousePosition, float lower, float upper) {
+        return mousePosition >= lower && mousePosition < upper ? RULER_ACTIVE_COLOR : RULER_DEFAULT_COLOR;
+    }
+
+    private Vector2 getMousePosition() {
+        return RenderSystem.instance().screenToWorld(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
     }
 }
