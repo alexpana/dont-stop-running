@@ -6,6 +6,7 @@
 
 ### Fixed
 - The level editor ruler text is now properly scaling with the zoom
+- The save / load dialogs are now customized for the editor, which fixes a bug where the save / load dialogs would be shown under the editor.
 
 ## [1.1] 2015-03-28
 ### Added

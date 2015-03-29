@@ -22,7 +22,7 @@ public class Log {
 
     private final String identifier;
 
-    private Level level = Level.INFO;
+    private Level level = Level.DEBUG;
 
     public enum Level {
         DEBUG,

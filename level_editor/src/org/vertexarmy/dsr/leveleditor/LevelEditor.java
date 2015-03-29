@@ -14,11 +14,13 @@ import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Function;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JFileChooser;
 import org.vertexarmy.dsr.Version;
@@ -37,6 +39,9 @@ import org.vertexarmy.dsr.game.Tiles;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
 import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
+import org.vertexarmy.dsr.leveleditor.ui.Dialog;
+import org.vertexarmy.dsr.leveleditor.ui.LevelLoadDialog;
+import org.vertexarmy.dsr.leveleditor.ui.LevelSaveDialog;
 import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
 
 class LevelEditor extends Game {
@@ -67,6 +72,8 @@ class LevelEditor extends Game {
     private DebugValuesPanel debugValuesPanel;
 
     private GridRenderer gridRenderer;
+    private LevelSaveDialog saveDialog;
+    private LevelLoadDialog loadDialog;
 
     private LevelEditor(Function<LevelEditor, Boolean> initTask) {
         this.initTask = initTask;
@@ -122,7 +129,12 @@ class LevelEditor extends Game {
                         }
 
                         if (isSaveShortcut(keycode)) {
-                            saveLevel(false);
+                            if (boundLevelFile == null) {
+                                saveDialog.show();
+                            } else {
+                                saveLevel();
+                            }
+
                             return true;
                         }
 
@@ -151,13 +163,15 @@ class LevelEditor extends Game {
         tiles.put(Tiles.DIRT, new TextureRegion(tilesTexture, 32, 0, 32, 32));
         tiles.put(Tiles.SAW, new TextureRegion(tilesTexture, 64, 0, 64, 64));
 
-        createUI();
+        initUI();
 
         initTask.apply(this);
     }
 
-    private void createUI() {
+    private void initUI() {
         debugValuesPanel = new DebugValuesPanel(uiNode.getUiSkin());
+        debugValuesPanel.setVisible(false);
+
         toolbox = new Toolbox(uiNode.getUiSkin(), new Toolbox.Listener() {
             @Override
             public void loadFileRequested() {
@@ -166,30 +180,46 @@ class LevelEditor extends Game {
 
             @Override
             public void saveFileRequested() {
-                saveLevel(true);
+                saveDialog.show();
             }
         });
 
         uiNode.getContentTable().add(toolbox).expandX().fill().row();
         uiNode.getContentTable().add(debugValuesPanel).left().row();
+
+        saveDialog = new LevelSaveDialog(uiNode.getStage(), "Save Level", uiNode.getUiSkin());
+        loadDialog = new LevelLoadDialog(uiNode.getStage(), "Load Level", uiNode.getUiSkin());
+
+        saveDialog.setListener(new Dialog.Listener<LevelSaveDialog.Event>() {
+            @Override
+            public void dialogAccepted(LevelSaveDialog.Event event) {
+                setBoundLevelFile(new File("levels/" + event.getFilename() + ".dat"));
+                saveLevel();
+            }
+        });
+
+        loadDialog.setListener(new Dialog.Listener<LevelLoadDialog.Event>() {
+            @Override
+            public void dialogAccepted(LevelLoadDialog.Event event) {
+                log.debug("Requested to load the level " + event.getLevelName());
+
+                try {
+                    loadLevel(new File("levels/" + event.getLevelName() + ".dat"));
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
+                }
+            }
+        });
     }
 
     private void openLevelFile() {
-        fileChooser.showOpenDialog(null);
-        File selectedFile = fileChooser.getSelectedFile();
-        if (selectedFile != null) {
-            try {
-                loadLevel(selectedFile);
-
-                log.info("Opened level " + boundLevelFile.getAbsolutePath());
-            } catch (Exception ignored) {
-                ignored.printStackTrace();
-            }
-        }
+        loadDialog.setAvailableLevelsList(discoverAvailableLevels());
+        loadDialog.show();
     }
 
     public void loadLevel(File selectedFile) {
         try {
+            log.debug("Attempting to load file " + selectedFile);
             FileInputStream inputStream = new FileInputStream(selectedFile);
 
             Level level = Serialization.deserialize(inputStream);
@@ -202,12 +232,7 @@ class LevelEditor extends Game {
         }
     }
 
-    private void saveLevel(boolean forceShowDialog) {
-        if (boundLevelFile == null || forceShowDialog) {
-            fileChooser.showSaveDialog(null);
-            setBoundLevelFile(fileChooser.getSelectedFile());
-        }
-
+    private void saveLevel() {
         if (boundLevelFile != null) {
             try {
                 FileOutputStream outputStream = new FileOutputStream(boundLevelFile);
@@ -216,6 +241,8 @@ class LevelEditor extends Game {
             } catch (Exception ignored) {
                 ignored.printStackTrace();
             }
+        } else {
+            log.warning("Attempted to save a level which is not bound to an external file.");
         }
     }
 
@@ -268,10 +295,24 @@ class LevelEditor extends Game {
         root.addNode(terrainPolygonEditor.getNode());
     }
 
+    private List<String> discoverAvailableLevels() {
+        List<String> result = Lists.newArrayList();
+
+        File levelsDirectory = new File("levels/");
+        for (File possibleLevelFile : levelsDirectory.listFiles()) {
+            if (possibleLevelFile.getAbsolutePath().endsWith(".dat")) {
+                result.add(possibleLevelFile.getName().substring(0, possibleLevelFile.getName().length() - 4));
+            }
+        }
+
+        return result;
+    }
+
     public static void launch(Function<LevelEditor, Boolean> initTask) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 1080;
-        config.height = 900;
+        config.width = 1000;
+        config.height = 800;
+        config.fullscreen = false;
         config.title = "Level Editor - " + Version.value();
         new LwjglApplication(new LevelEditor(initTask), config);
     }
