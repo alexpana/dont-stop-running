@@ -1,5 +1,6 @@
 package org.vertexarmy.dsr.leveleditor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
@@ -23,9 +24,7 @@ class CameraController extends InputAdapter implements InputComponent {
 
     private final Vector2 dragPosition = new Vector2(0, 0);
 
-    private boolean enableScrolling;
-
-    private boolean enableCameraPanning;
+    private boolean enableCameraPanning = false;
 
     private int zoomStepIndex = DEFAULT_ZOOM_LEVEL_INDEX;
 
@@ -50,34 +49,18 @@ class CameraController extends InputAdapter implements InputComponent {
 
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
-        if (enableCameraPanning) {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            enableCameraPanning = true;
             dragPosition.set(x, y);
             return true;
         } else {
+            enableCameraPanning = false;
             return false;
         }
     }
 
     @Override
-    public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.CONTROL_LEFT) {
-            enableScrolling = true;
-        }
-
-        if (keycode == Input.Keys.SPACE) {
-            enableCameraPanning = true;
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
     public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.CONTROL_LEFT) {
-            enableScrolling = false;
-        }
-
         if (keycode == Input.Keys.SPACE) {
             enableCameraPanning = false;
             return true;
@@ -88,7 +71,7 @@ class CameraController extends InputAdapter implements InputComponent {
 
     @Override
     public boolean scrolled(int amount) {
-        if (enableScrolling) {
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             zoomStepIndex = (int) Algorithms.clamp(zoomStepIndex - Math.signum(amount), 0, ZOOM_STEPS.length - 1);
             RenderSystem.instance().setZoom(ZOOM_STEPS[zoomStepIndex]);
         }

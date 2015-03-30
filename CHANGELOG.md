@@ -8,12 +8,13 @@
 ### Fixed
 - The level editor ruler text is now properly scaling with the zoom
 - The save / load dialogs are now customized for the editor, which fixes a bug where the save / load dialogs would be shown under the editor.
+- Dragging the camera in the level editor no longer glitches when releasing the space key.
 
 ## [1.1] 2015-03-28
 ### Added
 - This CHANGELOG
 - Support for serialization of generic objects
-- Support for saving and loading levels 
+- Support for saving and loading levels
 - Internal logging class
 - New pixel font (marke eigenbau) and a bitmap font converter from xml (NGL) to fnt
 - FontRepository for quickly adding and searching fonts
