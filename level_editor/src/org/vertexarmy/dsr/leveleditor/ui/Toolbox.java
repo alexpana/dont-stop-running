@@ -5,9 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.*;
-import org.vertexarmy.dsr.core.assets.IconRepository;
-import org.vertexarmy.dsr.graphics.CompositeDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import org.vertexarmy.dsr.leveleditor.AssetName;
 
 /**
@@ -36,8 +36,8 @@ public class Toolbox extends Table {
     }
 
     private void createComponents() {
-        openLevelButton = createImageButton(AssetName.ICON_FILE_OPEN);
-        saveLevelButton = createImageButton(AssetName.ICON_FILE_SAVE);
+        openLevelButton = UIToolkit.createImageButton(AssetName.ICON_FILE_OPEN);
+        saveLevelButton = UIToolkit.createImageButton(AssetName.ICON_FILE_SAVE);
     }
 
     private void layoutComponents() {
@@ -62,31 +62,6 @@ public class Toolbox extends Table {
                 notifySaveFileRequested();
             }
         });
-    }
-
-    private ImageButton createImageButton(String iconName) {
-        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
-        style.imageUp = createImageUp(iconName);
-        style.imageOver = createImageOver(iconName);
-        style.imageDown = createImageDown(iconName);
-
-        return new ImageButton(style);
-    }
-
-    private Drawable createImageUp(String iconName) {
-        return new TextureRegionDrawable(IconRepository.instance().getIcon(iconName));
-    }
-
-    private Drawable createImageOver(String iconName) {
-        return new CompositeDrawable(
-                IconRepository.instance().getIcon(AssetName.ICON_BACKGROUND_HOVER),
-                IconRepository.instance().getIcon(iconName));
-    }
-
-    private Drawable createImageDown(String iconName) {
-        return new CompositeDrawable(
-                IconRepository.instance().getIcon(AssetName.ICON_BACKGROUND_PRESSED),
-                IconRepository.instance().getIcon(iconName));
     }
 
     private void notifyLoadFileRequested() {

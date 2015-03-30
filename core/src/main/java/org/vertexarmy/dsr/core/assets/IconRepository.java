@@ -10,7 +10,7 @@ import org.vertexarmy.dsr.core.Log;
  * on 3/26/2015.
  */
 public class IconRepository {
-    private final static IconRepository INSTANCE = new IconRepository();
+    private static final IconRepository INSTANCE = new IconRepository();
 
     private final Log log = Log.create();
 

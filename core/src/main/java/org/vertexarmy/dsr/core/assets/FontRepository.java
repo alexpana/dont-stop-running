@@ -11,7 +11,7 @@ import org.vertexarmy.dsr.core.Log;
  * on 3/28/2015.
  */
 public class FontRepository {
-    private final static FontRepository INSTANCE = new FontRepository();
+    private static final FontRepository INSTANCE = new FontRepository();
 
     private final Map<String, BitmapFont> fontMap = Maps.newHashMap();
 

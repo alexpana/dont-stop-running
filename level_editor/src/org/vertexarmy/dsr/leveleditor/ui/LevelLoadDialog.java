@@ -1,26 +1,20 @@
 package org.vertexarmy.dsr.leveleditor.ui;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * created by Alex
  * on 3/28/2015.
  */
-public class LevelLoadDialog extends Window implements Dialog {
+public class LevelLoadDialog extends Dialog<LevelLoadDialog.Event> {
     private final TextButton cancelButton;
 
     private final TextButton load;
@@ -29,16 +23,13 @@ public class LevelLoadDialog extends Window implements Dialog {
 
     private final Stage stage;
 
-    @Setter
-    private Listener<Event> listener;
-
     public LevelLoadDialog(Stage stage, String title, Skin skin) {
         super(title, skin);
         this.stage = stage;
 
         availableLevelsList = new List<>(skin);
         availableLevelsList.setSize(100, 100);
-//        availableLevelsList.getStyle().
+
         load = new TextButton("Open", skin);
 
         cancelButton = new TextButton("Cancel", skin);
@@ -49,8 +40,6 @@ public class LevelLoadDialog extends Window implements Dialog {
         ScrollPane scrollPane = new ScrollPane(availableLevelsList, skin);
         scrollPane.setHeight(300);
         scrollPane.setFadeScrollBars(false);
-        scrollPane.getStyle().vScrollKnob.setMinWidth(7);
-        scrollPane.getStyle().vScroll.setMinWidth(7);
 
         add(scrollPane).padBottom(4).expand().fill().colspan(2).row();
         add(load).right().padRight(2);
@@ -74,40 +63,17 @@ public class LevelLoadDialog extends Window implements Dialog {
         load.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (listener != null) {
-                    listener.dialogAccepted(new Event(availableLevelsList.getSelected()));
-                }
+                notifyListener(new Event(availableLevelsList.getSelected()));
                 hide();
             }
         });
 
-        availableLevelsList.addListener(new InputListener() {
-            long previousClickTime = 0;
-            long DOUBLE_CLICK_THRESHOLD = 500;
 
+        UIToolkit.addListSelectionListener(availableLevelsList, new UIToolkit.ListSelectionListener() {
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                long currentTime = System.currentTimeMillis();
-                if (currentTime - previousClickTime < DOUBLE_CLICK_THRESHOLD) {
-                    if (listener != null) {
-                        listener.dialogAccepted(new Event(availableLevelsList.getSelected()));
-                    }
-                    hide();
-                } else {
-                    previousClickTime = currentTime;
-                }
-                return true;
-            }
-        });
-
-        this.addListener(new InputListener() {
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.ESCAPE) {
-                    hide();
-                    return true;
-                }
-                return false;
+            public void itemSelected() {
+                notifyListener(new Event(availableLevelsList.getSelected()));
+                hide();
             }
         });
     }
@@ -117,9 +83,8 @@ public class LevelLoadDialog extends Window implements Dialog {
         stage.addActor(this);
         setVisible(true);
 
-        setWidth(300);
-        setHeight(200);
-        setPosition((int) (Gdx.graphics.getWidth() - getWidth()) / 2, Gdx.graphics.getHeight() - getHeight() - 50);
+        setSize(300, 200);
+        UIToolkit.centerWindowOnTop(this);
     }
 
     @Override

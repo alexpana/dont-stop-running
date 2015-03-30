@@ -18,6 +18,7 @@ import org.vertexarmy.dsr.core.Root;
 import org.vertexarmy.dsr.core.Serialization;
 import org.vertexarmy.dsr.core.UiNode;
 import org.vertexarmy.dsr.core.assets.FontRepository;
+import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.InputComponent;
 import org.vertexarmy.dsr.core.component.Node;
@@ -67,6 +68,8 @@ class LevelEditor extends Game {
 
     private LevelLoadDialog loadDialog;
 
+    private SpritePickerDialog spritePickerDialog;
+
     private LevelEditor(Function<LevelEditor, Boolean> initTask) {
         this.initTask = initTask;
     }
@@ -84,10 +87,14 @@ class LevelEditor extends Game {
         FontRepository.instance().loadFont(AssetName.FONT_MARKE_8, Gdx.files.internal("fonts/marke_eigenbau_normal_8.fnt"));
         FontRepository.instance().loadFont(AssetName.FONT_VERA_SANS_MONO_10, Gdx.files.internal("fonts/vera_sans_mono_10.fnt"));
 
+        TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons.atlas"));
+
         root.addNode(new Node(ComponentType.INPUT, new CameraController()));
 
         uiNode = new UiNode();
         root.addNode(uiNode);
+
+        ElegantGraySkin.install(uiNode.getUiSkin());
 
         gridRenderer = new GridRenderer();
 
@@ -146,7 +153,15 @@ class LevelEditor extends Game {
                             return true;
                         }
 
+                        if (isSpritePickerShortcut(keycode)) {
+                            spritePickerDialog.show();
+                        }
+
                         return false;
+                    }
+
+                    private boolean isSpritePickerShortcut(int keycode) {
+                        return keycode == Input.Keys.F3;
                     }
 
                     private boolean isFullscreenShortcut(int keycode) {
@@ -167,9 +182,9 @@ class LevelEditor extends Game {
         root.addNode(originNode);
 
         Texture tilesTexture = new Texture(Gdx.files.internal("tiles.png"));
-        tiles.put(Tiles.GRASS, new TextureRegion(tilesTexture, 0, 0, 32, 32));
-        tiles.put(Tiles.DIRT, new TextureRegion(tilesTexture, 32, 0, 32, 32));
-        tiles.put(Tiles.SAW, new TextureRegion(tilesTexture, 64, 0, 64, 64));
+        TextureRepository.instance().addTexture("grass", new TextureRegion(tilesTexture, 0, 0, 32, 32));
+        TextureRepository.instance().addTexture("dirt", new TextureRegion(tilesTexture, 32, 0, 32, 32));
+        TextureRepository.instance().addTexture("saw", new TextureRegion(tilesTexture, 64, 0, 64, 64));
 
         initUI();
 
@@ -196,8 +211,6 @@ class LevelEditor extends Game {
         uiNode.getContentTable().add(debugValuesPanel).left().row();
 
         saveDialog = new LevelSaveDialog(uiNode.getStage(), "Save Level", uiNode.getUiSkin());
-        loadDialog = new LevelLoadDialog(uiNode.getStage(), "Load Level", uiNode.getUiSkin());
-
         saveDialog.setListener(new Dialog.Listener<LevelSaveDialog.Event>() {
             @Override
             public void dialogAccepted(LevelSaveDialog.Event event) {
@@ -206,6 +219,7 @@ class LevelEditor extends Game {
             }
         });
 
+        loadDialog = new LevelLoadDialog(uiNode.getStage(), "Load Level", uiNode.getUiSkin());
         loadDialog.setListener(new Dialog.Listener<LevelLoadDialog.Event>() {
             @Override
             public void dialogAccepted(LevelLoadDialog.Event event) {
@@ -218,6 +232,8 @@ class LevelEditor extends Game {
                 }
             }
         });
+
+        spritePickerDialog = new SpritePickerDialog(uiNode.getStage(), "Sprite Picker", uiNode.getUiSkin());
     }
 
     private void openLevelFile() {

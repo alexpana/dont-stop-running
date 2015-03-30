@@ -1,7 +1,6 @@
 package org.vertexarmy.dsr.leveleditor.ui;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -19,7 +18,7 @@ import lombok.Setter;
  * created by Alex
  * on 3/28/2015.
  */
-public class LevelSaveDialog extends Window implements Dialog {
+public class LevelSaveDialog extends Dialog<LevelSaveDialog.Event> {
     public static final char ESCAPE_CHARACTER = '\u001B';
 
     public static final char RETURN_CHARACTER = '\r';
@@ -98,7 +97,8 @@ public class LevelSaveDialog extends Window implements Dialog {
         setVisible(true);
 
         setWidth(300);
-        setPosition((int) (Gdx.graphics.getWidth() - getWidth()) / 2, Gdx.graphics.getHeight() - getHeight() - 50);
+
+        UIToolkit.centerWindowOnTop(this);
 
         stage.setKeyboardFocus(nameTextField);
     }
