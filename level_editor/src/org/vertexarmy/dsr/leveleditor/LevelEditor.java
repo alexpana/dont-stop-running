@@ -1,6 +1,11 @@
 package org.vertexarmy.dsr.leveleditor;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
@@ -12,6 +17,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Function;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.List;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
@@ -25,17 +34,15 @@ import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.Level;
-import org.vertexarmy.dsr.game.Tiles;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.ui.*;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
+import org.vertexarmy.dsr.leveleditor.ui.Dialog;
+import org.vertexarmy.dsr.leveleditor.ui.ElegantGraySkin;
+import org.vertexarmy.dsr.leveleditor.ui.LevelLoadDialog;
+import org.vertexarmy.dsr.leveleditor.ui.LevelSaveDialog;
+import org.vertexarmy.dsr.leveleditor.ui.SpritePickerDialog;
+import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
 
 class LevelEditor extends Game {
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
@@ -43,8 +50,6 @@ class LevelEditor extends Game {
     private final Log log = Log.create();
 
     private final Root root = new Root();
-
-    private final Map<Tiles, TextureRegion> tiles = new HashMap<>();
 
     private final Function<LevelEditor, Boolean> initTask;
 
