@@ -152,7 +152,7 @@ public class SpritePickerDialog extends Dialog<SpritePickerDialog.Event> {
     }
 
     @RequiredArgsConstructor
-    class Event {
+    public static class Event {
         @Getter
         private final TextureRegion selectedTexture;
     }
