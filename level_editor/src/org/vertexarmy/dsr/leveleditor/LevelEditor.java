@@ -186,6 +186,8 @@ class LevelEditor extends Game {
         TextureRepository.instance().addTexture("dirt", new TextureRegion(tilesTexture, 32, 0, 32, 32));
         TextureRepository.instance().addTexture("saw", new TextureRegion(tilesTexture, 64, 0, 64, 64));
 
+        TextureRepository.instance().addTexture("floor_tile_42342_42523_01", new TextureRegion(new Texture(Gdx.files.internal("test.jpg"))));
+
         initUI();
 
         initTask.apply(this);
@@ -233,7 +235,7 @@ class LevelEditor extends Game {
             }
         });
 
-        spritePickerDialog = new SpritePickerDialog(uiNode.getStage(), "Sprite Picker", uiNode.getUiSkin());
+        spritePickerDialog = new SpritePickerDialog(uiNode.getStage(), "Select terrain texture", uiNode.getUiSkin());
     }
 
     private void openLevelFile() {

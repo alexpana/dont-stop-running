@@ -19,11 +19,11 @@ public class UIToolkit {
     private static long DOUBLE_CLICK_THRESHOLD = 500;
 
     public static void centerWindow(Window window) {
-        window.setPosition((int) (Gdx.graphics.getWidth() - window.getWidth()) / 2, (Gdx.graphics.getHeight() - window.getHeight()) / 2);
+        window.setPosition((int) ((Gdx.graphics.getWidth() - window.getWidth()) / 2), (int) ((Gdx.graphics.getHeight() - window.getHeight()) / 2));
     }
 
     public static void centerWindowOnTop(Window window) {
-        window.setPosition((int) (Gdx.graphics.getWidth() - window.getWidth()) / 2, Gdx.graphics.getHeight() - window.getHeight() - 50);
+        window.setPosition((int) ((Gdx.graphics.getWidth() - window.getWidth()) / 2), (int) (Gdx.graphics.getHeight() - window.getHeight() - 50));
     }
 
     public static ImageButton createImageButton(String iconName) {
@@ -39,18 +39,21 @@ public class UIToolkit {
         return new ImageButton(style);
     }
 
-    public static <T> void addListSelectionListener(List<T> list, final ListSelectionListener listener) {
+    public static <T> void addListSelectionListener(final List<T> list, final ListSelectionListener listener) {
         list.addListener(new InputListener() {
             long previousClickTime = 0;
+            int firstSelectedIndex = -1;
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 long currentTime = System.currentTimeMillis();
-                if (currentTime - previousClickTime < DOUBLE_CLICK_THRESHOLD) {
+
+                if (currentTime - previousClickTime < DOUBLE_CLICK_THRESHOLD && list.getSelectedIndex() == firstSelectedIndex) {
                     if (listener != null) {
                         listener.itemSelected();
                     }
                 } else {
+                    firstSelectedIndex = list.getSelectedIndex();
                     previousClickTime = currentTime;
                 }
                 return true;
@@ -58,7 +61,7 @@ public class UIToolkit {
         });
     }
 
-    public static interface ListSelectionListener {
+    public interface ListSelectionListener {
         void itemSelected();
     }
 }
