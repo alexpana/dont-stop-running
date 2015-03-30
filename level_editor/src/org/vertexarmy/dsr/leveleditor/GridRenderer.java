@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import lombok.Getter;
+import lombok.Setter;
 import org.vertexarmy.dsr.core.assets.FontRepository;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 
@@ -36,6 +38,26 @@ public class GridRenderer {
     private final SpriteBatch spriteBatch;
     private final BitmapFont gridFont;
 
+    @Getter
+    @Setter
+    private boolean visible = true;
+
+    @Getter
+    @Setter
+    private boolean gridVisible = true;
+
+    @Getter
+    @Setter
+    private boolean rulersVisible = true;
+
+    @Getter
+    @Setter
+    private boolean highMarkVisible = true;
+
+    @Getter
+    @Setter
+    private boolean baseAxesVisible = true;
+
     public GridRenderer() {
         shapeRenderer = RenderSystem.instance().getShapeRenderer();
         spriteBatch = RenderSystem.instance().getSpriteBatch();
@@ -45,7 +67,9 @@ public class GridRenderer {
     }
 
     public void renderGrid() {
-        float gridSize = GRID_SIZE;// / RenderSystem.instance().getZoom();
+        if (!visible) {
+            return;
+        }
 
         Vector2 topLeft = RenderSystem.instance().screenToWorld(Vector2.Zero);
         Vector2 bottomRight = RenderSystem.instance().screenToWorld(new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
@@ -55,38 +79,46 @@ public class GridRenderer {
         float screenTop = topLeft.y;
         float screenBottom = bottomRight.y;
 
-        float xStart = ((int) (screenLeft / gridSize) * gridSize);
-        float yStart = ((int) (screenTop / gridSize) * gridSize);
+        float xStart = ((int) (screenLeft / GRID_SIZE) * GRID_SIZE);
+        float yStart = ((int) (screenTop / GRID_SIZE) * GRID_SIZE);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(GRID_DEFAULT_COLOR);
 
-        for (float x = xStart; x <= screenRight; x += gridSize) {
-            shapeRenderer.line(x, screenTop, x, screenBottom);
+        if (gridVisible) {
+            for (float x = xStart; x <= screenRight; x += GRID_SIZE) {
+                shapeRenderer.line(x, screenTop, x, screenBottom);
+            }
+
+            for (float y = yStart; y >= screenBottom; y -= GRID_SIZE) {
+                shapeRenderer.line(screenLeft, y, screenRight, y);
+            }
         }
 
-        for (float y = yStart; y >= screenBottom; y -= gridSize) {
-            shapeRenderer.line(screenLeft, y, screenRight, y);
+        if (baseAxesVisible) {
+            if (screenLeft <= 0 && screenRight >= 0) {
+                shapeRenderer.setColor(GRID_X_INDICATOR_COLOR);
+                shapeRenderer.line(0, screenTop, 0, screenBottom);
+            }
+
+            if (screenTop >= 0 && screenBottom <= 0) {
+                shapeRenderer.setColor(GRID_Y_INDICATOR_COLOR);
+                shapeRenderer.line(screenLeft, 0, screenRight, 0);
+            }
         }
 
-        if (screenLeft <= 0 && screenRight >= 0) {
-            shapeRenderer.setColor(GRID_X_INDICATOR_COLOR);
-            shapeRenderer.line(0, screenTop, 0, screenBottom);
-        }
-
-        if (screenTop >= 0 && screenBottom <= 0) {
-            shapeRenderer.setColor(GRID_Y_INDICATOR_COLOR);
-            shapeRenderer.line(screenLeft, 0, screenRight, 0);
-        }
-
-        if (screenTop >= MAX_HEIGHT_INDICATOR_VALUE && screenBottom <= MAX_HEIGHT_INDICATOR_VALUE) {
-            shapeRenderer.setColor(MAX_HEIGHT_INDICATOR_COLOR);
-            shapeRenderer.line(screenLeft, MAX_HEIGHT_INDICATOR_VALUE, screenRight, MAX_HEIGHT_INDICATOR_VALUE);
+        if (highMarkVisible) {
+            if (screenTop >= MAX_HEIGHT_INDICATOR_VALUE && screenBottom <= MAX_HEIGHT_INDICATOR_VALUE) {
+                shapeRenderer.setColor(MAX_HEIGHT_INDICATOR_COLOR);
+                shapeRenderer.line(screenLeft, MAX_HEIGHT_INDICATOR_VALUE, screenRight, MAX_HEIGHT_INDICATOR_VALUE);
+            }
         }
 
         shapeRenderer.end();
 
-        drawRulerIndicators();
+        if (rulersVisible) {
+            drawRulerIndicators();
+        }
     }
 
     private void drawRulerIndicators() {
@@ -141,17 +173,30 @@ public class GridRenderer {
         }
 
         if (screenTop >= MAX_HEIGHT_INDICATOR_VALUE && screenBottom <= MAX_HEIGHT_INDICATOR_VALUE) {
-            gridFont.setColor(MAX_HEIGHT_INDICATOR_COLOR);
+            if (highMarkVisible) {
+                gridFont.setColor(MAX_HEIGHT_INDICATOR_COLOR);
+            } else {
+                gridFont.setColor(getRulerColor(mousePosition.y, MAX_HEIGHT_INDICATOR_VALUE, MAX_HEIGHT_INDICATOR_VALUE + GRID_SIZE));
+            }
             gridFont.draw(spriteBatch, String.valueOf(MAX_HEIGHT_INDICATOR_VALUE), (int) screenLeft * zoom, MAX_HEIGHT_INDICATOR_VALUE * zoom + gridFont.getLineHeight());
         }
 
         if (screenLeft <= 0 && screenRight >= 0) {
-            gridFont.setColor(GRID_X_INDICATOR_COLOR);
+            if (baseAxesVisible) {
+                gridFont.setColor(GRID_X_INDICATOR_COLOR);
+            } else {
+                gridFont.setColor(getRulerColor(mousePosition.x, 0, GRID_SIZE));
+            }
             gridFont.draw(spriteBatch, "0", 1, (int) (screenBottom * zoom + gridFont.getLineHeight()));
         }
 
         if (screenTop >= 0 && screenBottom <= 0) {
-            gridFont.setColor(GRID_Y_INDICATOR_COLOR);
+            if (baseAxesVisible) {
+                gridFont.setColor(GRID_Y_INDICATOR_COLOR);
+            } else {
+                gridFont.setColor(getRulerColor(mousePosition.y, 0, GRID_SIZE));
+            }
+
             gridFont.draw(spriteBatch, "0", (int) (screenLeft * zoom), (int) (gridFont.getLineHeight()));
         }
 
