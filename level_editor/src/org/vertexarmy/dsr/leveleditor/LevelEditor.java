@@ -1,10 +1,6 @@
 package org.vertexarmy.dsr.leveleditor;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
@@ -16,12 +12,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Function;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
@@ -37,11 +27,14 @@ import org.vertexarmy.dsr.game.Level;
 import org.vertexarmy.dsr.game.Tiles;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
-import org.vertexarmy.dsr.leveleditor.ui.Dialog;
-import org.vertexarmy.dsr.leveleditor.ui.LevelLoadDialog;
-import org.vertexarmy.dsr.leveleditor.ui.LevelSaveDialog;
-import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
+import org.vertexarmy.dsr.leveleditor.ui.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class LevelEditor extends Game {
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
@@ -69,12 +62,20 @@ class LevelEditor extends Game {
     private DebugValuesPanel debugValuesPanel;
 
     private GridRenderer gridRenderer;
+
     private LevelSaveDialog saveDialog;
+
     private LevelLoadDialog loadDialog;
 
     private LevelEditor(Function<LevelEditor, Boolean> initTask) {
         this.initTask = initTask;
     }
+
+    private boolean isFullscreen = false;
+
+    private int windowedWidth = 1000;
+
+    private int windowedHeight = 800;
 
     @Override
     public void create() {
@@ -139,7 +140,17 @@ class LevelEditor extends Game {
                             openLevelFile();
                             return true;
                         }
+
+                        if (isFullscreenShortcut(keycode)) {
+                            toggleFullscreen();
+                            return true;
+                        }
+
                         return false;
+                    }
+
+                    private boolean isFullscreenShortcut(int keycode) {
+                        return keycode == Input.Keys.F11;
                     }
 
                     private boolean isOpenShortcut(int keycode) {
@@ -276,7 +287,31 @@ class LevelEditor extends Game {
     public void resize(int w, int h) {
         RenderSystem.instance().setViewportSize(w, h);
 
+        if (!Gdx.graphics.isFullscreen()) {
+            windowedWidth = w;
+            windowedHeight = h;
+        }
+
+        uiNode.getStage().getViewport().setWorldSize(w, h);
         uiNode.getStage().getViewport().update(w, h, true);
+    }
+
+    private void toggleFullscreen() {
+        if (isFullscreen) {
+            isFullscreen = false;
+            Gdx.graphics.setDisplayMode(windowedWidth, windowedHeight, false);
+        } else {
+            isFullscreen = true;
+            int fullscreenWidth = 0;
+            int fullscreenHeight = 0;
+            for (Graphics.DisplayMode displayMode : Gdx.graphics.getDisplayModes()) {
+                if (displayMode.width * displayMode.height > fullscreenWidth * fullscreenHeight) {
+                    fullscreenWidth = displayMode.width;
+                    fullscreenHeight = displayMode.height;
+                }
+            }
+            Gdx.graphics.setDisplayMode(fullscreenWidth, fullscreenHeight, true);
+        }
     }
 
     void setLevel(Level level) {

@@ -3,6 +3,7 @@
 ## Unreleased
 ### Added
 - A maximum height indicator to the level editor grid to signal the peak of the level (default: 800)
+- Support for fullscreen in the level editor (F11)
 
 ### Fixed
 - The level editor ruler text is now properly scaling with the zoom
@@ -12,7 +13,7 @@
 ### Added
 - This CHANGELOG
 - Support for serialization of generic objects
-- Support for saving and loading levels
+- Support for saving and loading levels 
 - Internal logging class
 - New pixel font (marke eigenbau) and a bitmap font converter from xml (NGL) to fnt
 - FontRepository for quickly adding and searching fonts
