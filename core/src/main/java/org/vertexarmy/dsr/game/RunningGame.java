@@ -91,9 +91,9 @@ public class RunningGame extends Game {
 
         Polygon polygon = new Polygon(new float[]{0, 0, 0, 70, 50, 120, 80, 105, 100, 105, 100, 0});
 
-        PolygonSprite sprite1 = SpriteFactory.getInstance().createSprite(polygon);
-        PolygonSprite sprite2 = SpriteFactory.getInstance().createSprite(polygon);
-        PolygonSprite sprite3 = SpriteFactory.getInstance().createSprite(polygon);
+        PolygonSprite sprite1 = SpriteFactory.instance().createSprite(polygon);
+        PolygonSprite sprite2 = SpriteFactory.instance().createSprite(polygon);
+        PolygonSprite sprite3 = SpriteFactory.instance().createSprite(polygon);
 
         sprite2.setPosition(100, 200);
         sprite3.setPosition(300, 300);

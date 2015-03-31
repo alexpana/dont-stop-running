@@ -17,7 +17,7 @@ public class SpriteFactory {
     private SpriteFactory() {
     }
 
-    public static SpriteFactory getInstance() {
+    public static SpriteFactory instance() {
         if (INSTANCE == null) {
             INSTANCE = new SpriteFactory();
         }

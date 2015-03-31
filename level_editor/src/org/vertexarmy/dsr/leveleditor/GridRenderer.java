@@ -115,13 +115,12 @@ public class GridRenderer {
         }
 
         shapeRenderer.end();
-
-        if (rulersVisible) {
-            drawRulerIndicators();
-        }
     }
 
-    private void drawRulerIndicators() {
+    public void renderRulers() {
+        if (!rulersVisible) {
+            return;
+        }
         float zoom = RenderSystem.instance().getZoom();
         float gridSize = GRID_SIZE * zoom;
 
