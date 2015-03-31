@@ -104,19 +104,16 @@ class LevelEditor extends Game {
             public void render() {
                 update();
 
-                PolygonSpriteBatch polygonSpriteBatch = RenderSystem.instance().getPolygonSpriteBatch();
-
                 gridRenderer.renderGrid();
 
                 backgroundRenderer.render();
 
+                PolygonSpriteBatch polygonSpriteBatch = RenderSystem.instance().getPolygonSpriteBatch();
                 if (level != null) {
                     polygonSpriteBatch.begin();
                     terrainSprite.draw(polygonSpriteBatch);
                     polygonSpriteBatch.end();
                 }
-
-                DebugValues.instance().setValue(DebugItems.FPS, String.valueOf(Gdx.graphics.getFramesPerSecond()));
 
                 gridRenderer.renderRulers();
             }
@@ -301,6 +298,8 @@ class LevelEditor extends Game {
 
         Vector2 mouseWorld = RenderSystem.instance().screenToWorld(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
         DebugValues.instance().setValue(DebugItems.MOUSE_WORLD, (int) mouseWorld.x + ", " + (int) mouseWorld.y);
+
+        DebugValues.instance().setValue(DebugItems.FPS, String.valueOf(Gdx.graphics.getFramesPerSecond()));
 
         if (level != null) {
             terrainSprite = SPRITE_FACTORY.createSprite(level.getTerrainPatches().get(0));
