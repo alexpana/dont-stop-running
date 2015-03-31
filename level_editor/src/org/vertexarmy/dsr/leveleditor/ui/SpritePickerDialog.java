@@ -6,20 +6,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import java.util.Collections;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.collection.ArrayUtils;
 import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.graphics.GraphicsUtils;
+
+import java.util.Collections;
 
 /**
  * Created by alex
@@ -32,32 +28,24 @@ public class SpritePickerDialog extends Dialog<SpritePickerDialog.Event> {
 
     private final List<Object> availableLevelsList;
 
-    private final TextButton selectButton;
-
-    private final TextButton cancelButton;
-
     private final ImageButton previewArea;
 
     private TextureRegion selectedTexture;
 
     public SpritePickerDialog(Stage stage, String title, Skin skin) {
-        super(title, skin);
+        super(stage, title, skin);
         this.stage = stage;
         this.skin = skin;
 
         availableLevelsList = new List<>(skin);
 
-        selectButton = new TextButton("Select", skin);
-
-        cancelButton = new TextButton("Cancel", skin);
-
         previewArea = new ImageButton(new ImageButton.ImageButtonStyle());
 
         initComponents();
 
-        initLayout();
-
         initListeners();
+
+        packLayout();
 
         updatePreviewToMatchSelection();
     }
@@ -68,44 +56,15 @@ public class SpritePickerDialog extends Dialog<SpritePickerDialog.Event> {
         availableLevelsList.setItems(ArrayUtils.toArray(availableTextures));
         availableLevelsList.setSize(200, 100);
 
-        selectButton.pad(0, 5, 3, 5);
-
-        cancelButton.pad(0, 5, 3, 5);
-
         previewArea.setSize(300, 300);
         previewArea.getStyle().imageUp = new PreviewDrawable();
-    }
 
-    private void initLayout() {
-        ScrollPane scrollPane = new ScrollPane(availableLevelsList, skin);
-        scrollPane.setHeight(300);
-        scrollPane.setFadeScrollBars(false);
-        scrollPane.getStyle().vScrollKnob.setMinWidth(7);
-        scrollPane.getStyle().vScroll.setMinWidth(7);
+        getActionButton().setText("Select");
 
-        add(scrollPane).expand().fill();
-        add(previewArea).row();
-
-        Table buttonsTable = new Table();
-        buttonsTable.add(selectButton).right().padRight(2);
-        buttonsTable.add(cancelButton).left().row();
-        add(buttonsTable).colspan(2).padTop(4);
-
-        setResizable(false);
         setMovable(true);
-        setModal(false);
-        pack();
-
     }
 
     private void initListeners() {
-        cancelButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                hide();
-            }
-        });
-
         availableLevelsList.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -120,16 +79,25 @@ public class SpritePickerDialog extends Dialog<SpritePickerDialog.Event> {
                 hide();
             }
         });
+    }
 
-        selectButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (selectedTexture != null) {
-                    notifyListener(new Event(selectedTexture));
-                    hide();
-                }
-            }
-        });
+    @Override
+    protected Actor getContent() {
+        Table contentTable = new Table();
+
+        ScrollPane scrollPane = new ScrollPane(availableLevelsList, skin);
+        scrollPane.setHeight(300);
+        scrollPane.setFadeScrollBars(false);
+
+        contentTable.add(scrollPane).expand().fill();
+        contentTable.add(previewArea).row();
+        return contentTable;
+    }
+
+    @Override
+    protected void doAction() {
+        notifyListener(new Event(selectedTexture));
+        hide();
     }
 
     private void updatePreviewToMatchSelection() {
@@ -141,7 +109,7 @@ public class SpritePickerDialog extends Dialog<SpritePickerDialog.Event> {
     public void show() {
         stage.addActor(this);
         setVisible(true);
-        setSize(500, 343);
+        setSize(500, 355);
         UIToolkit.centerWindow(this);
     }
 
@@ -177,7 +145,6 @@ public class SpritePickerDialog extends Dialog<SpritePickerDialog.Event> {
                 float h = selectedTexture.getRegionHeight();
                 float maxSize = Math.max(w, h);
                 if (maxSize <= SIZE) {
-                    // draw in the center
                     Vector2 center = new Vector2(x + width / 2, y + height / 2);
                     batch.draw(selectedTexture, (int) (center.x - w / 2), (int) (center.y - h / 2), w, h);
                 } else {
