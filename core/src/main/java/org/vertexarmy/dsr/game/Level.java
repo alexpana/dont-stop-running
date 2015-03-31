@@ -1,6 +1,7 @@
 package org.vertexarmy.dsr.game;
 
 import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.ImmutableList;
 import java.io.Serializable;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -52,4 +53,8 @@ public class Level implements Serializable {
 
     @Getter
     private final List<Polygon> terrainPatches;
+
+    public static Level createDefaultLevel() {
+        return new Level(null, null, ImmutableList.of(new Polygon(new float[]{100, 100, 100, -100, -100, -100, -100, 100})));
+    }
 }

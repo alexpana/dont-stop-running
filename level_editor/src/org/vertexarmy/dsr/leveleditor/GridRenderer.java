@@ -34,10 +34,6 @@ public class GridRenderer {
 
     private static final int MAX_HEIGHT_INDICATOR_VALUE = 800;
 
-    private final ShapeRenderer shapeRenderer;
-    private final SpriteBatch spriteBatch;
-    private final BitmapFont gridFont;
-
     @Getter
     @Setter
     private boolean visible = true;
@@ -59,17 +55,17 @@ public class GridRenderer {
     private boolean baseAxesVisible = true;
 
     public GridRenderer() {
-        shapeRenderer = RenderSystem.instance().getShapeRenderer();
-        spriteBatch = RenderSystem.instance().getSpriteBatch();
-
-        gridFont = FontRepository.instance().getFont(AssetName.FONT_MARKE_8);
-        gridFont.setColor(RULER_DEFAULT_COLOR);
     }
 
     public void renderGrid() {
         if (!visible) {
             return;
         }
+
+        ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
+
+        BitmapFont gridFont = FontRepository.instance().getFont(AssetName.FONT_MARKE_8);
+        gridFont.setColor(RULER_DEFAULT_COLOR);
 
         Vector2 topLeft = RenderSystem.instance().screenToWorld(Vector2.Zero);
         Vector2 bottomRight = RenderSystem.instance().screenToWorld(new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
@@ -121,6 +117,12 @@ public class GridRenderer {
         if (!rulersVisible) {
             return;
         }
+
+        SpriteBatch spriteBatch = RenderSystem.instance().getSpriteBatch();
+
+        BitmapFont gridFont = FontRepository.instance().getFont(AssetName.FONT_MARKE_8);
+        gridFont.setColor(RULER_DEFAULT_COLOR);
+
         float zoom = RenderSystem.instance().getZoom();
         float gridSize = GRID_SIZE * zoom;
 

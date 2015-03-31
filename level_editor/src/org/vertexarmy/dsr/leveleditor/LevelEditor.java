@@ -2,8 +2,6 @@ package org.vertexarmy.dsr.leveleditor;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
@@ -15,18 +13,14 @@ import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.List;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
 import org.vertexarmy.dsr.core.Serialization;
-import org.vertexarmy.dsr.core.UiNode;
 import org.vertexarmy.dsr.core.assets.FontRepository;
 import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.core.component.ComponentType;
@@ -45,7 +39,6 @@ import org.vertexarmy.dsr.leveleditor.ui.LevelLoadDialog;
 import org.vertexarmy.dsr.leveleditor.ui.LevelSaveDialog;
 import org.vertexarmy.dsr.leveleditor.ui.SpritePickerDialog;
 import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
-import org.vertexarmy.dsr.math.Polygon;
 
 class LevelEditor extends Game {
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.instance();
@@ -56,6 +49,10 @@ class LevelEditor extends Game {
 
     private final Function<LevelEditor, Boolean> initTask;
 
+    private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
+
+    private final GridRenderer gridRenderer = new GridRenderer();
+
     private File boundLevelFile;
 
     private Level level;
@@ -64,13 +61,9 @@ class LevelEditor extends Game {
 
     private PolygonEditor terrainPolygonEditor;
 
-    private UiNode uiNode;
-
     private Toolbox toolbox;
 
     private DebugValuesPanel debugValuesPanel;
-
-    private GridRenderer gridRenderer;
 
     private LevelSaveDialog saveDialog;
 
@@ -80,14 +73,6 @@ class LevelEditor extends Game {
 
     private LevelBackgroundDialog levelBackgroundDialog;
 
-    private boolean isFullscreen = false;
-
-    private int windowedWidth = 1000;
-
-    private int windowedHeight = 800;
-
-    private BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
-
     private LevelEditor(Function<LevelEditor, Boolean> initTask) {
         this.initTask = initTask;
     }
@@ -96,30 +81,28 @@ class LevelEditor extends Game {
     public void create() {
         root.initialize();
 
-        FontRepository.instance().loadFont(AssetName.FONT_MARKE_8, Gdx.files.internal("fonts/marke_eigenbau_normal_8.fnt"));
-        FontRepository.instance().loadFont(AssetName.FONT_VERA_SANS_MONO_10, Gdx.files.internal("fonts/vera_sans_mono_10.fnt"));
+        loadAssets();
 
-        Texture tilesTexture = new Texture(Gdx.files.internal("tiles.png"));
-        TextureRepository.instance().addTexture("grass", new TextureRegion(tilesTexture, 0, 0, 32, 32));
-        TextureRepository.instance().addTexture("dirt", new TextureRegion(tilesTexture, 32, 0, 32, 32));
-        TextureRepository.instance().addTexture("saw", new TextureRegion(tilesTexture, 64, 0, 64, 64));
-        TextureRepository.instance().addTexture("floor_tile_42342_42523_01", new TextureRegion(new Texture(Gdx.files.internal("test.jpg"))));
-        TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons.atlas"));
-        TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons_background.atlas"));
+        ElegantGraySkin.install(root.getUiNode().getUiSkin());
+
+        Node editorNode = createEditorNode();
 
         root.addNode(new Node(ComponentType.INPUT, new CameraController()));
+        root.addNode(new Node(ComponentType.INPUT, new CameraController()));
+        root.addNode(editorNode);
 
-        uiNode = new UiNode();
-        root.addNode(uiNode);
+        initUI();
 
-        ElegantGraySkin.install(uiNode.getUiSkin());
+        setLevel(Level.createDefaultLevel());
 
-        gridRenderer = new GridRenderer();
+        initTask.apply(this);
+    }
 
+    private Node createEditorNode() {
         Node originNode = new Node(ComponentType.RENDER, new RenderComponent() {
             @Override
             public void render() {
-                doUpdate();
+                update();
 
                 PolygonSpriteBatch polygonSpriteBatch = RenderSystem.instance().getPolygonSpriteBatch();
 
@@ -145,84 +128,69 @@ class LevelEditor extends Game {
                 return new InputAdapter() {
                     @Override
                     public boolean keyDown(int keycode) {
-                        if (keycode == Input.Keys.F1) {
+                        if (Shortcuts.isHideDebugInfoShortcut(keycode)) {
                             debugValuesPanel.setVisible(!debugValuesPanel.isVisible());
                             return true;
                         }
 
-                        if (keycode == Input.Keys.F2) {
-                            uiNode.getContentTable().setVisible(!uiNode.getContentTable().isVisible());
+                        if (Shortcuts.isHideUIShortcut(keycode)) {
+                            root.getUiNode().getContentTable().setVisible(!root.getUiNode().getContentTable().isVisible());
                             return true;
                         }
 
-                        if (isSaveShortcut(keycode)) {
+                        if (Shortcuts.isSaveShortcut(keycode)) {
                             if (boundLevelFile == null) {
                                 saveDialog.show();
                             } else {
                                 saveLevel();
                             }
-
                             return true;
                         }
 
-                        if (isOpenShortcut(keycode)) {
+                        if (Shortcuts.isOpenShortcut(keycode)) {
                             openLevelFile();
                             return true;
                         }
 
-                        if (isFullscreenShortcut(keycode)) {
-                            toggleFullscreen();
+                        if (Shortcuts.isFullscreenShortcut(keycode)) {
+                            RenderSystem.instance().toggleFullscreen();
                             return true;
                         }
 
-                        if (isSpritePickerShortcut(keycode)) {
+                        if (Shortcuts.isSpritePickerShortcut(keycode)) {
                             spritePickerDialog.show();
                         }
 
-                        if (isEditBackgroundShortcut(keycode)) {
+                        if (Shortcuts.isEditBackgroundShortcut(keycode)) {
                             levelBackgroundDialog.show();
                         }
 
                         return false;
                     }
-
-                    private boolean isEditBackgroundShortcut(int keycode) {
-                        return keycode == Input.Keys.B && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT);
-                    }
-
-                    private boolean isSpritePickerShortcut(int keycode) {
-                        return keycode == Input.Keys.F3;
-                    }
-
-                    private boolean isFullscreenShortcut(int keycode) {
-                        return keycode == Input.Keys.F11;
-                    }
-
-                    private boolean isOpenShortcut(int keycode) {
-                        return Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && keycode == Input.Keys.O;
-                    }
-
-                    private boolean isSaveShortcut(int keycode) {
-                        return Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && keycode == Input.Keys.S;
-                    }
                 };
             }
         });
+        return originNode;
+    }
 
-        root.addNode(originNode);
+    private void loadAssets() {
+        FontRepository.instance().loadFont(AssetName.FONT_MARKE_8, Gdx.files.internal("fonts/marke_eigenbau_normal_8.fnt"));
+        FontRepository.instance().loadFont(AssetName.FONT_VERA_SANS_MONO_10, Gdx.files.internal("fonts/vera_sans_mono_10.fnt"));
 
-        initUI();
-
-        setLevel(new Level(null, null, ImmutableList.of(new Polygon(new float[] {100, 100, 100, -100, -100, -100, -100, 100}))));
-
-        initTask.apply(this);
+        Texture tilesTexture = new Texture(Gdx.files.internal("tiles.png"));
+        TextureRepository.instance().addTexture("grass", new TextureRegion(tilesTexture, 0, 0, 32, 32));
+        TextureRepository.instance().addTexture("dirt", new TextureRegion(tilesTexture, 32, 0, 32, 32));
+        TextureRepository.instance().addTexture("saw", new TextureRegion(tilesTexture, 64, 0, 64, 64));
+        TextureRepository.instance().addTexture("floor_tile_42342_42523_01", new TextureRegion(new Texture(Gdx.files.internal("test.jpg"))));
+        TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons.atlas"));
+        TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons_background.atlas"));
     }
 
     private void initUI() {
-        debugValuesPanel = new DebugValuesPanel(uiNode.getUiSkin());
+        debugValuesPanel = new DebugValuesPanel(root.getUiNode().getUiSkin());
         debugValuesPanel.setVisible(false);
 
-        toolbox = new Toolbox(uiNode.getUiSkin(), new Toolbox.Listener() {
+        toolbox = new Toolbox(root.getUiNode().getUiSkin(), new Toolbox.Listener() {
             @Override
             public void loadFileRequested() {
                 openLevelFile();
@@ -234,10 +202,10 @@ class LevelEditor extends Game {
             }
         });
 
-        uiNode.getContentTable().add(toolbox).expandX().fill().row();
-        uiNode.getContentTable().add(debugValuesPanel).left().row();
+        root.getUiNode().getContentTable().add(toolbox).expandX().fill().row();
+        root.getUiNode().getContentTable().add(debugValuesPanel).left().row();
 
-        saveDialog = new LevelSaveDialog(uiNode.getStage(), "Save Level", uiNode.getUiSkin());
+        saveDialog = new LevelSaveDialog(root.getUiNode().getStage(), "Save Level", root.getUiNode().getUiSkin());
         saveDialog.setListener(new Dialog.Listener<LevelSaveDialog.Event>() {
             @Override
             public void dialogAccepted(LevelSaveDialog.Event event) {
@@ -246,7 +214,7 @@ class LevelEditor extends Game {
             }
         });
 
-        loadDialog = new LevelLoadDialog(uiNode.getStage(), "Load Level", uiNode.getUiSkin());
+        loadDialog = new LevelLoadDialog(root.getUiNode().getStage(), "Load Level", root.getUiNode().getUiSkin());
         loadDialog.setListener(new Dialog.Listener<LevelLoadDialog.Event>() {
             @Override
             public void dialogAccepted(LevelLoadDialog.Event event) {
@@ -260,9 +228,9 @@ class LevelEditor extends Game {
             }
         });
 
-        spritePickerDialog = new SpritePickerDialog(uiNode.getStage(), "Select terrain texture", uiNode.getUiSkin());
+        spritePickerDialog = new SpritePickerDialog(root.getUiNode().getStage(), "Select terrain texture", root.getUiNode().getUiSkin());
 
-        levelBackgroundDialog = new LevelBackgroundDialog(uiNode.getStage(), "Edit Background", uiNode.getUiSkin());
+        levelBackgroundDialog = new LevelBackgroundDialog(root.getUiNode().getStage(), "Edit Background", root.getUiNode().getUiSkin());
         levelBackgroundDialog.setListener(new Dialog.Listener<LevelBackgroundDialog.Event>() {
             @Override
             public void dialogAccepted(LevelBackgroundDialog.Event event) {
@@ -273,7 +241,7 @@ class LevelEditor extends Game {
     }
 
     private void openLevelFile() {
-        loadDialog.setAvailableLevelsList(discoverAvailableLevels());
+        loadDialog.setAvailableLevelsList(FileUtils.discoverAvailableLevels());
         loadDialog.show();
     }
 
@@ -318,7 +286,12 @@ class LevelEditor extends Game {
         root.update();
     }
 
-    private void doUpdate() {
+    @Override
+    public void resize(int w, int h) {
+        root.handleResize(w, h);
+    }
+
+    private void update() {
         Camera camera = RenderSystem.instance().getCamera();
         float zoom = RenderSystem.instance().getZoom();
 
@@ -332,37 +305,6 @@ class LevelEditor extends Game {
         if (level != null) {
             terrainSprite = SPRITE_FACTORY.createSprite(level.getTerrainPatches().get(0));
             terrainSprite.setColor(Color.BLACK);
-        }
-    }
-
-    @Override
-    public void resize(int w, int h) {
-        RenderSystem.instance().setViewportSize(w, h);
-
-        if (!Gdx.graphics.isFullscreen()) {
-            windowedWidth = w;
-            windowedHeight = h;
-        }
-
-        uiNode.getStage().getViewport().setWorldSize(w, h);
-        uiNode.getStage().getViewport().update(w, h, true);
-    }
-
-    private void toggleFullscreen() {
-        if (isFullscreen) {
-            isFullscreen = false;
-            Gdx.graphics.setDisplayMode(windowedWidth, windowedHeight, false);
-        } else {
-            isFullscreen = true;
-            int fullscreenWidth = 0;
-            int fullscreenHeight = 0;
-            for (Graphics.DisplayMode displayMode : Gdx.graphics.getDisplayModes()) {
-                if (displayMode.width * displayMode.height > fullscreenWidth * fullscreenHeight) {
-                    fullscreenWidth = displayMode.width;
-                    fullscreenHeight = displayMode.height;
-                }
-            }
-            Gdx.graphics.setDisplayMode(fullscreenWidth, fullscreenHeight, true);
         }
     }
 
@@ -380,25 +322,6 @@ class LevelEditor extends Game {
         root.addNode(terrainPolygonEditor.getNode());
 
         backgroundRenderer.setLevel(level);
-    }
-
-    private List<String> discoverAvailableLevels() {
-        List<String> result = Lists.newArrayList();
-
-        File levelsDirectory = new File("levels/");
-        final File[] files = levelsDirectory.listFiles();
-
-        if (files == null) {
-            log.error("Could not read the levels directory.");
-        } else {
-            for (File possibleLevelFile : files) {
-                if (possibleLevelFile.getAbsolutePath().endsWith(".dat")) {
-                    result.add(possibleLevelFile.getName().substring(0, possibleLevelFile.getName().length() - 4));
-                }
-            }
-        }
-
-        return result;
     }
 
     public static void launch(Function<LevelEditor, Boolean> initTask) {

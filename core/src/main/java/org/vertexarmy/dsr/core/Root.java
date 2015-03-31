@@ -2,6 +2,7 @@ package org.vertexarmy.dsr.core;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import lombok.Getter;
 import org.vertexarmy.dsr.core.assets.FontRepository;
 import org.vertexarmy.dsr.core.assets.ShaderRepository;
 import org.vertexarmy.dsr.core.assets.TextureRepository;
@@ -22,6 +23,9 @@ public class Root {
 
     private final RenderSystem renderSystem = RenderSystem.instance();
 
+    @Getter
+    private UiNode uiNode;
+
     public Root() {
     }
 
@@ -34,6 +38,9 @@ public class Root {
         ShaderRepository.instance().initialize();
         FontRepository.instance().initialize();
         TextureRepository.instance().initialize();
+
+        uiNode = new UiNode();
+        addNode(uiNode);
     }
 
     public void addNode(Node node) {
@@ -74,5 +81,12 @@ public class Root {
         } else {
             return null;
         }
+    }
+
+    public void handleResize(int w, int h) {
+        renderSystem.setViewportSize(w, h);
+
+        uiNode.getStage().getViewport().setWorldSize(w, h);
+        uiNode.getStage().getViewport().update(w, h, true);
     }
 }

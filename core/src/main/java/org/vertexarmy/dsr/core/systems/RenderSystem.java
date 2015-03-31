@@ -1,6 +1,7 @@
 package org.vertexarmy.dsr.core.systems;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -47,6 +48,12 @@ public class RenderSystem {
 
     @Getter
     private ShapeRenderer shapeRenderer;
+
+    private boolean isFullscreen = false;
+
+    private int windowedWidth = 800;
+
+    private int windowedHeight = 600;
 
     private RenderSystem() {
     }
@@ -105,6 +112,11 @@ public class RenderSystem {
     public void setViewportSize(int width, int height) {
         viewportWidth = width;
         viewportHeight = height;
+
+        if (!isFullscreen) {
+            windowedWidth = width;
+            windowedHeight = height;
+        }
         updateCameras();
     }
 
@@ -132,6 +144,24 @@ public class RenderSystem {
         Vector2 v = new Vector2(screen).sub(new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2));
         v.y *= -1;
         return cameraPosition.add(v);
+    }
+
+    public void toggleFullscreen() {
+        if (isFullscreen) {
+            isFullscreen = false;
+            Gdx.graphics.setDisplayMode(windowedWidth, windowedHeight, false);
+        } else {
+            isFullscreen = true;
+            int fullscreenWidth = 0;
+            int fullscreenHeight = 0;
+            for (Graphics.DisplayMode displayMode : Gdx.graphics.getDisplayModes()) {
+                if (displayMode.width * displayMode.height > fullscreenWidth * fullscreenHeight) {
+                    fullscreenWidth = displayMode.width;
+                    fullscreenHeight = displayMode.height;
+                }
+            }
+            Gdx.graphics.setDisplayMode(fullscreenWidth, fullscreenHeight, true);
+        }
     }
 
     public float screenToWorld(float distance) {
