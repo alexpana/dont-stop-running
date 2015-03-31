@@ -35,9 +35,9 @@ public class LevelLoadDialog extends Dialog<LevelLoadDialog.Event> {
     }
 
     private void initListeners() {
-        UIToolkit.addListSelectionListener(availableLevelsList, new UIToolkit.ListSelectionListener() {
+        UIToolkit.addActionListener(availableLevelsList, new UIToolkit.ActionListener() {
             @Override
-            public void itemSelected() {
+            public void action() {
                 notifyListener(new Event(availableLevelsList.getSelected()));
                 hide();
             }

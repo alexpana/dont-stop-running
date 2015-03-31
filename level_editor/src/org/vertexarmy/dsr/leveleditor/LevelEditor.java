@@ -84,7 +84,14 @@ class LevelEditor extends Game {
         FontRepository.instance().loadFont(AssetName.FONT_MARKE_8, Gdx.files.internal("fonts/marke_eigenbau_normal_8.fnt"));
         FontRepository.instance().loadFont(AssetName.FONT_VERA_SANS_MONO_10, Gdx.files.internal("fonts/vera_sans_mono_10.fnt"));
 
+        Texture tilesTexture = new Texture(Gdx.files.internal("tiles.png"));
+        TextureRepository.instance().addTexture("grass", new TextureRegion(tilesTexture, 0, 0, 32, 32));
+        TextureRepository.instance().addTexture("dirt", new TextureRegion(tilesTexture, 32, 0, 32, 32));
+        TextureRepository.instance().addTexture("saw", new TextureRegion(tilesTexture, 64, 0, 64, 64));
+        TextureRepository.instance().addTexture("floor_tile_42342_42523_01", new TextureRegion(new Texture(Gdx.files.internal("test.jpg"))));
         TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons.atlas"));
+        TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons_background.atlas"));
+
 
         root.addNode(new Node(ComponentType.INPUT, new CameraController()));
 
@@ -185,13 +192,6 @@ class LevelEditor extends Game {
         });
 
         root.addNode(originNode);
-
-        Texture tilesTexture = new Texture(Gdx.files.internal("tiles.png"));
-        TextureRepository.instance().addTexture("grass", new TextureRegion(tilesTexture, 0, 0, 32, 32));
-        TextureRepository.instance().addTexture("dirt", new TextureRegion(tilesTexture, 32, 0, 32, 32));
-        TextureRepository.instance().addTexture("saw", new TextureRegion(tilesTexture, 64, 0, 64, 64));
-
-        TextureRepository.instance().addTexture("floor_tile_42342_42523_01", new TextureRegion(new Texture(Gdx.files.internal("test.jpg"))));
 
         initUI();
 

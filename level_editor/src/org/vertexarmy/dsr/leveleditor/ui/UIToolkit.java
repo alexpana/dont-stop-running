@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import org.vertexarmy.dsr.core.assets.IconRepository;
+import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.graphics.CompositeDrawable;
 import org.vertexarmy.dsr.leveleditor.AssetName;
 
@@ -30,18 +30,18 @@ public class UIToolkit {
 
     public static ImageButton createImageButton(String iconName) {
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
-        style.imageUp = new TextureRegionDrawable(IconRepository.instance().getIcon(iconName));
+        style.imageUp = new TextureRegionDrawable(TextureRepository.instance().getTexture(iconName));
         style.imageOver = new CompositeDrawable(
-                IconRepository.instance().getIcon(AssetName.ICON_BACKGROUND_HOVER),
-                IconRepository.instance().getIcon(iconName));
+                TextureRepository.instance().getTexture(AssetName.ICON_BACKGROUND_HOVER),
+                TextureRepository.instance().getTexture(iconName));
         style.imageDown = new CompositeDrawable(
-                IconRepository.instance().getIcon(AssetName.ICON_BACKGROUND_PRESSED),
-                IconRepository.instance().getIcon(iconName));
+                TextureRepository.instance().getTexture(AssetName.ICON_BACKGROUND_PRESSED),
+                TextureRepository.instance().getTexture(iconName));
 
         return new ImageButton(style);
     }
 
-    public static <T> void addListSelectionListener(final List<T> list, final ListSelectionListener listener) {
+    public static <T> void addActionListener(final List<T> list, final ActionListener listener) {
         list.addListener(new InputListener() {
             long previousClickTime = 0;
             int firstSelectedIndex = -1;
@@ -52,7 +52,7 @@ public class UIToolkit {
 
                 if (currentTime - previousClickTime < DOUBLE_CLICK_THRESHOLD && list.getSelectedIndex() == firstSelectedIndex) {
                     if (listener != null) {
-                        listener.itemSelected();
+                        listener.action();
                     }
                 } else {
                     firstSelectedIndex = list.getSelectedIndex();
@@ -72,8 +72,17 @@ public class UIToolkit {
         });
     }
 
-    public interface ListSelectionListener {
-        void itemSelected();
+    public static <T> void addSelectionListener(final List<T> list, final SingleSelectionListener listener) {
+        list.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                listener.selectionChanged(list.getSelectedIndex());
+            }
+        });
+    }
+
+    public interface SingleSelectionListener {
+        void selectionChanged(int selectionIndex);
     }
 
     public interface ActionListener {

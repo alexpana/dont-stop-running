@@ -47,8 +47,7 @@ public class TextureRepository {
     }
 
     public void loadTextureAtlas(FileHandle atlasFile) {
-        TextureAtlas atlas = new TextureAtlas(atlasFile);
-        addTextureAtlas(atlas);
+        addTextureAtlas(new TextureAtlas(atlasFile));
     }
 
     public void addTextureAtlas(TextureAtlas textureAtlas) {

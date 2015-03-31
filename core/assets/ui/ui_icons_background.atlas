@@ -1,0 +1,26 @@
+ui_icons_background.png
+size: 63,21
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+icon_bg_up
+  rotate: false
+  xy: 0, 0
+  size: 21, 21
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+icon_bg_over
+  rotate: false
+  xy: 21, 0
+  size: 21, 21
+  orig: 21, 0
+  offset: 0, 0
+  index: -1
+icon_bg_down
+  rotate: false
+  xy: 42, 0
+  size: 21, 21
+  orig: 42, 0
+  offset: 0, 0
+  index: -1

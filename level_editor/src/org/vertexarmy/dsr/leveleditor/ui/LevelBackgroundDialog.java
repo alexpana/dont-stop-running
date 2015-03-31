@@ -2,16 +2,23 @@ package org.vertexarmy.dsr.leveleditor.ui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Array;
 import com.beust.jcommander.internal.Maps;
+import java.util.Map;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.game.Level;
 import org.vertexarmy.dsr.leveleditor.AssetName;
-
-import java.util.Map;
 
 /**
  * Created by alex
@@ -50,9 +57,9 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
 
         textureName = new Label("none", skin);
 
-        selectTextureButton = UIToolkit.createImageButton(AssetName.ICON_FILE_OPEN);
+        selectTextureButton = UIToolkit.createImageButton(AssetName.ICON_SELECT_TEXTURE);
 
-        clearTextureButton = UIToolkit.createImageButton(AssetName.ICON_FILE_SAVE);
+        clearTextureButton = UIToolkit.createImageButton(AssetName.ICON_CLEAR_TEXTURE);
 
         parallaxSpeedLabel = new Label("Parallax", skin);
 
@@ -63,6 +70,8 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
         initListeners();
 
         packLayout();
+
+        updateViewToMatchModel();
     }
 
     private void initComponents() {
@@ -88,13 +97,42 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
         UIToolkit.addActionListener(clearTextureButton, new UIToolkit.ActionListener() {
             @Override
             public void action() {
-                backgroundLayerMap.get(layerList.getSelected()).setTextureName(null);
+                getSelectedLayer().setTextureName(null);
+                updateViewToMatchModel();
             }
         });
 
-        UIToolkit.addListSelectionListener(layerList, new UIToolkit.ListSelectionListener() {
+        UIToolkit.addActionListener(layerList, new UIToolkit.ActionListener() {
             @Override
-            public void itemSelected() {
+            public void action() {
+                updateViewToMatchModel();
+            }
+        });
+
+        UIToolkit.addSelectionListener(layerList, new UIToolkit.SingleSelectionListener() {
+            @Override
+            public void selectionChanged(int selectionIndex) {
+                updateViewToMatchModel();
+            }
+        });
+
+        parallaxSpeedTextField.addListener(new InputListener() {
+            @Override
+            public boolean keyTyped(InputEvent event, char character) {
+                try {
+                    float parallaxSpeedScale = Float.parseFloat(parallaxSpeedTextField.getText());
+                    getSelectedLayer().setParallaxSpeedScale(parallaxSpeedScale);
+                    return true;
+                } catch (NumberFormatException ignored) {
+                    return false;
+                }
+            }
+        });
+
+        texturePickerDialog.setListener(new Dialog.Listener<SpritePickerDialog.Event>() {
+            @Override
+            public void dialogAccepted(SpritePickerDialog.Event event) {
+                getSelectedLayer().setTextureName(event.getSelectedTextureName());
                 updateViewToMatchModel();
             }
         });
@@ -144,7 +182,7 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
     }
 
     private void updateViewToMatchModel() {
-        Level.BackgroundLayer selectedLayer = backgroundLayerMap.get(layerList.getSelected());
+        Level.BackgroundLayer selectedLayer = getSelectedLayer();
 
         if (selectedLayer.getTextureName() != null) {
             textureName.getStyle().fontColor = Color.WHITE;
@@ -155,6 +193,10 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
         }
 
         parallaxSpeedTextField.setText(String.valueOf(selectedLayer.getParallaxSpeedScale()));
+    }
+
+    private Level.BackgroundLayer getSelectedLayer() {
+        return backgroundLayerMap.get(layerList.getSelected());
     }
 
     @RequiredArgsConstructor
