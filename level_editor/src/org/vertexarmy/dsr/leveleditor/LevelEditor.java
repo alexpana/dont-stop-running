@@ -1,11 +1,6 @@
 package org.vertexarmy.dsr.leveleditor;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
@@ -17,10 +12,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Function;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.List;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
@@ -36,13 +27,12 @@ import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.Level;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
-import org.vertexarmy.dsr.leveleditor.ui.Dialog;
-import org.vertexarmy.dsr.leveleditor.ui.ElegantGraySkin;
-import org.vertexarmy.dsr.leveleditor.ui.LevelLoadDialog;
-import org.vertexarmy.dsr.leveleditor.ui.LevelSaveDialog;
-import org.vertexarmy.dsr.leveleditor.ui.SpritePickerDialog;
-import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
+import org.vertexarmy.dsr.leveleditor.ui.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.List;
 
 class LevelEditor extends Game {
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.getInstance();
@@ -75,15 +65,17 @@ class LevelEditor extends Game {
 
     private SpritePickerDialog spritePickerDialog;
 
-    private LevelEditor(Function<LevelEditor, Boolean> initTask) {
-        this.initTask = initTask;
-    }
+    private LevelBackgroundDialog levelBackgroundDialog;
 
     private boolean isFullscreen = false;
 
     private int windowedWidth = 1000;
 
     private int windowedHeight = 800;
+
+    private LevelEditor(Function<LevelEditor, Boolean> initTask) {
+        this.initTask = initTask;
+    }
 
     @Override
     public void create() {
@@ -162,7 +154,15 @@ class LevelEditor extends Game {
                             spritePickerDialog.show();
                         }
 
+                        if (isEditBackgroundShortcut(keycode)) {
+                            levelBackgroundDialog.show();
+                        }
+
                         return false;
+                    }
+
+                    private boolean isEditBackgroundShortcut(int keycode) {
+                        return keycode == Input.Keys.B && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT);
                     }
 
                     private boolean isSpritePickerShortcut(int keycode) {
@@ -241,6 +241,8 @@ class LevelEditor extends Game {
         });
 
         spritePickerDialog = new SpritePickerDialog(uiNode.getStage(), "Select terrain texture", uiNode.getUiSkin());
+
+        levelBackgroundDialog = new LevelBackgroundDialog(uiNode.getStage(), "Edit Background", uiNode.getUiSkin());
     }
 
     private void openLevelFile() {
