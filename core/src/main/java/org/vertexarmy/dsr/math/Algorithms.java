@@ -7,8 +7,9 @@ import com.badlogic.gdx.math.Vector2;
  * created by Alex
  * on 3/18/2015.
  */
+@SuppressWarnings("unused")
 public class Algorithms {
-    public static boolean vertexInsideTriangle(Vector2 vertex, Triangle triangle) {
+    public static boolean triangleContainsVertex(Vector2 vertex, Triangle triangle) {
         Vector2 v1v2 = new Vector2(triangle.v2).sub(triangle.v1);
         Vector2 v2v3 = new Vector2(triangle.v3).sub(triangle.v2);
         Vector2 v3v1 = new Vector2(triangle.v1).sub(triangle.v3);
@@ -101,7 +102,6 @@ public class Algorithms {
         return createRectangle(v1.x, v1.y, v2.x, v2.y);
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public static float distance(Vector2 a, Vector2 b) {
         final float deltaX = a.x - b.x;
         final float deltaY = a.y - b.y;
@@ -141,6 +141,24 @@ public class Algorithms {
     public static boolean segmentContainsVertex(Vector2 segmentA, Vector2 segmentB, Vector2 vertex) {
         float segmentLengthSquared = Algorithms.distanceSq(segmentA, segmentB);
 
-        return Algorithms.distanceSq(segmentA, vertex) <= segmentLengthSquared &&Algorithms.distanceSq(segmentB, vertex) <= segmentLengthSquared;
+        return Algorithms.distanceSq(segmentA, vertex) <= segmentLengthSquared && Algorithms.distanceSq(segmentB, vertex) <= segmentLengthSquared;
+    }
+
+    public static boolean polygonContainsVertex(Vector2 vertex, Polygon polygon) {
+        short[] indices = EarClippingTriangulation.triangulate(polygon);
+        Triangle triangle = new Triangle();
+
+        for (int i = 0; i < indices.length / 3; ++i) {
+            short i1 = indices[i * 3];
+            short i2 = indices[i * 3 + 1];
+            short i3 = indices[i * 3 + 2];
+
+            triangle.set(polygon.getVertex(i1), polygon.getVertex(i2), polygon.getVertex(i3));
+            if (Algorithms.triangleContainsVertex(vertex, triangle)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -2,10 +2,9 @@ package org.vertexarmy.dsr.math;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
-import lombok.EqualsAndHashCode;
-
 import java.io.Serializable;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 
 /**
  * created by Alex
@@ -86,6 +85,24 @@ public class Polygon implements Serializable {
         }
 
         return vertexArray;
+    }
+
+    public boolean containsVertex(Vector2 vertex) {
+        short[] indices = EarClippingTriangulation.triangulate(this);
+        Triangle triangle = new Triangle();
+
+        for (int i = 0; i < indices.length / 3; ++i) {
+            short i1 = indices[i * 3];
+            short i2 = indices[i * 3 + 1];
+            short i3 = indices[i * 3 + 2];
+
+            triangle.set(vertexList.get(i1), vertexList.get(i2), vertexList.get(i3));
+            if (Algorithms.triangleContainsVertex(vertex, triangle)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public List<Edge> getEdgeList() {

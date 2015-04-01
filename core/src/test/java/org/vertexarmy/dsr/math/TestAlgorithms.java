@@ -32,44 +32,44 @@ public class TestAlgorithms {
         Triangle t3 = new Triangle(v3, v4, v6);
         Triangle t4 = new Triangle(v5, v4, v2);
 
-        Assert.assertTrue(Algorithms.vertexInsideTriangle(x4, t1));
+        Assert.assertTrue(Algorithms.triangleContainsVertex(x4, t1));
 
         Assert.assertTrue(Algorithms.vertexOnTrianglePerimeter(x2, t1));
         Assert.assertTrue(Algorithms.vertexOnTrianglePerimeter(x5, t1));
 
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x1, t1));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x3, t1));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x7, t1));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x8, t1));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x6, t1));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x1, t1));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x3, t1));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x7, t1));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x8, t1));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x6, t1));
 
-        Assert.assertTrue(Algorithms.vertexInsideTriangle(x6, t2));
+        Assert.assertTrue(Algorithms.triangleContainsVertex(x6, t2));
 
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x1, t2));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x2, t2));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x3, t2));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x4, t2));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x5, t2));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x7, t2));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x8, t2));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x1, t2));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x2, t2));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x3, t2));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x4, t2));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x5, t2));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x7, t2));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x8, t2));
 
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x1, t3));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x2, t3));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x3, t3));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x4, t3));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x5, t3));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x6, t3));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x7, t3));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x8, t3));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x1, t3));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x2, t3));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x3, t3));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x4, t3));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x5, t3));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x6, t3));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x7, t3));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x8, t3));
 
         Assert.assertTrue(Algorithms.vertexOnTrianglePerimeter(x5, t4));
 
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x1, t4));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x2, t4));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x3, t4));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x4, t4));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x6, t4));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x7, t4));
-        Assert.assertFalse(Algorithms.vertexInsideTriangle(x8, t4));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x1, t4));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x2, t4));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x3, t4));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x4, t4));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x6, t4));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x7, t4));
+        Assert.assertFalse(Algorithms.triangleContainsVertex(x8, t4));
     }
 }

@@ -67,7 +67,7 @@ public class EarClippingTriangulation {
         it.next();
 
         while (!it.current().equals(vertex.previous())) {
-            if (Algorithms.vertexInsideTriangle(it.current().position, triangle)) {
+            if (Algorithms.triangleContainsVertex(it.current().position, triangle)) {
                 return false;
             } else {
                 it.forward();

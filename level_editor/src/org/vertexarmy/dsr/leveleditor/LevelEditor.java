@@ -7,13 +7,13 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PolygonSprite;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.google.common.base.Function;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
@@ -26,21 +26,22 @@ import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.Level;
-import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraController;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
 import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.ui.*;
+import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
+import org.vertexarmy.dsr.leveleditor.ui.Dialog;
+import org.vertexarmy.dsr.leveleditor.ui.ElegantGraySkin;
+import org.vertexarmy.dsr.leveleditor.ui.LevelBackgroundDialog;
+import org.vertexarmy.dsr.leveleditor.ui.LevelLoadDialog;
+import org.vertexarmy.dsr.leveleditor.ui.LevelSaveDialog;
+import org.vertexarmy.dsr.leveleditor.ui.SpritePickerDialog;
+import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
+import org.vertexarmy.dsr.math.Algorithms;
 import org.vertexarmy.dsr.math.Polygon;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-
 class LevelEditor extends Game {
-    private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.instance();
-
     private final Log log = Log.create();
 
     private final Root root = new Root();
@@ -117,6 +118,25 @@ class LevelEditor extends Game {
             public InputProcessor getInputAdapter() {
                 return new InputAdapter() {
                     @Override
+                    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                        Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
+
+                        Polygon clickedPolygon = null;
+
+                        for (Polygon terrainPolygon : level.getTerrainPatches()) {
+                            if (Algorithms.polygonContainsVertex(mouseWorldPosition, terrainPolygon)) {
+                                clickedPolygon = terrainPolygon;
+                            }
+                        }
+
+                        if (clickedPolygon != null && clickedPolygon != terrainPolygonEditor.getPolygon()) {
+                            editPolygon(clickedPolygon);
+                            return true;
+                        }
+                        return false;
+                    }
+
+                    @Override
                     public boolean keyDown(int keycode) {
                         if (Shortcuts.isHideDebugInfoShortcut(keycode)) {
                             debugValuesPanel.setVisible(!debugValuesPanel.isVisible());
@@ -164,11 +184,16 @@ class LevelEditor extends Game {
     }
 
     private void loadAssets() {
-        // Load fonts
+        loadFonts();
+        loadTextures();
+    }
+
+    private void loadFonts() {
         FontRepository.instance().loadFont(AssetName.FONT_MARKE_8, Gdx.files.internal("fonts/marke_eigenbau_normal_8.fnt"));
         FontRepository.instance().loadFont(AssetName.FONT_VERA_SANS_MONO_10, Gdx.files.internal("fonts/vera_sans_mono_10.fnt"));
+    }
 
-        // Load textures
+    private void loadTextures() {
         Texture tilesTexture = new Texture(Gdx.files.internal("tiles.png"));
         TextureRepository.instance().addTexture("grass", new TextureRegion(tilesTexture, 0, 0, 32, 32));
         TextureRepository.instance().addTexture("dirt", new TextureRegion(tilesTexture, 32, 0, 32, 32));
