@@ -27,6 +27,8 @@ import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.Level;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
+import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraController;
+import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
 import org.vertexarmy.dsr.leveleditor.ui.*;
 
@@ -67,6 +69,10 @@ class LevelEditor extends Game {
 
     private LevelBackgroundDialog levelBackgroundDialog;
 
+    private UserPanningCameraController userUserPanningCameraController = new UserPanningCameraController();
+
+    private AutoScrollCameraController autoScrollCameraController = new AutoScrollCameraController();
+
     private LevelEditor(Function<LevelEditor, Boolean> initTask) {
         this.initTask = initTask;
     }
@@ -81,8 +87,8 @@ class LevelEditor extends Game {
 
         Node editorNode = createEditorNode();
 
-        root.addNode(new Node(ComponentType.INPUT, new CameraController()));
-        root.addNode(new Node(ComponentType.INPUT, new CameraController()));
+        root.addNode(new Node(ComponentType.INPUT, userUserPanningCameraController));
+        root.addNode(new Node(ComponentType.UPDATE, autoScrollCameraController));
         root.addNode(editorNode);
 
         initUI();
@@ -190,6 +196,24 @@ class LevelEditor extends Game {
             @Override
             public void saveFileRequested() {
                 saveDialog.show();
+            }
+
+            @Override
+            public void autoScrollForwardRequested() {
+                userUserPanningCameraController.setEnabled(false);
+                autoScrollCameraController.increaseSpeed();
+            }
+
+            @Override
+            public void pauseAutoScrollRequested() {
+                userUserPanningCameraController.setEnabled(true);
+                autoScrollCameraController.resetSpeed();
+            }
+
+            @Override
+            public void autoScrollBackwardRequested() {
+                userUserPanningCameraController.setEnabled(false);
+                autoScrollCameraController.decreaseSpeed();
             }
         });
 

@@ -6,5 +6,6 @@ package org.vertexarmy.dsr.core.component;
  */
 public enum ComponentType {
     RENDER,
-    INPUT
+    INPUT,
+    UPDATE
 }

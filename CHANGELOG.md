@@ -6,6 +6,7 @@
 - Support for fullscreen in the level editor (F11)
 - Texture picker dialog for the level editor
 - Level background editor with support for 5 background layers
+- Play forward / reverse buttons to autoscroll the level
 
 ### Fixed
 - The level editor ruler text is now properly scaling with the zoom

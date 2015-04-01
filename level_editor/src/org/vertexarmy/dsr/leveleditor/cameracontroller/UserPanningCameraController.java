@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor;
+package org.vertexarmy.dsr.leveleditor.cameracontroller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -15,7 +15,7 @@ import org.vertexarmy.dsr.math.Algorithms;
  * created by Alex
  * on 3/16/2015.
  */
-class CameraController extends InputAdapter implements InputComponent {
+public class UserPanningCameraController extends InputAdapter implements InputComponent {
     private static final float[] ZOOM_STEPS = new float[]{0.1f, 0.25f, 0.33f, 0.5f, 0.66f, 0.75f, 1.0f, 1.5f, 2f, 3f, 4f, 5f};
 
     private static final int DEFAULT_ZOOM_LEVEL_INDEX = 6;
@@ -28,12 +28,11 @@ class CameraController extends InputAdapter implements InputComponent {
 
     private int zoomStepIndex = DEFAULT_ZOOM_LEVEL_INDEX;
 
-    public CameraController() {
-    }
+    private boolean enabled = false;
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (!enableCameraPanning) {
+        if (!enabled || !enableCameraPanning) {
             return false;
         }
 
@@ -49,6 +48,10 @@ class CameraController extends InputAdapter implements InputComponent {
 
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
+        if (!enabled) {
+            return false;
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             enableCameraPanning = true;
             dragPosition.set(x, y);
@@ -61,6 +64,10 @@ class CameraController extends InputAdapter implements InputComponent {
 
     @Override
     public boolean keyUp(int keycode) {
+        if (!enabled) {
+            return false;
+        }
+
         if (keycode == Input.Keys.SPACE) {
             enableCameraPanning = false;
             return true;
@@ -71,6 +78,10 @@ class CameraController extends InputAdapter implements InputComponent {
 
     @Override
     public boolean scrolled(int amount) {
+        if (!enabled) {
+            return false;
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             zoomStepIndex = (int) Algorithms.clamp(zoomStepIndex - Math.signum(amount), 0, ZOOM_STEPS.length - 1);
             RenderSystem.instance().setZoom(ZOOM_STEPS[zoomStepIndex]);
@@ -81,5 +92,15 @@ class CameraController extends InputAdapter implements InputComponent {
     @Override
     public InputProcessor getInputAdapter() {
         return this;
+    }
+
+    public void setEnabled(boolean enabled) {
+        if (this.enabled != enabled) {
+            this.enabled = enabled;
+
+            if (!enabled) {
+                enableCameraPanning = false;
+            }
+        }
     }
 }
