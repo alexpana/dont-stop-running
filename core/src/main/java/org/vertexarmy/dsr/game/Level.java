@@ -81,6 +81,8 @@ public class Level implements Serializable {
     }
 
     public static Level createDefaultLevel() {
-        return new Level(null, null, ImmutableList.of(new Polygon(new float[]{100, 100, 100, -100, -100, -100, -100, 100})));
+        return new Level(null, null, ImmutableList.of(
+                new Polygon(new float[]{100, 100, 100, -100, -100, -100, -100, 100}),
+                new Polygon(new float[]{200, 200, 200, 100, 100, 100, 100, 200})));
     }
 }

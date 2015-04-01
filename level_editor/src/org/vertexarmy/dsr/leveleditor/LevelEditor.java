@@ -29,8 +29,10 @@ import org.vertexarmy.dsr.game.Level;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraController;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
+import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
 import org.vertexarmy.dsr.leveleditor.ui.*;
+import org.vertexarmy.dsr.math.Polygon;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,15 +47,13 @@ class LevelEditor extends Game {
 
     private final Function<LevelEditor, Boolean> initTask;
 
-    private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
+    private final LevelRenderer levelRenderer = new LevelRenderer();
 
     private final GridRenderer gridRenderer = new GridRenderer();
 
     private File boundLevelFile;
 
     private Level level;
-
-    private PolygonSprite terrainSprite;
 
     private PolygonEditor terrainPolygonEditor;
 
@@ -85,15 +85,15 @@ class LevelEditor extends Game {
 
         ElegantGraySkin.install(root.getUiNode().getUiSkin());
 
-        Node editorNode = createEditorNode();
-
         root.addNode(new Node(ComponentType.INPUT, userUserPanningCameraController));
         root.addNode(new Node(ComponentType.UPDATE, autoScrollCameraController));
-        root.addNode(editorNode);
+        root.addNode(createEditorNode());
 
         initUI();
 
         setLevel(Level.createDefaultLevel());
+
+        userUserPanningCameraController.setEnabled(true);
 
         initTask.apply(this);
     }
@@ -106,14 +106,7 @@ class LevelEditor extends Game {
 
                 gridRenderer.renderGrid();
 
-                backgroundRenderer.render();
-
-                PolygonSpriteBatch polygonSpriteBatch = RenderSystem.instance().getPolygonSpriteBatch();
-                if (level != null) {
-                    polygonSpriteBatch.begin();
-                    terrainSprite.draw(polygonSpriteBatch);
-                    polygonSpriteBatch.end();
-                }
+                levelRenderer.render();
 
                 gridRenderer.renderRulers();
             }
@@ -171,9 +164,11 @@ class LevelEditor extends Game {
     }
 
     private void loadAssets() {
+        // Load fonts
         FontRepository.instance().loadFont(AssetName.FONT_MARKE_8, Gdx.files.internal("fonts/marke_eigenbau_normal_8.fnt"));
         FontRepository.instance().loadFont(AssetName.FONT_VERA_SANS_MONO_10, Gdx.files.internal("fonts/vera_sans_mono_10.fnt"));
 
+        // Load textures
         Texture tilesTexture = new Texture(Gdx.files.internal("tiles.png"));
         TextureRepository.instance().addTexture("grass", new TextureRegion(tilesTexture, 0, 0, 32, 32));
         TextureRepository.instance().addTexture("dirt", new TextureRegion(tilesTexture, 32, 0, 32, 32));
@@ -251,7 +246,7 @@ class LevelEditor extends Game {
             public void dialogAccepted(LevelBackgroundDialog.Event event) {
                 level.getBackgroundLayers().clear();
                 level.getBackgroundLayers().addAll(event.getBackgroundLayers());
-                backgroundRenderer.reloadLevel();
+                levelRenderer.reloadLevel();
             }
         });
     }
@@ -320,26 +315,24 @@ class LevelEditor extends Game {
 
         DebugValues.instance().setValue(DebugItems.FPS, String.valueOf(Gdx.graphics.getFramesPerSecond()));
 
-        if (level != null) {
-            terrainSprite = SPRITE_FACTORY.createSprite(level.getTerrainPatches().get(0));
-            terrainSprite.setColor(Color.BLACK);
-        }
+        levelRenderer.reloadLevel();
     }
 
-    void setLevel(Level level) {
+    private void setLevel(Level level) {
         this.level = level;
 
-        terrainSprite = SPRITE_FACTORY.createSprite(level.getTerrainPatches().get(0));
-        terrainSprite.setColor(Color.BLACK);
+        editPolygon(level.getTerrainPatches().get(0));
 
+        levelRenderer.setLevel(level);
+    }
+
+    private void editPolygon(Polygon polygon) {
         if (terrainPolygonEditor != null) {
             root.removeNode(terrainPolygonEditor.getNode());
         }
 
-        terrainPolygonEditor = new PolygonEditor(level.getTerrainPatches().get(0));
+        terrainPolygonEditor = new PolygonEditor(polygon);
         root.addNode(terrainPolygonEditor.getNode());
-
-        backgroundRenderer.setLevel(level);
     }
 
     public static void launch(Function<LevelEditor, Boolean> initTask) {

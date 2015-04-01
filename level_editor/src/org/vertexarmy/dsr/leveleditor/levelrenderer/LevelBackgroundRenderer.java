@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor;
+package org.vertexarmy.dsr.leveleditor.levelrenderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,7 +17,7 @@ import java.util.Map;
  * created by Alex
  * on 3/31/2015.
  */
-public class BackgroundRenderer {
+public class LevelBackgroundRenderer {
 
     private Level level;
 
