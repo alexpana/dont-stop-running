@@ -5,20 +5,16 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
 import com.beust.jcommander.internal.Maps;
-import java.util.Map;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.game.Level;
 import org.vertexarmy.dsr.leveleditor.AssetName;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by alex
@@ -75,10 +71,19 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
     }
 
     private void initComponents() {
-        layerList.setItems(Array.with("Background", "Far", "Middle", "Near", "Foreground"));
 
+        String[] backgroundLayerNames = new String[Level.BackgroundLayerType.values().length];
+
+        for (int i = 0; i < backgroundLayerNames.length; ++i) {
+            backgroundLayerNames[i] = Level.BackgroundLayerType.values()[i].name().toLowerCase();
+        }
+
+        layerList.setItems(Array.with(backgroundLayerNames));
+
+        int i = 0;
         for (String item : layerList.getItems()) {
-            backgroundLayerMap.put(item, new Level.BackgroundLayer(null, 1.0f));
+            backgroundLayerMap.put(item, new Level.BackgroundLayer(null, 1.0f, Level.BackgroundLayerType.values()[i]));
+            i += 1;
         }
 
         textureName.setStyle(new Label.LabelStyle(textureName.getStyle()));
@@ -160,7 +165,7 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
 
     @Override
     protected void doAction() {
-        notifyListener(new Event(backgroundLayerMap));
+        notifyListener(new Event(backgroundLayerMap.values()));
         hide();
     }
 
@@ -202,6 +207,6 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
     @RequiredArgsConstructor
     public static class Event {
         @Getter
-        private final Map<String, Level.BackgroundLayer> backgroundLayers;
+        private final Collection<Level.BackgroundLayer> backgroundLayers;
     }
 }

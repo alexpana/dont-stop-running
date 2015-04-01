@@ -14,9 +14,6 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.google.common.base.Function;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
@@ -31,14 +28,11 @@ import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.Level;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
-import org.vertexarmy.dsr.leveleditor.ui.Dialog;
-import org.vertexarmy.dsr.leveleditor.ui.ElegantGraySkin;
-import org.vertexarmy.dsr.leveleditor.ui.LevelBackgroundDialog;
-import org.vertexarmy.dsr.leveleditor.ui.LevelLoadDialog;
-import org.vertexarmy.dsr.leveleditor.ui.LevelSaveDialog;
-import org.vertexarmy.dsr.leveleditor.ui.SpritePickerDialog;
-import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
+import org.vertexarmy.dsr.leveleditor.ui.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 class LevelEditor extends Game {
     private static final SpriteFactory SPRITE_FACTORY = SpriteFactory.instance();
@@ -232,7 +226,8 @@ class LevelEditor extends Game {
             @Override
             public void dialogAccepted(LevelBackgroundDialog.Event event) {
                 level.getBackgroundLayers().clear();
-                level.getBackgroundLayers().addAll(event.getBackgroundLayers().values());
+                level.getBackgroundLayers().addAll(event.getBackgroundLayers());
+                backgroundRenderer.reloadLevel();
             }
         });
     }
@@ -328,6 +323,7 @@ class LevelEditor extends Game {
         config.width = 1000;
         config.height = 800;
         config.fullscreen = false;
+        config.vSyncEnabled = true;
         config.title = "Level Editor - " + Version.value();
         new LwjglApplication(new LevelEditor(initTask), config);
     }

@@ -5,6 +5,7 @@
 - A maximum height indicator to the level editor grid to signal the peak of the level (default: 800)
 - Support for fullscreen in the level editor (F11)
 - Texture picker dialog for the level editor
+- Level background editor with support for 5 background layers
 
 ### Fixed
 - The level editor ruler text is now properly scaling with the zoom

@@ -165,6 +165,6 @@ public class RenderSystem {
     }
 
     public float screenToWorld(float distance) {
-        return distance * zoom;
+        return distance / zoom;
     }
 }
