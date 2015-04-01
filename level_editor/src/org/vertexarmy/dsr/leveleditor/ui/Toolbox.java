@@ -40,10 +40,9 @@ public class Toolbox extends Table {
         openLevelButton = UIToolkit.createImageButton(AssetName.ICON_FILE_OPEN);
         saveLevelButton = UIToolkit.createImageButton(AssetName.ICON_FILE_SAVE);
 
-        // TODO: Add proper icons here
-        autoScrollForwardButton = UIToolkit.createImageButton(AssetName.ICON_FILE_OPEN);
-        pauseAutoScrollButton = UIToolkit.createImageButton(AssetName.ICON_FILE_OPEN);
-        autoScrollBackwardButton = UIToolkit.createImageButton(AssetName.ICON_FILE_OPEN);
+        autoScrollForwardButton = UIToolkit.createImageButton(AssetName.ICON_PLAY_FORWARD);
+        pauseAutoScrollButton = UIToolkit.createImageButton(AssetName.ICON_PAUSE);
+        autoScrollBackwardButton = UIToolkit.createImageButton(AssetName.ICON_PLAY_REVERSE);
     }
 
     private void layoutComponents() {

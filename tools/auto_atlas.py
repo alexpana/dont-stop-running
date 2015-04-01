@@ -54,6 +54,6 @@ def create_atlas(texture, size, grid_size, region_names):
 
 
 atlas = create_atlas("ui_icons.png", [85, 85], 21,
-                     ["icon_alignv", "icon_alignh", "icon_file_open", "icon_file_save", "icon_select_texture", "icon_clear_texture"])
+                     ["icon_alignv", "icon_alignh", "icon_file_open", "icon_file_save", "icon_select_texture", "icon_clear_texture", "icon_play_forward", "icon_pause", "icon_play_reverse"])
 
 print atlas.getvalue()

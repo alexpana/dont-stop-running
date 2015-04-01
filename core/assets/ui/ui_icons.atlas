@@ -45,4 +45,25 @@ icon_clear_texture
   orig: 21, 21
   offset: 0, 0
   index: -1
+icon_play_forward
+  rotate: false
+  xy: 42, 21
+  size: 21, 21
+  orig: 42, 21
+  offset: 0, 0
+  index: -1
+icon_pause
+  rotate: false
+  xy: 63, 21
+  size: 21, 21
+  orig: 63, 21
+  offset: 0, 0
+  index: -1
+icon_play_reverse
+  rotate: false
+  xy: 0, 42
+  size: 21, 21
+  orig: 0, 42
+  offset: 0, 0
+  index: -1
 
