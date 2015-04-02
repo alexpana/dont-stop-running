@@ -6,11 +6,9 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.component.ComponentType;
@@ -168,5 +166,15 @@ public class PolygonEditor {
                 return input.getVertexIndex();
             }
         }));
+    }
+
+    public Vector2 getHoveredVertex() {
+        for (VertexHandler handler : vertexHandlers) {
+            if (handler.isHovered()) {
+                return getVertex(handler);
+            }
+        }
+
+        return null;
     }
 }

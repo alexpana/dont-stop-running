@@ -121,6 +121,10 @@ class LevelEditor extends Game {
                     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                         Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
 
+                        if (terrainPolygonEditor.getHoveredVertex() != null) {
+                            return false;
+                        }
+
                         Polygon clickedPolygon = null;
 
                         for (Polygon terrainPolygon : level.getTerrainPatches()) {
