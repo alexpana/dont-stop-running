@@ -14,6 +14,7 @@ import com.google.common.base.Function;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import javax.annotation.Nullable;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
@@ -119,25 +120,34 @@ class LevelEditor extends Game {
                 return new InputAdapter() {
                     @Override
                     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                        Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
-
                         if (terrainPolygonEditor.getHoveredVertex() != null) {
                             return false;
                         }
 
-                        Polygon clickedPolygon = null;
-
-                        for (Polygon terrainPolygon : level.getTerrainPatches()) {
-                            if (Algorithms.polygonContainsVertex(mouseWorldPosition, terrainPolygon)) {
-                                clickedPolygon = terrainPolygon;
-                            }
-                        }
+                        Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
+                        Polygon clickedPolygon = findPolygonWhichContains(mouseWorldPosition);
 
                         if (clickedPolygon != null && clickedPolygon != terrainPolygonEditor.getPolygon()) {
                             editPolygon(clickedPolygon);
                             return true;
                         }
                         return false;
+                    }
+
+                    @Override
+                    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                        if (terrainPolygonEditor.getHoveredVertex() != null) {
+                            return false;
+                        }
+
+                        Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
+
+                        if (findPolygonWhichContains(mouseWorldPosition) == null) {
+                            editPolygon(null);
+                            return false;
+                        }
+
+                        return true;
                     }
 
                     @Override
@@ -180,6 +190,17 @@ class LevelEditor extends Game {
                         }
 
                         return false;
+                    }
+
+                    private Polygon findPolygonWhichContains(Vector2 mouseWorldPosition) {
+                        Polygon clickedPolygon = null;
+
+                        for (Polygon terrainPolygon : level.getTerrainPatches()) {
+                            if (Algorithms.polygonContainsVertex(mouseWorldPosition, terrainPolygon)) {
+                                clickedPolygon = terrainPolygon;
+                            }
+                        }
+                        return clickedPolygon;
                     }
                 };
             }
@@ -355,13 +376,19 @@ class LevelEditor extends Game {
         levelRenderer.setLevel(level);
     }
 
-    private void editPolygon(Polygon polygon) {
+    private void editPolygon(@Nullable Polygon polygon) {
         if (terrainPolygonEditor != null) {
+            if (polygon == terrainPolygonEditor.getPolygon()) {
+                return;
+            }
+
             root.removeNode(terrainPolygonEditor.getNode());
         }
 
-        terrainPolygonEditor = new PolygonEditor(polygon);
-        root.addNode(terrainPolygonEditor.getNode());
+        if (polygon != null) {
+            terrainPolygonEditor = new PolygonEditor(polygon);
+            root.addNode(terrainPolygonEditor.getNode());
+        }
     }
 
     public static void launch(Function<LevelEditor, Boolean> initTask) {
