@@ -2,13 +2,7 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.vertexarmy.dsr.core.component.ComponentType;
@@ -16,6 +10,10 @@ import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
 import org.vertexarmy.dsr.math.Polygon;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * created by Alex
@@ -26,10 +24,10 @@ public class PolygonEditor {
     private final List<VertexHandler> vertexHandlers = Lists.newArrayList();
 
     @Getter
-    private final Polygon polygon;
+    private Polygon polygon;
 
     @Getter
-    private final Node node;
+    private Node node;
 
     public enum EditModeType {
         DEFAULT,
@@ -40,19 +38,19 @@ public class PolygonEditor {
 
     private final Map<EditModeType, EditMode> editModes = Maps.newHashMap();
 
-    public PolygonEditor(Polygon polygon) {
-        this.polygon = polygon;
-
-        updateVertexHandlers();
-
+    public PolygonEditor() {
         editModes.put(EditModeType.DEFAULT, new EditModeDefault(this));
         editModes.put(EditModeType.ADD_VERTEX, new EditModeAddVertex(this));
-
         setEditMode(EditModeType.DEFAULT);
 
         node = new Node();
         node.addComponent(ComponentType.RENDER, new PolygonEditorRenderComponent(this));
         node.addComponent(ComponentType.INPUT, new PolygonEditorInputComponent(this));
+    }
+
+    public PolygonEditor(Polygon polygon) {
+        super();
+        bindToPolygon(polygon);
     }
 
     EditMode getEditMode() {
@@ -85,6 +83,34 @@ public class PolygonEditor {
             }
         }
         return null;
+    }
+
+    public boolean isBoundToPolygon() {
+        return polygon != null;
+    }
+
+    public boolean bindToPolygon(Polygon polygon) {
+        if (this.polygon == polygon) {
+            return false;
+        }
+
+        this.polygon = polygon;
+
+        updateVertexHandlers();
+
+        setEditMode(EditModeType.DEFAULT);
+
+        return true;
+    }
+
+    public boolean unbindFromPolygon() {
+        if (this.polygon != null) {
+            this.polygon = null;
+            vertexHandlers.clear();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<VertexHandler> getSelectedHandlers() {
@@ -158,14 +184,6 @@ public class PolygonEditor {
             }
         }
         return null;
-    }
-
-    public List<Integer> getHandlerIndices(List<VertexHandler> handlers) {
-        return ImmutableList.copyOf(Iterables.transform(handlers, new Function<VertexHandler, Integer>() {
-            public Integer apply(VertexHandler input) {
-                return input.getVertexIndex();
-            }
-        }));
     }
 
     public Vector2 getHoveredVertex() {

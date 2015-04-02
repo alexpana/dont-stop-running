@@ -18,8 +18,6 @@ class PolygonEditorRenderComponent extends RenderComponent {
     private static final Color DRAGGED_VERTEX_HANDLER_COLOR = Color.GREEN;
     private static final Color SELECTED_VERTEX_HANDLER_COLOR = Color.RED;
     private static final Color DEFAULT_VERTEX_HANDLER_COLOR = Color.YELLOW;
-    private final Polygon polygon;
-
     private final List<VertexHandler> vertexHandlers;
 
     private final PolygonEditor polygonEditor;
@@ -28,12 +26,17 @@ class PolygonEditorRenderComponent extends RenderComponent {
 
     public PolygonEditorRenderComponent(PolygonEditor polygonEditor) {
         this.polygonEditor = polygonEditor;
-        polygon = polygonEditor.getPolygon();
         vertexHandlers = polygonEditor.getVertexHandlers();
     }
 
     @Override
     public void render() {
+        if (!polygonEditor.isBoundToPolygon()) {
+            return;
+        }
+
+        Polygon polygon = polygonEditor.getPolygon();
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(new Color(0.35f, 0.35f, 0.35f, 1.0f));
         for (int i = 1; i < polygon.getVertexCount(); ++i) {
@@ -53,6 +56,8 @@ class PolygonEditorRenderComponent extends RenderComponent {
     }
 
     private void drawHandler(VertexHandler handler) {
+        Polygon polygon = polygonEditor.getPolygon();
+
         float zoom = RenderSystem.instance().getZoom();
         Vector2 vertex = polygon.getVertex(handler.getVertexIndex());
 
@@ -71,6 +76,8 @@ class PolygonEditorRenderComponent extends RenderComponent {
     }
 
     private void drawEdge(int indexFrom, int indexTo) {
+        Polygon polygon = polygonEditor.getPolygon();
+
         Vector2 from = polygon.getVertex(indexFrom);
         Vector2 to = polygon.getVertex(indexTo);
 

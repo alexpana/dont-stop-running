@@ -18,13 +18,15 @@ public class LevelEditorLauncher {
 
         final String levelName = arguments.length > 0 ? arguments[0] : null;
 
-        LevelEditor.launch(new Function<LevelEditor, Boolean>() {
+        Function<LevelEditor, Boolean> initTask = arguments.length > 0 ? new Function<LevelEditor, Boolean>() {
             @Nullable
             @Override
             public Boolean apply(LevelEditor input) {
                 input.loadLevel(new File(levelName));
                 return true;
             }
-        });
+        } : null;
+
+        LevelEditor.launch(initTask);
     }
 }

@@ -3,14 +3,15 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.beust.jcommander.internal.Maps;
+
 import java.util.Map;
+
 import org.vertexarmy.dsr.core.component.InputComponent;
 
 /**
  * created by Alex
  * on 3/23/2015.
  */
-// TODO: change modes using hotkeys: SHIFT, CTRL, etc.
 class PolygonEditorInputComponent implements InputComponent, InputProcessor {
     private final PolygonEditor polygonEditor;
 
@@ -30,6 +31,10 @@ class PolygonEditorInputComponent implements InputComponent, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        if (!polygonEditor.isBoundToPolygon()) {
+            return false;
+        }
+
         if (hotkeys.containsKey(keycode)) {
             polygonEditor.setEditMode(hotkeys.get(keycode));
             return true;
@@ -39,36 +44,43 @@ class PolygonEditorInputComponent implements InputComponent, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        return polygonEditor.getEditMode().keyUp(keycode);
+        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().keyUp(keycode);
+
     }
 
     @Override
     public boolean keyTyped(char character) {
-        return polygonEditor.getEditMode().keyTyped(character);
+        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().keyTyped(character);
+
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return polygonEditor.getEditMode().touchDown(screenX, screenY, pointer, button);
+        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().touchDown(screenX, screenY, pointer, button);
+
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return polygonEditor.getEditMode().touchUp(screenX, screenY, pointer, button);
+        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().touchUp(screenX, screenY, pointer, button);
+
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return polygonEditor.getEditMode().touchDragged(screenX, screenY, pointer);
+        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().touchDragged(screenX, screenY, pointer);
+
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return polygonEditor.getEditMode().mouseMoved(screenX, screenY);
+        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().mouseMoved(screenX, screenY);
+
     }
 
     @Override
     public boolean scrolled(int amount) {
-        return polygonEditor.getEditMode().scrolled(amount);
+        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().scrolled(amount);
+
     }
 }

@@ -11,10 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.google.common.base.Function;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import javax.annotation.Nullable;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
@@ -31,16 +27,14 @@ import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraControlle
 import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
 import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.ui.DebugValuesPanel;
-import org.vertexarmy.dsr.leveleditor.ui.Dialog;
-import org.vertexarmy.dsr.leveleditor.ui.ElegantGraySkin;
-import org.vertexarmy.dsr.leveleditor.ui.LevelBackgroundDialog;
-import org.vertexarmy.dsr.leveleditor.ui.LevelLoadDialog;
-import org.vertexarmy.dsr.leveleditor.ui.LevelSaveDialog;
-import org.vertexarmy.dsr.leveleditor.ui.SpritePickerDialog;
-import org.vertexarmy.dsr.leveleditor.ui.Toolbox;
+import org.vertexarmy.dsr.leveleditor.ui.*;
 import org.vertexarmy.dsr.math.Algorithms;
 import org.vertexarmy.dsr.math.Polygon;
+
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 class LevelEditor extends Game {
     private final Log log = Log.create();
@@ -87,9 +81,12 @@ class LevelEditor extends Game {
 
         ElegantGraySkin.install(root.getUiNode().getUiSkin());
 
+        terrainPolygonEditor = new PolygonEditor();
+
+        root.addNode(createEditorNode());
         root.addNode(new Node(ComponentType.INPUT, userUserPanningCameraController));
         root.addNode(new Node(ComponentType.UPDATE, autoScrollCameraController));
-        root.addNode(createEditorNode());
+        root.addNode(terrainPolygonEditor.getNode());
 
         initUI();
 
@@ -97,7 +94,9 @@ class LevelEditor extends Game {
 
         userUserPanningCameraController.setEnabled(true);
 
-        initTask.apply(this);
+        if (initTask != null) {
+            initTask.apply(this);
+        }
     }
 
     private Node createEditorNode() {
@@ -125,29 +124,13 @@ class LevelEditor extends Game {
                         }
 
                         Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
-                        Polygon clickedPolygon = findPolygonWhichContains(mouseWorldPosition);
+                        Polygon pickedPolygon = findPolygonWhichContains(mouseWorldPosition);
 
-                        if (clickedPolygon != null && clickedPolygon != terrainPolygonEditor.getPolygon()) {
-                            editPolygon(clickedPolygon);
-                            return true;
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                        if (terrainPolygonEditor.getHoveredVertex() != null) {
+                        if (pickedPolygon != null) {
+                            return pickPolygonForEditing(pickedPolygon);
+                        } else {
                             return false;
                         }
-
-                        Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
-
-                        if (findPolygonWhichContains(mouseWorldPosition) == null) {
-                            editPolygon(null);
-                            return false;
-                        }
-
-                        return true;
                     }
 
                     @Override
@@ -173,6 +156,11 @@ class LevelEditor extends Game {
 
                         if (Shortcuts.isOpenShortcut(keycode)) {
                             openLevelFile();
+                            return true;
+                        }
+
+                        if (Shortcuts.isDeselectShortcut(keycode)) {
+                            pickPolygonForEditing(null);
                             return true;
                         }
 
@@ -371,23 +359,14 @@ class LevelEditor extends Game {
     private void setLevel(Level level) {
         this.level = level;
 
-        editPolygon(level.getTerrainPatches().get(0));
-
         levelRenderer.setLevel(level);
     }
 
-    private void editPolygon(@Nullable Polygon polygon) {
-        if (terrainPolygonEditor != null) {
-            if (polygon == terrainPolygonEditor.getPolygon()) {
-                return;
-            }
-
-            root.removeNode(terrainPolygonEditor.getNode());
-        }
-
-        if (polygon != null) {
-            terrainPolygonEditor = new PolygonEditor(polygon);
-            root.addNode(terrainPolygonEditor.getNode());
+    private boolean pickPolygonForEditing(@Nullable Polygon polygon) {
+        if (polygon == null) {
+            return terrainPolygonEditor.unbindFromPolygon();
+        } else {
+            return terrainPolygonEditor.bindToPolygon(polygon);
         }
     }
 

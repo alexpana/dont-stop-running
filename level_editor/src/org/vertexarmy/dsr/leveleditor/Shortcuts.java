@@ -35,4 +35,8 @@ public class Shortcuts {
     public static boolean isHideDebugInfoShortcut(int keycode) {
         return keycode == Input.Keys.F1;
     }
+
+    public static boolean isDeselectShortcut(int keycode) {
+        return keycode == Input.Keys.ESCAPE;
+    }
 }
