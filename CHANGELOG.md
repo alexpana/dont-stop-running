@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## [1.2] 2015-04-04
 ### Added
 - A maximum height indicator to the level editor grid to signal the peak of the level (default: 800)
 - Support for fullscreen in the level editor (F11)
