@@ -9,7 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Maps;
 import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
-import org.vertexarmy.dsr.game.Level;
+import org.vertexarmy.dsr.game.level.BackgroundLayer;
+import org.vertexarmy.dsr.game.level.Level;
 
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class LevelBackgroundRenderer {
 
     private Level level;
 
-    private final Map<Level.BackgroundLayerType, Sprite> backgroundSprites = Maps.newHashMap();
+    private final Map<BackgroundLayer.Type, Sprite> backgroundSprites = Maps.newHashMap();
 
     public void setLevel(Level level) {
         this.level = level;
@@ -34,7 +35,7 @@ public class LevelBackgroundRenderer {
 
         batch.begin();
 
-        for (Level.BackgroundLayerType layerType : Level.BackgroundLayerType.values()) {
+        for (BackgroundLayer.Type layerType : BackgroundLayer.Type.values()) {
             Sprite sprite = backgroundSprites.get(layerType);
             if (sprite == null) {
                 continue;
@@ -68,8 +69,8 @@ public class LevelBackgroundRenderer {
 
     public void reloadLevel() {
         backgroundSprites.clear();
-        for (Level.BackgroundLayerType layerType : Level.BackgroundLayerType.values()) {
-            Level.BackgroundLayer layer = level.getBackgroundLayerByType(layerType);
+        for (BackgroundLayer.Type layerType : BackgroundLayer.Type.values()) {
+            BackgroundLayer layer = level.getBackgroundLayerByType(layerType);
             if (layer != null && layer.getTextureName() != null) {
                 TextureRegion texture = TextureRepository.instance().getTexture(layer.getTextureName());
 

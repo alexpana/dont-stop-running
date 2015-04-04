@@ -22,7 +22,7 @@ import org.vertexarmy.dsr.core.component.InputComponent;
 import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
-import org.vertexarmy.dsr.game.Level;
+import org.vertexarmy.dsr.game.level.Level;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraController;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
 import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
@@ -126,11 +126,7 @@ class LevelEditor extends Game {
                         Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
                         Polygon pickedPolygon = findPolygonWhichContains(mouseWorldPosition);
 
-                        if (pickedPolygon != null) {
-                            return pickPolygonForEditing(pickedPolygon);
-                        } else {
-                            return false;
-                        }
+                        return pickedPolygon != null && pickPolygonForEditing(pickedPolygon);
                     }
 
                     @Override

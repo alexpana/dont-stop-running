@@ -1,6 +1,6 @@
 package org.vertexarmy.dsr.leveleditor.levelrenderer;
 
-import org.vertexarmy.dsr.game.Level;
+import org.vertexarmy.dsr.game.level.Level;
 
 /**
  * Created by alex
@@ -8,26 +8,33 @@ import org.vertexarmy.dsr.game.Level;
  */
 public class LevelRenderer {
 
-    private Level level;
+	private Level level;
 
-    private final LevelBackgroundRenderer backgroundRenderer = new LevelBackgroundRenderer();
+	private final LevelBackgroundRenderer backgroundRenderer = new LevelBackgroundRenderer();
 
-    private final LevelTerrainRenderer terrainRenderer = new LevelTerrainRenderer();
+	private final LevelTerrainRenderer terrainRenderer = new LevelTerrainRenderer();
 
-    public void setLevel(Level level) {
-        this.level = level;
-        backgroundRenderer.setLevel(level);
-        terrainRenderer.setLevel(level);
-    }
+	private final LevelSpritesRenderer spritesRenderer = new LevelSpritesRenderer();
 
-    public void render() {
-        backgroundRenderer.render();
-        terrainRenderer.render();
-    }
+	public void setLevel(Level level) {
+		this.level = level;
+		backgroundRenderer.setLevel(level);
+		terrainRenderer.setLevel(level);
+		spritesRenderer.setLevel(level);
+	}
 
-    public void reloadLevel() {
-        backgroundRenderer.reloadLevel();
-        terrainRenderer.reloadLevel();
-    }
+	public void render() {
+		backgroundRenderer.render();
+
+		spritesRenderer.renderBackgroundSprites();
+		terrainRenderer.render();
+		spritesRenderer.renderForegroundSprites();
+	}
+
+	public void reloadLevel() {
+		backgroundRenderer.reloadLevel();
+		terrainRenderer.reloadLevel();
+		spritesRenderer.reloadLevel();
+	}
 
 }

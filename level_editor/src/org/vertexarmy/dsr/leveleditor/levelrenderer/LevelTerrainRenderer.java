@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
-import org.vertexarmy.dsr.game.Level;
+import org.vertexarmy.dsr.game.level.Level;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.math.Polygon;
 

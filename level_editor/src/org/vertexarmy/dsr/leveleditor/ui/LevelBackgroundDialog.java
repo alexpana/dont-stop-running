@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.beust.jcommander.internal.Maps;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.vertexarmy.dsr.game.Level;
+import org.vertexarmy.dsr.game.level.BackgroundLayer;
 import org.vertexarmy.dsr.leveleditor.AssetName;
 
 import java.util.Collection;
@@ -23,7 +23,7 @@ import java.util.Map;
 public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
 
     // Model
-    private final Map<String, Level.BackgroundLayer> backgroundLayerMap = Maps.newHashMap();
+    private final Map<String, BackgroundLayer> backgroundLayerMap = Maps.newHashMap();
 
     // View
     private final List<String> layerList;
@@ -72,17 +72,17 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
 
     private void initComponents() {
 
-        String[] backgroundLayerNames = new String[Level.BackgroundLayerType.values().length];
+        String[] backgroundLayerNames = new String[BackgroundLayer.Type.values().length];
 
         for (int i = 0; i < backgroundLayerNames.length; ++i) {
-            backgroundLayerNames[i] = Level.BackgroundLayerType.values()[i].name().toLowerCase();
+            backgroundLayerNames[i] = BackgroundLayer.Type.values()[i].name().toLowerCase();
         }
 
         layerList.setItems(Array.with(backgroundLayerNames));
 
         int i = 0;
         for (String item : layerList.getItems()) {
-            backgroundLayerMap.put(item, new Level.BackgroundLayer(null, 1.0f, Level.BackgroundLayerType.values()[i]));
+            backgroundLayerMap.put(item, new BackgroundLayer(null, 1.0f, BackgroundLayer.Type.values()[i]));
             i += 1;
         }
 
@@ -187,7 +187,7 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
     }
 
     private void updateViewToMatchModel() {
-        Level.BackgroundLayer selectedLayer = getSelectedLayer();
+        BackgroundLayer selectedLayer = getSelectedLayer();
 
         if (selectedLayer.getTextureName() != null) {
             textureName.getStyle().fontColor = Color.WHITE;
@@ -200,13 +200,13 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
         parallaxSpeedTextField.setText(String.valueOf(selectedLayer.getParallaxSpeedScale()));
     }
 
-    private Level.BackgroundLayer getSelectedLayer() {
+    private BackgroundLayer getSelectedLayer() {
         return backgroundLayerMap.get(layerList.getSelected());
     }
 
     @RequiredArgsConstructor
     public static class Event {
         @Getter
-        private final Collection<Level.BackgroundLayer> backgroundLayers;
+        private final Collection<BackgroundLayer> backgroundLayers;
     }
 }
