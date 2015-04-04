@@ -2,9 +2,10 @@ package org.vertexarmy.dsr.collection;
 
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;
+import lombok.RequiredArgsConstructor;
+
 import java.util.Collection;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 
 /**
  * created by Alex

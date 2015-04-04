@@ -1,17 +1,13 @@
 package org.vertexarmy.dsr.graphics;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import org.vertexarmy.dsr.graphics.GraphicsUtils.GlError;
+
 import java.util.HashMap;
 import java.util.Map;
-import org.vertexarmy.dsr.graphics.GraphicsUtils.GlError;
 
 /**
  * created by Alex

@@ -1,13 +1,14 @@
 package org.vertexarmy.dsr.atlas_viewer;
 
 import com.beust.jcommander.internal.Maps;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import javax.imageio.ImageIO;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * created by Alex

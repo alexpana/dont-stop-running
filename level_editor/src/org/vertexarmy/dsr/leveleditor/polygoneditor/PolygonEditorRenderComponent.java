@@ -2,13 +2,12 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-
-import java.util.List;
-
 import com.badlogic.gdx.math.Vector2;
 import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.math.Polygon;
+
+import java.util.List;
 
 /**
  * created by Alex

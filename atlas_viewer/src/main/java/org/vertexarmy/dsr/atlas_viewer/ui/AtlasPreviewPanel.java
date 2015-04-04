@@ -1,14 +1,11 @@
 package org.vertexarmy.dsr.atlas_viewer.ui;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import org.vertexarmy.dsr.atlas_viewer.TextureAtlas;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import javax.swing.JPanel;
-import org.vertexarmy.dsr.atlas_viewer.TextureAtlas;
 
 /**
  * created by Alex
@@ -61,7 +58,7 @@ public class AtlasPreviewPanel extends JPanel {
                 int xr = (int) (((getWidth() / zoom - texture.getWidth()) / 2 + region.x) * zoom) - 1;
                 int yr = (int) (((getHeight() / zoom - texture.getHeight()) / 2 + region.y) * zoom) - 1;
                 int wr = (int) ((region.w) * zoom) + 1;
-                int hr = (int) ((region.h)* zoom) + 1;
+                int hr = (int) ((region.h) * zoom) + 1;
 
                 g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{4, 4}, 0));
                 g2d.setColor(HIGHLIGHT_COLOR_A);

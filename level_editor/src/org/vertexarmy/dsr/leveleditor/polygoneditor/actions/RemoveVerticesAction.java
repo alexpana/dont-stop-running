@@ -2,9 +2,10 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor.actions;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
-import java.util.List;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
+
+import java.util.List;
 
 /**
  * created by Alex

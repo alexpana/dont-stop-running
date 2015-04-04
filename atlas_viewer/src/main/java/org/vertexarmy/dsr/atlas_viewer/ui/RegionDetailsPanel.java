@@ -1,11 +1,10 @@
 package org.vertexarmy.dsr.atlas_viewer.ui;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 import org.vertexarmy.dsr.atlas_viewer.TextureAtlas;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * created by Alex
@@ -45,7 +44,7 @@ public class RegionDetailsPanel extends JPanel {
     }
 
     public void setRegion(TextureAtlas.Region region) {
-        positionLabel.setText((int)region.x + ", " + (int)region.y);
-        sizeLabel.setText((int)region.w + ", " + (int)region.h);
+        positionLabel.setText((int) region.x + ", " + (int) region.y);
+        sizeLabel.setText((int) region.w + ", " + (int) region.h);
     }
 }

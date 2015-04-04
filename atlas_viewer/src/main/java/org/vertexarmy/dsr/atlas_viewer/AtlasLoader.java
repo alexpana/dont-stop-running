@@ -5,6 +5,7 @@ import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -43,7 +44,6 @@ public class AtlasLoader {
 
     private TextureAtlas doLoad() {
         String textureName = new File(atlasFile.getParent(), readLine()).toString();
-        Map<String, String> atlasParameters = readParameters();
         Map<String, TextureAtlas.Region> regionMap = readRegions();
 
         TextureAtlas atlas = new TextureAtlas(textureName);

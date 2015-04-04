@@ -12,10 +12,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.vertexarmy.dsr.game.behavior.Behavior;
 import org.vertexarmy.dsr.game.behavior.SpriteRotateBehavior;
 import org.vertexarmy.dsr.game.behavior.SweepHorizontalBehavior;
@@ -24,6 +20,11 @@ import org.vertexarmy.dsr.game.objects.GameObject;
 import org.vertexarmy.dsr.game.objects.SpriteObject;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
 import org.vertexarmy.dsr.math.Polygon;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RunningGame extends Game {
     private Map<Tiles, TextureRegion> tiles = new HashMap<>();

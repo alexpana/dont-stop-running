@@ -3,8 +3,9 @@ package org.vertexarmy.dsr.core.assets;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.beust.jcommander.internal.Maps;
-import java.util.Map;
 import org.vertexarmy.dsr.core.Log;
+
+import java.util.Map;
 
 /**
  * created by Alex

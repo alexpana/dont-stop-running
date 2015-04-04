@@ -9,9 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
-
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
 import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.core.ActionManager;
@@ -19,14 +16,10 @@ import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.AlignHandlersHorizontallyAction;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.AlignHandlersVerticallyAction;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.DeselectAllHandlersAction;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.MoveHandlerAction;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.MoveMultipleHandlersAction;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.RemoveVerticesAction;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.SelectHandlersAction;
+import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.*;
 import org.vertexarmy.dsr.math.Algorithms;
+
+import java.util.List;
 
 /**
  * created by Alex

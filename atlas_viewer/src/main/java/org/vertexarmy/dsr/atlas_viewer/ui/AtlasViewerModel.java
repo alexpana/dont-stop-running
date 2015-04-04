@@ -1,12 +1,12 @@
 package org.vertexarmy.dsr.atlas_viewer.ui;
 
 import com.beust.jcommander.internal.Lists;
-import java.util.Collections;
-import java.util.List;
-import javax.swing.DefaultListModel;
-import javax.swing.SwingUtilities;
 import lombok.Getter;
 import org.vertexarmy.dsr.atlas_viewer.TextureAtlas;
+
+import javax.swing.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * created by Alex

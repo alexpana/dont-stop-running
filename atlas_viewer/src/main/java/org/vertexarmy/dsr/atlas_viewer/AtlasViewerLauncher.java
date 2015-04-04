@@ -1,8 +1,9 @@
 package org.vertexarmy.dsr.atlas_viewer;
 
-import java.io.File;
-import javax.swing.UIManager;
 import org.vertexarmy.dsr.atlas_viewer.ui.AtlasViewerFrame;
+
+import javax.swing.*;
+import java.io.File;
 
 /**
  * created by Alex

@@ -1,9 +1,10 @@
 package org.vertexarmy.dsr.leveleditor;
 
 import com.beust.jcommander.internal.Lists;
+import org.vertexarmy.dsr.core.Log;
+
 import java.io.File;
 import java.util.List;
-import org.vertexarmy.dsr.core.Log;
 
 /**
  * created by Alex

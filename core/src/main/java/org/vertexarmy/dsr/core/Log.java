@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.IdentityHashMap;
-import java.util.Set;
 
 /**
  * created by Alex
@@ -31,6 +28,7 @@ public class Log {
         ERROR,
         NONE;
     }
+
     public static Log create() {
         String callingClass = getCallingClass();
         return new Log(callingClass);

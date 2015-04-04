@@ -26,21 +26,21 @@ public class BackgroundLayer implements Serializable {
         }
     }
 
-	@Getter
-	@Setter
-	private String textureName;
+    @Getter
+    @Setter
+    private String textureName;
 
-	@Getter
-	@Setter
-	private float parallaxSpeedScale;
+    @Getter
+    @Setter
+    private float parallaxSpeedScale;
 
-	@Getter
-	@Setter
-	private Type type;
+    @Getter
+    @Setter
+    private Type type;
 
-	public BackgroundLayer(String textureName, float parallaxSpeedScale, Type type) {
-		this.textureName = textureName;
-		this.parallaxSpeedScale = parallaxSpeedScale;
-		this.type = type;
-	}
+    public BackgroundLayer(String textureName, float parallaxSpeedScale, Type type) {
+        this.textureName = textureName;
+        this.parallaxSpeedScale = parallaxSpeedScale;
+        this.type = type;
+    }
 }

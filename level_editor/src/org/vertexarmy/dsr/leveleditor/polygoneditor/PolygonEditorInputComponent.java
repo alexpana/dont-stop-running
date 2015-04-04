@@ -3,10 +3,9 @@ package org.vertexarmy.dsr.leveleditor.polygoneditor;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.beust.jcommander.internal.Maps;
+import org.vertexarmy.dsr.core.component.InputComponent;
 
 import java.util.Map;
-
-import org.vertexarmy.dsr.core.component.InputComponent;
 
 /**
  * created by Alex

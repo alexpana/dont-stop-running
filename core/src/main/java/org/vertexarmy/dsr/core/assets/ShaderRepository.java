@@ -2,8 +2,9 @@ package org.vertexarmy.dsr.core.assets;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.beust.jcommander.internal.Maps;
-import java.util.Map;
 import org.vertexarmy.dsr.core.Log;
+
+import java.util.Map;
 
 /**
  * created by Alex

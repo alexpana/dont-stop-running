@@ -3,7 +3,7 @@ apply plugin: 'java'
 sourceCompatibility = 1.7
 version = '1.0'
 
-sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.main.java.srcDirs = ["src/"]
 
 project.ext.mainClassName = "org.vertexarmy.dsr.level_editor.LevelEditorLauncher"
 project.ext.assetsDir = new File("../core/assets");

@@ -4,9 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;
-import java.util.List;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.component.InputComponent;
+
+import java.util.List;
 
 /**
  * created by Alex

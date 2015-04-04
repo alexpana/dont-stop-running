@@ -2,9 +2,10 @@ package org.vertexarmy.dsr.math;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
+import lombok.EqualsAndHashCode;
+
 import java.io.Serializable;
 import java.util.List;
-import lombok.EqualsAndHashCode;
 
 /**
  * created by Alex
