@@ -18,7 +18,7 @@ import java.util.Map;
  * created by Alex
  * on 3/31/2015.
  */
-public class LevelBackgroundRenderer {
+public class BackgroundRenderer {
 
     private Level level;
 

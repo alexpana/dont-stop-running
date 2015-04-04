@@ -26,8 +26,9 @@ import org.vertexarmy.dsr.game.level.Level;
 import org.vertexarmy.dsr.game.level.LevelSprite;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraController;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
+import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditor;
+import org.vertexarmy.dsr.leveleditor.editors.sprite.SpriteEditor;
 import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
 import org.vertexarmy.dsr.leveleditor.ui.*;
 import org.vertexarmy.dsr.math.Polygon;
 
@@ -51,7 +52,9 @@ class LevelEditor extends Game {
 
     private Level level;
 
-    private PolygonEditor terrainPolygonEditor;
+    private PolygonEditor terrainPolygonEditor = new PolygonEditor();
+
+    private SpriteEditor spriteEditor = new SpriteEditor();
 
     private Toolbox toolbox;
 
@@ -81,12 +84,11 @@ class LevelEditor extends Game {
 
         ElegantGraySkin.install(root.getUiNode().getUiSkin());
 
-        terrainPolygonEditor = new PolygonEditor();
-
-        root.addNode(createEditorNode());
         root.addNode(new Node(ComponentType.INPUT, userUserPanningCameraController));
         root.addNode(new Node(ComponentType.UPDATE, autoScrollCameraController));
+        root.addNode(createEditorNode());
         root.addNode(terrainPolygonEditor.getNode());
+        root.addNode(spriteEditor.getNode());
 
         initUI();
 
@@ -126,11 +128,12 @@ class LevelEditor extends Game {
                         ItemPicker.PickResult pickResult = ItemPicker.pickObject(level, screenX, screenY);
 
                         if (pickResult.getType() == ItemPicker.ItemType.TERRAIN_POLYGON) {
+                            pickSpriteForEditing(null);
                             return pickPolygonForEditing((Polygon) pickResult.getObject());
                         }
 
-                        //noinspection SimplifiableIfStatement
                         if (pickResult.getType() == ItemPicker.ItemType.LEVEL_SPRITE) {
+                            pickPolygonForEditing(null);
                             return pickSpriteForEditing((LevelSprite) pickResult.getObject());
                         }
 
@@ -165,6 +168,7 @@ class LevelEditor extends Game {
 
                         if (Shortcuts.isDeselectShortcut(keycode)) {
                             pickPolygonForEditing(null);
+                            pickSpriteForEditing(null);
                             return true;
                         }
 
@@ -364,7 +368,11 @@ class LevelEditor extends Game {
     }
 
     private boolean pickSpriteForEditing(LevelSprite levelSprite) {
-        return false;
+        if (levelSprite == null) {
+            return spriteEditor.unbindFromSprite();
+        } else {
+            return spriteEditor.bindToSprite(levelSprite);
+        }
     }
 
     public static void launch(Function<LevelEditor, Boolean> initTask) {

@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.polygoneditor;
+package org.vertexarmy.dsr.leveleditor.editors.polygon;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,7 +16,7 @@ import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.*;
+import org.vertexarmy.dsr.leveleditor.editors.polygon.actions.*;
 import org.vertexarmy.dsr.math.Algorithms;
 
 import java.util.List;

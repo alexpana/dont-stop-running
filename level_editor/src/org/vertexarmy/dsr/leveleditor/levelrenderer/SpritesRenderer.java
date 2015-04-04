@@ -16,7 +16,7 @@ import java.util.List;
  * created by Alex
  * on 4/4/2015.
  */
-public class LevelSpritesRenderer {
+public class SpritesRenderer {
     private Level level;
 
     private final List<Sprite> foregroundSpriteList = Lists.newArrayList();

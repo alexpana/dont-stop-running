@@ -15,7 +15,7 @@ import java.util.List;
  * Created by alex
  * on 01.04.2015.
  */
-public class LevelTerrainRenderer {
+public class TerrainRenderer {
     private Level level;
 
     private final List<PolygonSprite> polygonSprites = Lists.newArrayList();

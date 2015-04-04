@@ -1,10 +1,10 @@
-package org.vertexarmy.dsr.leveleditor.polygoneditor.actions;
+package org.vertexarmy.dsr.leveleditor.editors.polygon.actions;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.VertexHandler;
+import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditor;
+import org.vertexarmy.dsr.leveleditor.editors.polygon.VertexHandler;
 
 import java.util.List;
 
@@ -12,14 +12,14 @@ import java.util.List;
  * Created by alex
  * on 24.03.2015.
  */
-public class AlignHandlersHorizontallyAction extends ActionManager.ActionAdapter {
+public class AlignHandlersVerticallyAction extends ActionManager.ActionAdapter {
     private final PolygonEditor polygonEditor;
 
     private final List<VertexHandler> selectedVertexHandlers = Lists.newArrayList();
 
     private final List<Vector2> originalVertexPositions = Lists.newArrayList();
 
-    public AlignHandlersHorizontallyAction(PolygonEditor editor, List<VertexHandler> selectedVertexHandlers) {
+    public AlignHandlersVerticallyAction(PolygonEditor editor, List<VertexHandler> selectedVertexHandlers) {
         polygonEditor = editor;
         this.selectedVertexHandlers.addAll(selectedVertexHandlers);
 
@@ -30,17 +30,17 @@ public class AlignHandlersHorizontallyAction extends ActionManager.ActionAdapter
 
     @Override
     public void doAction() {
-        float medianY = 0;
+        float medianX = 0;
         List<VertexHandler> selectedHandlers = polygonEditor.getSelectedHandlers();
         if (!selectedHandlers.isEmpty()) {
             for (VertexHandler handler : selectedHandlers) {
-                medianY += polygonEditor.getVertex(handler).y;
+                medianX += polygonEditor.getVertex(handler).x;
             }
 
-            medianY /= selectedHandlers.size();
+            medianX /= selectedHandlers.size();
             for (VertexHandler handler : selectedHandlers) {
                 Vector2 originalPosition = polygonEditor.getVertex(handler);
-                polygonEditor.setVertex(handler, originalPosition.x, medianY);
+                polygonEditor.setVertex(handler, medianX, originalPosition.y);
             }
         }
     }
@@ -59,7 +59,7 @@ public class AlignHandlersHorizontallyAction extends ActionManager.ActionAdapter
         }
 
         for (VertexHandler handler : selectedVertexHandlers) {
-            if (polygonEditor.getVertex(handler).y != polygonEditor.getVertex(selectedVertexHandlers.get(0)).y) {
+            if (polygonEditor.getVertex(handler).x != polygonEditor.getVertex(selectedVertexHandlers.get(0)).x) {
                 return true;
             }
         }

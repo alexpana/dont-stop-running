@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.polygoneditor;
+package org.vertexarmy.dsr.leveleditor.editors.polygon;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;

@@ -7,17 +7,13 @@ import org.vertexarmy.dsr.game.level.Level;
  * on 01.04.2015.
  */
 public class LevelRenderer {
+    private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
 
-    private Level level;
+    private final TerrainRenderer terrainRenderer = new TerrainRenderer();
 
-    private final LevelBackgroundRenderer backgroundRenderer = new LevelBackgroundRenderer();
-
-    private final LevelTerrainRenderer terrainRenderer = new LevelTerrainRenderer();
-
-    private final LevelSpritesRenderer spritesRenderer = new LevelSpritesRenderer();
+    private final SpritesRenderer spritesRenderer = new SpritesRenderer();
 
     public void setLevel(Level level) {
-        this.level = level;
         backgroundRenderer.setLevel(level);
         terrainRenderer.setLevel(level);
         spritesRenderer.setLevel(level);

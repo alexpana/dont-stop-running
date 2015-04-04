@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.polygoneditor;
+package org.vertexarmy.dsr.leveleditor.editors.polygon;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.actions.AddNewVertexAction;
+import org.vertexarmy.dsr.leveleditor.editors.polygon.actions.AddNewVertexAction;
 import org.vertexarmy.dsr.math.Algorithms;
 import org.vertexarmy.dsr.math.Edge;
 

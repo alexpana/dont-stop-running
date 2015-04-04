@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.polygoneditor;
+package org.vertexarmy.dsr.leveleditor.editors.polygon;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -21,8 +21,6 @@ class PolygonEditorRenderComponent extends RenderComponent {
 
     private final PolygonEditor polygonEditor;
 
-    private final ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
-
     public PolygonEditorRenderComponent(PolygonEditor polygonEditor) {
         this.polygonEditor = polygonEditor;
         vertexHandlers = polygonEditor.getVertexHandlers();
@@ -33,6 +31,8 @@ class PolygonEditorRenderComponent extends RenderComponent {
         if (!polygonEditor.isBoundToPolygon()) {
             return;
         }
+
+        ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
 
         Polygon polygon = polygonEditor.getPolygon();
 
@@ -55,6 +55,7 @@ class PolygonEditorRenderComponent extends RenderComponent {
     }
 
     private void drawHandler(VertexHandler handler) {
+        ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
         Polygon polygon = polygonEditor.getPolygon();
 
         float zoom = RenderSystem.instance().getZoom();
@@ -71,10 +72,12 @@ class PolygonEditorRenderComponent extends RenderComponent {
     }
 
     private void drawRect(float x, float y, float size) {
+        ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
         shapeRenderer.rect(x - size / 2, y - size / 2, size, size);
     }
 
     private void drawEdge(int indexFrom, int indexTo) {
+        ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
         Polygon polygon = polygonEditor.getPolygon();
 
         Vector2 from = polygon.getVertex(indexFrom);

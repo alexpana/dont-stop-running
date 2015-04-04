@@ -45,7 +45,7 @@ public class Level implements Serializable {
                 new Polygon(new float[]{100, 100, 100, -100, -100, -100, -100, 100}),
                 new Polygon(new float[]{200, 200, 200, 100, 100, 100, 100, 200})),
                 ImmutableList.of(
-                        new LevelSprite("dirt", Vector2.Zero, 0, new Vector2(1, 1), 0, true),
+                        new LevelSprite("dirt", Vector2.Zero.cpy(), 0, new Vector2(1, 1), 0, true),
                         new LevelSprite("saw", new Vector2(70, 70), 0, new Vector2(1, 1), 0, false),
                         new LevelSprite("saw", new Vector2(400, 400), 0, new Vector2(1, 1), 0, false)
                 ));

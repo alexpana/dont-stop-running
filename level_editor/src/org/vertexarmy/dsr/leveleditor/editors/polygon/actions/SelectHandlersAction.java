@@ -1,9 +1,9 @@
-package org.vertexarmy.dsr.leveleditor.polygoneditor.actions;
+package org.vertexarmy.dsr.leveleditor.editors.polygon.actions;
 
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.polygoneditor.VertexHandler;
+import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditor;
+import org.vertexarmy.dsr.leveleditor.editors.polygon.VertexHandler;
 
 import java.util.List;
 
