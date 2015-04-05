@@ -306,7 +306,10 @@ class LevelEditor extends Game {
             log.debug("Attempting to load file " + selectedFile);
             FileInputStream inputStream = new FileInputStream(selectedFile);
 
-            Level level = Serialization.deserialize(inputStream);
+            Level level = Serialization.deserialize(inputStream, Level.class);
+
+            terrainPolygonEditor.unbindFromPolygon();
+            spriteEditor.unbindFromSprite();
 
             setLevel(level);
 

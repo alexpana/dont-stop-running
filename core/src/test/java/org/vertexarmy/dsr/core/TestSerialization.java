@@ -28,7 +28,7 @@ public class TestSerialization {
 
         ByteArrayInputStream inputStream = new ByteArrayInputStream(byteOutputStream.toByteArray());
 
-        Level deserializedLevel = Serialization.deserialize(inputStream);
+        Level deserializedLevel = Serialization.deserialize(inputStream, Level.class);
 
         Assert.assertEquals(originalLevel, deserializedLevel);
     }

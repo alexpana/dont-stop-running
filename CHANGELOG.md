@@ -3,6 +3,7 @@
 ## Unreleased
 ### Added
 - Support for editing sprites
+- JSON serialization for more flexible serialization between versions
 
 ## [1.2] 2015-04-04
 ### Added

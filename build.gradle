@@ -52,6 +52,8 @@ project(":core") {
 
         compile "org.testng:testng:6.8.21"
 
+        compile 'com.google.code.gson:gson:2.3.1'
+
         compile "de.ruedigermoeller:fst:2.24"
     }
 }
@@ -86,6 +88,14 @@ project(":level_editor") {
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+    }
+
+
+    jar {
+        manifest {
+            attributes 'Implementation-Title': 'Gradle Quickstart',
+                    'Implementation-Version': version
+        }
     }
 }
 
