@@ -86,6 +86,7 @@ public class SpritesRenderer {
         sprite.setPosition(levelSprite.getPosition().x, levelSprite.getPosition().y);
         sprite.setScale(levelSprite.getScale().x, levelSprite.getScale().y);
         sprite.setRotation(levelSprite.getRotation());
+        sprite.setOrigin(0, 0);
         return sprite;
     }
 

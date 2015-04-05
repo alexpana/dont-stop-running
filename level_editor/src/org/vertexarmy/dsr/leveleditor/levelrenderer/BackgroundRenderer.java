@@ -78,7 +78,7 @@ public class BackgroundRenderer {
                 sprite.getTexture().setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
                 sprite.setU(0);
                 sprite.setV(0);
-                sprite.setV2(800 / sprite.getTexture().getHeight());
+                sprite.setV2(1); //800.0f / sprite.getTexture().getHeight());
 
                 backgroundSprites.put(layer.getType(), sprite);
             }

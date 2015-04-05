@@ -1,5 +1,9 @@
 # Change Log
 
+## Unreleased
+### Added
+- Support for editing sprites
+
 ## [1.2] 2015-04-04
 ### Added
 - A maximum height indicator to the level editor grid to signal the peak of the level (default: 800)

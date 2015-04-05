@@ -99,9 +99,9 @@ public abstract class Dialog<E> extends Window {
 
     protected abstract void doAction();
 
-    protected abstract void show();
+    public abstract void show();
 
-    protected abstract void hide();
+    public abstract void hide();
 
     protected void notifyListener(E event) {
         if (listener != null) {

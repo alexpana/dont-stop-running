@@ -24,9 +24,9 @@ public class SpriteEditorRenderComponent extends RenderComponent {
 
         renderOutline();
 
-        renderRotateHandler();
+//        renderRotateHandler();
 
-        renderScaleHandler();
+//        renderScaleHandler();
     }
 
     private void renderOutline() {

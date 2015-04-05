@@ -54,7 +54,7 @@ class LevelEditor extends Game {
 
     private PolygonEditor terrainPolygonEditor = new PolygonEditor();
 
-    private SpriteEditor spriteEditor = new SpriteEditor();
+    private SpriteEditor spriteEditor;
 
     private Toolbox toolbox;
 
@@ -80,17 +80,20 @@ class LevelEditor extends Game {
     public void create() {
         root.initialize();
 
+//        root.getUiNode().getStage().setDebugAll(true);
+
         loadAssets();
 
         ElegantGraySkin.install(root.getUiNode().getUiSkin());
+
+        initUI();
+        spriteEditor = new SpriteEditor(root);
 
         root.addNode(new Node(ComponentType.INPUT, userUserPanningCameraController));
         root.addNode(new Node(ComponentType.UPDATE, autoScrollCameraController));
         root.addNode(createEditorNode());
         root.addNode(terrainPolygonEditor.getNode());
         root.addNode(spriteEditor.getNode());
-
-        initUI();
 
         setLevel(Level.createDefaultLevel());
 
@@ -208,9 +211,16 @@ class LevelEditor extends Game {
         TextureRepository.instance().addTexture("grass", new TextureRegion(tilesTexture, 0, 0, 32, 32));
         TextureRepository.instance().addTexture("dirt", new TextureRegion(tilesTexture, 32, 0, 32, 32));
         TextureRepository.instance().addTexture("saw", new TextureRegion(tilesTexture, 64, 0, 64, 64));
-        TextureRepository.instance().addTexture("floor_tile_42342_42523_01", new TextureRegion(new Texture(Gdx.files.internal("test.jpg"))));
+
         TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons.atlas"));
         TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons_background.atlas"));
+
+        File file = new File("textures");
+        for (String textureName : file.list()) {
+            if (textureName.endsWith(".png") || textureName.endsWith(".jpg")) {
+                TextureRepository.instance().addTexture(textureName, new TextureRegion(new Texture(Gdx.files.internal("textures/" + textureName))));
+            }
+        }
     }
 
     private void initUI() {

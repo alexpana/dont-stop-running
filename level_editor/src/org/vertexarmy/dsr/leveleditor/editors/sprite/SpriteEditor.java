@@ -3,10 +3,12 @@ package org.vertexarmy.dsr.leveleditor.editors.sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Getter;
+import org.vertexarmy.dsr.core.Root;
 import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.game.level.LevelSprite;
+import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
 
 /**
  * created by Alex
@@ -25,14 +27,23 @@ public class SpriteEditor {
     @Getter
     private final EditHandler rotateHandler = new EditHandler();
 
-    public SpriteEditor() {
+    @Getter
+    private GenericEditor editDialog;
+
+    private Root root;
+
+    public SpriteEditor(Root root) {
+        this.root = root;
         node.addComponent(ComponentType.INPUT, new SpriteEditorInputComponent(this));
         node.addComponent(ComponentType.RENDER, new SpriteEditorRenderComponent(this));
+
+        editDialog = new GenericEditor(root.getUiNode().getStage(), "Edit sprite", root.getUiNode().getUiSkin(), LevelSprite.class);
     }
 
     public boolean bindToSprite(LevelSprite levelSprite) {
         if (this.levelSprite != levelSprite) {
             this.levelSprite = levelSprite;
+            editDialog.bindToObject(levelSprite);
             return true;
         } else {
             return false;
@@ -42,6 +53,7 @@ public class SpriteEditor {
     public boolean unbindFromSprite() {
         if (levelSprite != null) {
             this.levelSprite = null;
+            editDialog.bindToObject(null);
             return true;
         } else {
             return false;
