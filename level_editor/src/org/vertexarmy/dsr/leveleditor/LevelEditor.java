@@ -264,7 +264,7 @@ class LevelEditor extends Game {
         saveDialog.setListener(new Dialog.Listener<LevelSaveDialog.Event>() {
             @Override
             public void dialogAccepted(LevelSaveDialog.Event event) {
-                setBoundLevelFile(new File("levels/" + event.getFilename() + ".dat"));
+                setBoundLevelFile(new File("levels/" + event.getFilename() + ".json"));
                 saveLevel();
             }
         });
@@ -276,7 +276,7 @@ class LevelEditor extends Game {
                 log.debug("Requested to load the level " + event.getLevelName());
 
                 try {
-                    loadLevel(new File("levels/" + event.getLevelName() + ".dat"));
+                    loadLevel(new File("levels/" + event.getLevelName() + ".json"));
                 } catch (Exception ignored) {
                     ignored.printStackTrace();
                 }

@@ -23,7 +23,7 @@ public class FileUtils {
             log.error("Could not read the levels directory.");
         } else {
             for (File possibleLevelFile : files) {
-                if (possibleLevelFile.getAbsolutePath().endsWith(".dat")) {
+                if (possibleLevelFile.getAbsolutePath().endsWith(".json")) {
                     result.add(possibleLevelFile.getName().substring(0, possibleLevelFile.getName().length() - 4));
                 }
             }
