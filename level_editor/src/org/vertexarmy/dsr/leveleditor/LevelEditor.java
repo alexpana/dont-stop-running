@@ -165,7 +165,7 @@ class LevelEditor extends Game {
                         }
 
                         if (Shortcuts.isOpenShortcut(keycode)) {
-                            openLevelFile();
+                            loadDialog.show();
                             return true;
                         }
 
@@ -230,7 +230,7 @@ class LevelEditor extends Game {
         toolbox = new Toolbox(root.getUiNode().getUiSkin(), new Toolbox.Listener() {
             @Override
             public void loadFileRequested() {
-                openLevelFile();
+                loadDialog.show();
             }
 
             @Override
@@ -294,11 +294,6 @@ class LevelEditor extends Game {
                 levelRenderer.reloadLevel();
             }
         });
-    }
-
-    private void openLevelFile() {
-        loadDialog.setAvailableLevelsList(FileUtils.discoverAvailableLevels());
-        loadDialog.show();
     }
 
     public void loadLevel(File selectedFile) {
