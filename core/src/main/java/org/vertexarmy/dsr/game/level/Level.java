@@ -25,7 +25,7 @@ public class Level implements Serializable {
     private final Polygon endArea;
 
     @Getter
-    private final List<Polygon> terrainPatches;
+    private final List<TerrainPatch> terrainPatches;
 
     @Getter
     private final List<LevelSprite> levelSprites;
@@ -42,8 +42,7 @@ public class Level implements Serializable {
 
     public static Level createDefaultLevel() {
         return new Level(null, null, ImmutableList.of(
-                new Polygon(new float[]{100, 100, 100, -100, -100, -100, -100, 100}),
-                new Polygon(new float[]{200, 200, 200, 100, 100, 100, 100, 200})),
+                new TerrainPatch(new Polygon(new float[]{100, 100, 100, -100, -100, -100, -100, 100}))),
                 ImmutableList.of(
                         new LevelSprite("dirt", Vector2.Zero.cpy(), 0, new Vector2(1, 1), 0, true),
                         new LevelSprite("saw", new Vector2(70, 70), 0, new Vector2(1, 1), 0, false),

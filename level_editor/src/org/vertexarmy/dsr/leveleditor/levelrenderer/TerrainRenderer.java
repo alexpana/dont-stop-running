@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.level.Level;
+import org.vertexarmy.dsr.game.level.TerrainPatch;
 import org.vertexarmy.dsr.graphics.SpriteFactory;
-import org.vertexarmy.dsr.math.Polygon;
 
 import java.util.List;
 
@@ -37,8 +37,8 @@ public class TerrainRenderer {
 
     public void reloadLevel() {
         polygonSprites.clear();
-        for (Polygon polygon : level.getTerrainPatches()) {
-            PolygonSprite terrainPolygonSprite = SpriteFactory.instance().createSprite(polygon);
+        for (TerrainPatch terrainPatch : level.getTerrainPatches()) {
+            PolygonSprite terrainPolygonSprite = SpriteFactory.instance().createSprite(terrainPatch.getShape());
             terrainPolygonSprite.setColor(Color.BLACK);
             polygonSprites.add(terrainPolygonSprite);
         }

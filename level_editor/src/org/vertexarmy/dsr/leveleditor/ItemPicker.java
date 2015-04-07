@@ -9,6 +9,7 @@ import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.level.Level;
 import org.vertexarmy.dsr.game.level.LevelSprite;
+import org.vertexarmy.dsr.game.level.TerrainPatch;
 import org.vertexarmy.dsr.math.Algorithms;
 import org.vertexarmy.dsr.math.Polygon;
 
@@ -59,10 +60,10 @@ public class ItemPicker {
     private static Polygon pickTerrainPolygon(Level level, int screenX, int screenY) {
         Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(screenX, screenY);
 
-        for (Polygon terrainPolygon : level.getTerrainPatches()) {
-            if (Algorithms.polygonContainsVertex(mouseWorldPosition, terrainPolygon)) {
+        for (TerrainPatch terrainShape : level.getTerrainPatches()) {
+            if (Algorithms.polygonContainsVertex(mouseWorldPosition, terrainShape.getShape())) {
                 log.debug("Picked a polygon");
-                return terrainPolygon;
+                return terrainShape.getShape();
             }
         }
 
