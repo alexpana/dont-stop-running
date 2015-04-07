@@ -25,12 +25,15 @@ import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.level.Level;
 import org.vertexarmy.dsr.game.level.LevelSprite;
+import org.vertexarmy.dsr.game.level.TerrainPatch;
+import org.vertexarmy.dsr.graphics.TextureOverlay;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraController;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
 import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditor;
 import org.vertexarmy.dsr.leveleditor.editors.sprite.SpriteEditor;
 import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
 import org.vertexarmy.dsr.leveleditor.ui.*;
+import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
 import org.vertexarmy.dsr.math.Polygon;
 
 import javax.annotation.Nullable;
@@ -73,6 +76,8 @@ class LevelEditor extends Game {
 
     private AutoScrollCameraController autoScrollCameraController = new AutoScrollCameraController();
 
+    private GenericEditor terrainPatchTextureOverlayEditor;
+
     private LevelEditor(Function<LevelEditor, Boolean> initTask) {
         this.initTask = initTask;
     }
@@ -99,6 +104,8 @@ class LevelEditor extends Game {
         setLevel(Level.createDefaultLevel());
 
         userUserPanningCameraController.setEnabled(true);
+
+        terrainPatchTextureOverlayEditor = new GenericEditor(root.getUiNode().getStage(), "Texture Overlay", root.getUiNode().getUiSkin(), TextureOverlay.class);
 
         if (initTask != null) {
             initTask.apply(this);
@@ -132,12 +139,14 @@ class LevelEditor extends Game {
                         ItemPicker.PickResult pickResult = ItemPicker.pickObject(level, screenX, screenY);
 
                         if (pickResult.getType() == ItemPicker.ItemType.TERRAIN_POLYGON) {
+                            TerrainPatch pickedTerrainPatch = (TerrainPatch) pickResult.getObject();
+                            terrainPatchTextureOverlayEditor.bindToObject(pickedTerrainPatch.getTextureOverlay());
                             pickSpriteForEditing(null);
-                            return pickPolygonForEditing((Polygon) pickResult.getObject());
+                            return pickTerrainPatchForEditing(pickedTerrainPatch);
                         }
 
                         if (pickResult.getType() == ItemPicker.ItemType.LEVEL_SPRITE) {
-                            pickPolygonForEditing(null);
+                            pickTerrainPatchForEditing(null);
                             return pickSpriteForEditing((LevelSprite) pickResult.getObject());
                         }
 
@@ -171,7 +180,7 @@ class LevelEditor extends Game {
                         }
 
                         if (Shortcuts.isDeselectShortcut(keycode)) {
-                            pickPolygonForEditing(null);
+                            pickTerrainPatchForEditing(null);
                             pickSpriteForEditing(null);
                             return true;
                         }
@@ -255,6 +264,11 @@ class LevelEditor extends Game {
             public void autoScrollBackwardRequested() {
                 userUserPanningCameraController.setEnabled(false);
                 autoScrollCameraController.decreaseSpeed();
+            }
+
+            @Override
+            public void editTerrainPatch() {
+                terrainPatchTextureOverlayEditor.show();
             }
         });
 
@@ -368,11 +382,13 @@ class LevelEditor extends Game {
         levelRenderer.setLevel(level);
     }
 
-    private boolean pickPolygonForEditing(@Nullable Polygon polygon) {
-        if (polygon == null) {
+    private boolean pickTerrainPatchForEditing(@Nullable TerrainPatch terrainPatch) {
+        if (terrainPatch == null) {
+            terrainPatchTextureOverlayEditor.bindToObject(null);
             return terrainPolygonEditor.unbindFromPolygon();
         } else {
-            return terrainPolygonEditor.bindToPolygon(polygon);
+            terrainPatchTextureOverlayEditor.bindToObject(terrainPatch.getTextureOverlay());
+            return terrainPolygonEditor.bindToPolygon(terrainPatch.getShape());
         }
     }
 

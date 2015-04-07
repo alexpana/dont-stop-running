@@ -38,6 +38,7 @@ public class SpriteEditor {
         node.addComponent(ComponentType.RENDER, new SpriteEditorRenderComponent(this));
 
         editDialog = new GenericEditor(root.getUiNode().getStage(), "Edit sprite", root.getUiNode().getUiSkin(), LevelSprite.class);
+        editDialog.setSize(235, 200);
     }
 
     public boolean bindToSprite(LevelSprite levelSprite) {

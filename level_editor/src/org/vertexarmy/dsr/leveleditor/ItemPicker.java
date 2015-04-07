@@ -44,7 +44,7 @@ public class ItemPicker {
         }
 
 
-        Polygon pickedPolygon = pickTerrainPolygon(level, screenX, screenY);
+        TerrainPatch pickedPolygon = pickTerrainPolygon(level, screenX, screenY);
         if (pickedPolygon != null) {
             return new PickResult(ItemType.TERRAIN_POLYGON, pickedPolygon);
         }
@@ -57,13 +57,13 @@ public class ItemPicker {
         return PickResult.NOTHING;
     }
 
-    private static Polygon pickTerrainPolygon(Level level, int screenX, int screenY) {
+    private static TerrainPatch pickTerrainPolygon(Level level, int screenX, int screenY) {
         Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(screenX, screenY);
 
-        for (TerrainPatch terrainShape : level.getTerrainPatches()) {
-            if (Algorithms.polygonContainsVertex(mouseWorldPosition, terrainShape.getShape())) {
+        for (TerrainPatch terrainPatch : level.getTerrainPatches()) {
+            if (Algorithms.polygonContainsVertex(mouseWorldPosition, terrainPatch.getShape())) {
                 log.debug("Picked a polygon");
-                return terrainShape.getShape();
+                return terrainPatch;
             }
         }
 

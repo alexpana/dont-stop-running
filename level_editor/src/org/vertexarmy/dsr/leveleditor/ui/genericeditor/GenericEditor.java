@@ -28,12 +28,18 @@ public class GenericEditor extends Dialog {
 
     private final Map<Field, FieldEditor> fieldEditorMap = Maps.newHashMap();
 
+    private float fullSizeWidth = 200;
+
+    private float fullSizeHeight = 100;
+
     public GenericEditor(Stage stage, String title, Skin skin, Class objectClass) {
         super(stage, title, skin);
 
         objectContentTable = createContentTable(objectClass);
 
         contentTable = new Table(getSkin());
+
+        contentTable.add(emptyContentTable);
 
         this.setMovable(true);
 
@@ -97,14 +103,15 @@ public class GenericEditor extends Dialog {
         } else {
             contentTable.clear();
             contentTable.add(objectContentTable).fillX().expandX().top();
+            fullSizeWidth = getPrefWidth();
+            fullSizeHeight = getPrefHeight();
         }
-
-//        contentTable.pack();
-//        this.pack();
 
         for (FieldEditor fieldEditor : fieldEditorMap.values()) {
             fieldEditor.bindToObject(object);
         }
+
+        this.setSize(fullSizeWidth, fullSizeHeight);
     }
 
     @Override
@@ -114,7 +121,7 @@ public class GenericEditor extends Dialog {
 
     @Override
     protected void doAction() {
-
+        hide();
     }
 
     @Override
@@ -122,7 +129,7 @@ public class GenericEditor extends Dialog {
         getStage().addActor(this);
         this.setVisible(true);
 
-        this.setSize(235, 200);
+        this.setSize(fullSizeWidth, fullSizeHeight);
     }
 
     @Override
