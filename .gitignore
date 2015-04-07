@@ -62,3 +62,6 @@ build/
 
 .idea/libraries/
 .idea/tasks.xml
+
+## Assets
+core/assets/
