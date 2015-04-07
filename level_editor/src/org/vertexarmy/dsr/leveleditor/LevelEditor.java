@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import org.vertexarmy.dsr.Version;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
@@ -215,8 +216,8 @@ class LevelEditor extends Game {
         TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons.atlas"));
         TextureRepository.instance().loadTextureAtlas(Gdx.files.internal("ui/ui_icons_background.atlas"));
 
-        File file = new File("textures");
-        for (String textureName : file.list()) {
+        for (File textureFile : FileUtils.discoverFiles(new File("textures"), ImmutableList.of("png", "jpg"))) {
+            String textureName = textureFile.getName();
             if (textureName.endsWith(".png") || textureName.endsWith(".jpg")) {
                 TextureRepository.instance().addTexture(textureName, new TextureRegion(new Texture(Gdx.files.internal("textures/" + textureName))));
             }
