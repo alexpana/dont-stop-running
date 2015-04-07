@@ -13,22 +13,36 @@ import java.util.List;
 public class FileUtils {
     private static final Log log = Log.create();
 
-    public static List<String> discoverAvailableLevels() {
-        List<String> result = Lists.newArrayList();
+    public static List<File> discoverFiles(File path, List<String> extensions) {
+        List<File> result = Lists.newArrayList();
 
-        File levelsDirectory = new File("levels/");
-        final File[] files = levelsDirectory.listFiles();
+        final File[] files = path.listFiles();
 
         if (files == null) {
-            log.error("Could not read the levels directory.");
+            log.error("Could not read the root directory.");
         } else {
-            for (File possibleLevelFile : files) {
-                if (possibleLevelFile.getAbsolutePath().endsWith(".json")) {
-                    result.add(possibleLevelFile.getName().substring(0, possibleLevelFile.getName().length() - 4));
+            for (File file : files) {
+                if (file.isFile()) {
+                    extensions.contains(getExtension(file));
+                    result.add(file);
                 }
             }
         }
 
         return result;
+    }
+
+    public static String getExtension(File file) {
+        if (file.isDirectory()) {
+            return "";
+        }
+
+        int dotIndex = file.getName().lastIndexOf('.');
+
+        if (dotIndex == -1) {
+            return "";
+        }
+
+        return file.getName().substring(dotIndex + 1);
     }
 }

@@ -5,14 +5,20 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.vertexarmy.dsr.leveleditor.FileUtils;
+
+import java.io.File;
 
 /**
  * created by Alex
  * on 3/28/2015.
  */
 public class LevelLoadDialog extends Dialog<LevelLoadDialog.Event> {
+    private static final String LEVEL_EXTENSION = "json";
+
     private final List<String> availableLevelsList;
 
     private final ScrollPane scrollPane;
@@ -57,6 +63,7 @@ public class LevelLoadDialog extends Dialog<LevelLoadDialog.Event> {
 
     @Override
     public void show() {
+        discoverAvailableLevelsList();
         getStage().addActor(this);
         setVisible(true);
 
@@ -70,11 +77,14 @@ public class LevelLoadDialog extends Dialog<LevelLoadDialog.Event> {
         remove();
     }
 
-    public void setAvailableLevelsList(java.util.List<String> availableLevels) {
+    public void discoverAvailableLevelsList() {
+        java.util.List<File> discoveredLevelFiles = FileUtils.discoverFiles(new File("levels/"), ImmutableList.of(LEVEL_EXTENSION));
+
         this.availableLevelsList.clearItems();
-        String[] availableLevelsArray = new String[availableLevels.size()];
-        for (int i = 0; i < availableLevels.size(); ++i) {
-            availableLevelsArray[i] = availableLevels.get(i);
+        String[] availableLevelsArray = new String[discoveredLevelFiles.size()];
+        for (int i = 0; i < discoveredLevelFiles.size(); ++i) {
+            String filename = discoveredLevelFiles.get(i).getName();
+            availableLevelsArray[i] = filename.substring(0, filename.length() - LEVEL_EXTENSION.length() - 1);
         }
         this.availableLevelsList.setItems(availableLevelsArray);
     }
