@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.math.Polygon;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode
@@ -41,12 +42,17 @@ public class Level implements Serializable {
     }
 
     public static Level createDefaultLevel() {
-        return new Level(null, null, ImmutableList.of(
-                new TerrainPatch(new Polygon(new float[]{100, 100, 100, -100, -100, -100, -100, 100}))),
-                ImmutableList.of(
-                        new LevelSprite("dirt", Vector2.Zero.cpy(), 0, new Vector2(1, 1), 0, true),
-                        new LevelSprite("saw", new Vector2(70, 70), 0, new Vector2(1, 1), 0, false),
-                        new LevelSprite("saw", new Vector2(400, 400), 0, new Vector2(1, 1), 0, false)
-                ));
+        List<TerrainPatch> terrainPatches = Lists.newArrayList();
+        terrainPatches.add(new TerrainPatch(new Polygon(new float[]{100, 100, 100, -100, -100, -100, -100, 100})));
+
+
+        List<LevelSprite> levelSprites = Lists.newArrayList();
+        levelSprites.add(new LevelSprite("dirt", Vector2.Zero.cpy(), 0, new Vector2(1, 1), 0, true));
+        levelSprites.add(new LevelSprite("saw", new Vector2(70, 70), 0, new Vector2(1, 1), 0, false));
+        levelSprites.add(new LevelSprite("saw", new Vector2(400, 400), 0, new Vector2(1, 1), 0, false));
+
+        return new Level(null, null,
+                terrainPatches,
+                levelSprites);
     }
 }

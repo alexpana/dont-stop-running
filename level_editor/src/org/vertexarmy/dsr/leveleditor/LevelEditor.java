@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import org.vertexarmy.dsr.Version;
+import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.Log;
 import org.vertexarmy.dsr.core.Root;
 import org.vertexarmy.dsr.core.Serialization;
@@ -30,6 +31,7 @@ import org.vertexarmy.dsr.graphics.TextureOverlay;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraController;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
 import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditor;
+import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditorListener;
 import org.vertexarmy.dsr.leveleditor.editors.sprite.SpriteEditor;
 import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
 import org.vertexarmy.dsr.leveleditor.ui.*;
@@ -86,8 +88,6 @@ class LevelEditor extends Game {
     public void create() {
         root.initialize();
 
-//        root.getUiNode().getStage().setDebugAll(true);
-
         loadAssets();
 
         ElegantGraySkin.install(root.getUiNode().getUiSkin());
@@ -107,9 +107,28 @@ class LevelEditor extends Game {
 
         terrainPatchTextureOverlayEditor = new GenericEditor(root.getUiNode().getStage(), "Texture Overlay", root.getUiNode().getUiSkin(), TextureOverlay.class);
 
+
+        terrainPolygonEditor.setListener(new PolygonEditorListener() {
+            @Override
+            public void deletePolygonRequested() {
+                final TerrainPatch patchToRemove = findTerrainPatch(terrainPolygonEditor.getPolygon());
+
+                ActionManager.instance().runAction(new RemoveTerrainPatchAction(level, patchToRemove));
+            }
+        });
+
         if (initTask != null) {
             initTask.apply(this);
         }
+    }
+
+    private TerrainPatch findTerrainPatch(Polygon patchShape) {
+        for (TerrainPatch terrainPatch : level.getTerrainPatches()) {
+            if (terrainPatch.getShape() == patchShape) {
+                return terrainPatch;
+            }
+        }
+        return null;
     }
 
     private Node createEditorNode() {
@@ -409,4 +428,5 @@ class LevelEditor extends Game {
         config.title = "Level Editor - " + Version.value();
         new LwjglApplication(new LevelEditor(initTask), config);
     }
+
 }

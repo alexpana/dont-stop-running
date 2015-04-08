@@ -6,6 +6,7 @@
 - JSON serialization for more flexible serialization between versions
 - Support for editing texture overlays, and drawing terrain patches with texture overlays
 - Spinner UI components
+- Support for removing terrain patches
 
 ## [1.2] 2015-04-04
 ### Added

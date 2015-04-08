@@ -221,9 +221,13 @@ public class EditModeDefault extends InputAdapter implements EditMode {
             }
         }
 
-        ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.of(
-                new DeselectAllHandlersAction(polygonEditor, polygonEditor.getVertexHandlers(), polygonEditor.getSelectedHandlers()),
-                new RemoveVerticesAction(polygonEditor, allVertices, remainingVertices))));
+        if (remainingVertices.size() < 3 || polygonEditor.getSelectedHandlers().size() == 0) {
+            polygonEditor.deleteBoundPolygon();
+        } else {
+            ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.of(
+                    new DeselectAllHandlersAction(polygonEditor, polygonEditor.getVertexHandlers(), polygonEditor.getSelectedHandlers()),
+                    new RemoveVerticesAction(polygonEditor, allVertices, remainingVertices))));
+        }
     }
 
     @Override

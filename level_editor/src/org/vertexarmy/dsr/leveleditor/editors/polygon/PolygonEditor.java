@@ -5,6 +5,7 @@ import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.leveleditor.DebugItems;
@@ -28,6 +29,10 @@ public class PolygonEditor {
 
     @Getter
     private Node node;
+
+    @Getter
+    @Setter
+    private PolygonEditorListener listener;
 
     public enum EditModeType {
         DEFAULT,
@@ -194,5 +199,18 @@ public class PolygonEditor {
         }
 
         return null;
+    }
+
+    void deleteBoundPolygon() {
+        if (isBoundToPolygon()) {
+            notifyDeletePolygonRequested();
+            unbindFromPolygon();
+        }
+    }
+
+    private void notifyDeletePolygonRequested() {
+        if (listener != null) {
+            listener.deletePolygonRequested();
+        }
     }
 }
