@@ -46,6 +46,11 @@ public class SpriteEditorInputComponent extends InputAdapter implements InputCom
             return true;
         }
 
+        if (keycode == Input.Keys.FORWARD_DEL) {
+            editor.deleteSprite();
+            return true;
+        }
+
         return false;
     }
 

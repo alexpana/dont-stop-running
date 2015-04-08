@@ -8,7 +8,7 @@ import org.vertexarmy.dsr.game.level.TerrainPatch;
  * created by Alex
  * on 08-Apr-2015.
  */
-class RemoveTerrainPatchAction implements ActionManager.Action {
+class RemoveTerrainPatchAction extends ActionManager.ActionAdapter {
     private final TerrainPatch patchToRemove;
     private Level level;
 

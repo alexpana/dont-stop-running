@@ -33,6 +33,7 @@ import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraControll
 import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditor;
 import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditorListener;
 import org.vertexarmy.dsr.leveleditor.editors.sprite.SpriteEditor;
+import org.vertexarmy.dsr.leveleditor.editors.sprite.SpriteEditorListener;
 import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
 import org.vertexarmy.dsr.leveleditor.ui.*;
 import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
@@ -107,13 +108,17 @@ class LevelEditor extends Game {
 
         terrainPatchTextureOverlayEditor = new GenericEditor(root.getUiNode().getStage(), "Texture Overlay", root.getUiNode().getUiSkin(), TextureOverlay.class);
 
-
         terrainPolygonEditor.setListener(new PolygonEditorListener() {
             @Override
             public void deletePolygonRequested() {
-                final TerrainPatch patchToRemove = findTerrainPatch(terrainPolygonEditor.getPolygon());
+                ActionManager.instance().runAction(new RemoveTerrainPatchAction(level, findTerrainPatch(terrainPolygonEditor.getPolygon())));
+            }
+        });
 
-                ActionManager.instance().runAction(new RemoveTerrainPatchAction(level, patchToRemove));
+        spriteEditor.setListener(new SpriteEditorListener() {
+            @Override
+            public void deleteSpriteRequested() {
+                ActionManager.instance().runAction(new RemoveTerrainSpriteAction(level, spriteEditor.getLevelSprite()));
             }
         });
 
