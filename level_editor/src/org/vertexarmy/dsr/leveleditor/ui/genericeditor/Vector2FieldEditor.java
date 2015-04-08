@@ -9,7 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import org.vertexarmy.dsr.core.ReflectionHelper;
+import org.vertexarmy.dsr.leveleditor.ui.Spinner;
 
 import java.lang.reflect.Field;
 
@@ -18,9 +20,9 @@ import java.lang.reflect.Field;
  * on 05-Apr-2015.
  */
 public class Vector2FieldEditor extends FieldEditor {
-    private final TextField textFieldX;
+    private final Spinner textFieldX;
 
-    private final TextField textFieldY;
+    private final Spinner textFieldY;
 
     private final Table contentTable;
 
@@ -31,39 +33,35 @@ public class Vector2FieldEditor extends FieldEditor {
 
         contentTable = new Table(skin);
 
-        textFieldX = new TextField("", skin);
+        textFieldX = new Spinner("", skin);
+        textFieldX.setIncrement(ReflectionHelper.getPrecisionAnnotationValue(field));
 
-        textFieldX.addListener(new InputListener() {
+        textFieldX.addListener(new ChangeListener() {
             @Override
-            public boolean keyTyped(InputEvent event, char character) {
+            public void changed(ChangeEvent event, Actor actor) {
                 if (boundObject != null) {
                     try {
                         Vector2 fieldValue = (Vector2) ReflectionHelper.findGetter(boundObject.getClass(), field).invoke(boundObject);
                         fieldValue.x = Float.valueOf(textFieldX.getText());
-                        return true;
                     } catch (Exception ignored) {
-                        return false;
                     }
                 }
-                return false;
             }
         });
 
-        textFieldY = new TextField("", skin);
+        textFieldY = new Spinner("", skin);
+        textFieldY.setIncrement(ReflectionHelper.getPrecisionAnnotationValue(field));
 
-        textFieldY.addListener(new InputListener() {
+        textFieldY.addListener(new ChangeListener() {
             @Override
-            public boolean keyTyped(InputEvent event, char character) {
+            public void changed(ChangeEvent event, Actor actor) {
                 if (boundObject != null) {
                     try {
                         Vector2 fieldValue = (Vector2) ReflectionHelper.findGetter(boundObject.getClass(), field).invoke(boundObject);
                         fieldValue.y = Float.valueOf(textFieldY.getText());
-                        return true;
                     } catch (Exception ignored) {
-                        return false;
                     }
                 }
-                return false;
             }
         });
 

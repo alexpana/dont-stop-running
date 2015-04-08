@@ -76,4 +76,13 @@ public class ReflectionHelper {
         return null;
     }
 
+    public static float getPrecisionAnnotationValue(Field field) {
+        Precision precision = field.getAnnotation(Precision.class);
+        if (precision != null) {
+            return precision.value();
+        } else {
+            return 1.0f;
+        }
+    }
+
 }

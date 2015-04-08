@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import org.vertexarmy.dsr.core.ReflectionHelper;
+import org.vertexarmy.dsr.leveleditor.ui.Spinner;
 
 import java.lang.reflect.Field;
 
@@ -14,14 +15,15 @@ import java.lang.reflect.Field;
  * on 05-Apr-2015.
  */
 public class IntegerFieldEditor extends FieldEditor {
-    private TextField textField;
+    private Spinner textField;
 
     private Object boundObject;
 
     public IntegerFieldEditor(final Field field, Skin skin) {
         super(field);
 
-        textField = new TextField("", skin);
+        textField = new Spinner("", skin);
+        textField.setIncrement(ReflectionHelper.getPrecisionAnnotationValue(field));
 
         textField.addListener(new InputListener() {
             @Override

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.vertexarmy.dsr.core.Precision;
 
 /**
  * ceated by Alex
@@ -17,18 +18,22 @@ public class LevelSprite {
 
     @Getter
     @Setter
+    @Precision(value = 1)
     private Vector2 position;
 
     @Getter
     @Setter
+    @Precision(value = 0.1f)
     private float rotation;
 
     @Getter
     @Setter
+    @Precision(value = 0.1f)
     private Vector2 scale;
 
     @Getter
     @Setter
+    @Precision(value = 1)
     private int zOrder;
 
     @Getter

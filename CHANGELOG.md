@@ -4,6 +4,8 @@
 ### Added
 - Support for editing sprites
 - JSON serialization for more flexible serialization between versions
+- Support for editing texture overlays, and drawing terrain patches with texture overlays
+- Spinner UI components
 
 ## [1.2] 2015-04-04
 ### Added
