@@ -70,7 +70,7 @@ public class TerrainRenderer {
     private TextureRegion textureRegionFromTextureOverlay(TextureOverlay textureOverlay) {
         String textureName = textureOverlay.getTextureName();
         if (textureName == null) {
-            return new TextureRegion(GraphicsUtils.getColorTexture(Color.WHITE), 1, 1);
+            return new TextureRegion(GraphicsUtils.getColorTexture(Color.BLACK), 1, 1);
         } else {
             Texture overlayTexture = TextureRepository.instance().getTexture(textureName).getTexture();
             overlayTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);

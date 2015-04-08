@@ -10,6 +10,7 @@ import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
+import org.vertexarmy.dsr.leveleditor.editors.Bindable;
 import org.vertexarmy.dsr.math.Polygon;
 
 import java.util.Collections;
@@ -20,12 +21,10 @@ import java.util.Map;
  * created by Alex
  * on 3/21/2015.
  */
-public class PolygonEditor {
+public class PolygonEditor extends Bindable<Polygon> {
     @Getter(value = AccessLevel.PACKAGE)
     private final List<VertexHandler> vertexHandlers = Lists.newArrayList();
 
-    @Getter
-    private Polygon polygon;
 
     @Getter
     private Node node;
@@ -55,7 +54,7 @@ public class PolygonEditor {
 
     public PolygonEditor(Polygon polygon) {
         super();
-        bindToPolygon(polygon);
+        bind(polygon);
     }
 
     EditMode getEditMode() {
@@ -90,33 +89,16 @@ public class PolygonEditor {
         return null;
     }
 
-    public boolean isBoundToPolygon() {
-        return polygon != null;
-    }
-
-    public boolean bindToPolygon(Polygon polygon) {
-        if (this.polygon == polygon) {
-            return false;
-        }
-
-        this.polygon = polygon;
-
-        updateVertexHandlers();
-
-        setEditMode(EditModeType.DEFAULT);
-
-        return true;
-    }
-
-    public boolean unbindFromPolygon() {
-        if (this.polygon != null) {
-            this.polygon = null;
-            vertexHandlers.clear();
-            return true;
+    @Override
+    public void doBind(Polygon polygon) {
+        if (polygon != null) {
+            updateVertexHandlers();
+            setEditMode(EditModeType.DEFAULT);
         } else {
-            return false;
+            vertexHandlers.clear();
         }
     }
+
 
     public List<VertexHandler> getSelectedHandlers() {
         List<VertexHandler> selectedHandlers = Lists.newArrayList();
@@ -131,7 +113,7 @@ public class PolygonEditor {
     }
 
     public Vector2 getVertex(VertexHandler handler) {
-        return polygon.getVertex(handler.getVertexIndex());
+        return getBoundObject().getVertex(handler.getVertexIndex());
     }
 
     public void setVertex(VertexHandler handler, Vector2 position) {
@@ -139,11 +121,11 @@ public class PolygonEditor {
     }
 
     public void setVertex(VertexHandler handler, float x, float y) {
-        polygon.setVertex(handler.getVertexIndex(), new Vector2(x, y));
+        getBoundObject().setVertex(handler.getVertexIndex(), new Vector2(x, y));
     }
 
     public void addVertex(int index, Vector2 position) {
-        polygon.addVertex(index, position);
+        getBoundObject().addVertex(index, position);
         updateVertexHandlers();
     }
 
@@ -164,20 +146,20 @@ public class PolygonEditor {
         Collections.sort(indexList);
 
         for (int i = 0; i < indexList.size(); ++i) {
-            polygon.removeVertex(indexList.get(i) - i);
+            getBoundObject().removeVertex(indexList.get(i) - i);
         }
 
         updateVertexHandlers();
     }
 
     public void setVertices(List<Vector2> vertices) {
-        polygon.setVertices(vertices);
+        getBoundObject().setVertices(vertices);
         updateVertexHandlers();
     }
 
     private void updateVertexHandlers() {
         vertexHandlers.clear();
-        for (int i = 0; i < polygon.getVertexCount(); ++i) {
+        for (int i = 0; i < getBoundObject().getVertexCount(); ++i) {
             vertexHandlers.add(new VertexHandler(i));
         }
     }
@@ -202,9 +184,9 @@ public class PolygonEditor {
     }
 
     void deleteBoundPolygon() {
-        if (isBoundToPolygon()) {
+        if (isBound()) {
             notifyDeletePolygonRequested();
-            unbindFromPolygon();
+            unbind();
         }
     }
 

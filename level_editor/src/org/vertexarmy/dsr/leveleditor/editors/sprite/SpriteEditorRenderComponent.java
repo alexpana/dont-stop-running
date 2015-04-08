@@ -18,7 +18,7 @@ public class SpriteEditorRenderComponent extends RenderComponent {
 
     @Override
     public void render() {
-        if (!editor.isBoundToSprite()) {
+        if (!editor.isBound()) {
             return;
         }
 

@@ -152,12 +152,12 @@ public final class ActionManager {
             }
 
             for (Action action : actionList) {
-                if (!action.isValid()) {
-                    return false;
+                if (action.isValid()) {
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
     }
 }

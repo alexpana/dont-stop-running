@@ -56,7 +56,7 @@ public class SpriteEditorInputComponent extends InputAdapter implements InputCom
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (!editor.isBoundToSprite()) {
+        if (!editor.isBound()) {
             return false;
         }
 
@@ -85,7 +85,7 @@ public class SpriteEditorInputComponent extends InputAdapter implements InputCom
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (!editor.isBoundToSprite()) {
+        if (!editor.isBound()) {
             return false;
         }
 
@@ -94,7 +94,7 @@ public class SpriteEditorInputComponent extends InputAdapter implements InputCom
         if (editMode == EditMode.MOVE) {
             Vector2 moveOffset = dragHelper.getDragOffset(mouseWorldPosition);
             dragHelper.reset(mouseWorldPosition);
-            editor.getLevelSprite().getPosition().add(moveOffset);
+            editor.getBoundObject().getPosition().add(moveOffset);
             return true;
         }
 

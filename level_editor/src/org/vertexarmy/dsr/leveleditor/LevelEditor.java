@@ -111,14 +111,14 @@ class LevelEditor extends Game {
         terrainPolygonEditor.setListener(new PolygonEditorListener() {
             @Override
             public void deletePolygonRequested() {
-                ActionManager.instance().runAction(new RemoveTerrainPatchAction(level, findTerrainPatch(terrainPolygonEditor.getPolygon())));
+                ActionManager.instance().runAction(new RemoveTerrainPatchAction(level, findTerrainPatch(terrainPolygonEditor.getBoundObject())));
             }
         });
 
         spriteEditor.setListener(new SpriteEditorListener() {
             @Override
             public void deleteSpriteRequested() {
-                ActionManager.instance().runAction(new RemoveTerrainSpriteAction(level, spriteEditor.getLevelSprite()));
+                ActionManager.instance().runAction(new RemoveTerrainSpriteAction(level, spriteEditor.getBoundObject()));
             }
         });
 
@@ -163,15 +163,25 @@ class LevelEditor extends Game {
                         ItemPicker.PickResult pickResult = ItemPicker.pickObject(level, screenX, screenY);
 
                         if (pickResult.getType() == ItemPicker.ItemType.TERRAIN_POLYGON) {
-                            TerrainPatch pickedTerrainPatch = (TerrainPatch) pickResult.getObject();
-                            terrainPatchTextureOverlayEditor.bindToObject(pickedTerrainPatch.getTextureOverlay());
-                            pickSpriteForEditing(null);
-                            return pickTerrainPatchForEditing(pickedTerrainPatch);
+                            final TerrainPatch pickedTerrainPatch = (TerrainPatch) pickResult.getObject();
+                            boolean selectionChanged = pickedTerrainPatch.getShape() != terrainPolygonEditor.getBoundObject();
+
+                            ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
+                                    new BindAction<>(terrainPolygonEditor, pickedTerrainPatch.getShape()),
+                                    new BindAction<>(spriteEditor, null))));
+
+                            return selectionChanged;
                         }
 
                         if (pickResult.getType() == ItemPicker.ItemType.LEVEL_SPRITE) {
-                            pickTerrainPatchForEditing(null);
-                            return pickSpriteForEditing((LevelSprite) pickResult.getObject());
+                            LevelSprite pickedLevelSprite = (LevelSprite) pickResult.getObject();
+                            boolean selectionChanged = pickedLevelSprite != spriteEditor.getBoundObject();
+
+                            ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
+                                    new BindAction<>(terrainPolygonEditor, null),
+                                    new BindAction<>(spriteEditor, pickedLevelSprite))));
+
+                            return selectionChanged;
                         }
 
                         return false;
@@ -204,8 +214,9 @@ class LevelEditor extends Game {
                         }
 
                         if (Shortcuts.isDeselectShortcut(keycode)) {
-                            pickTerrainPatchForEditing(null);
-                            pickSpriteForEditing(null);
+                            ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
+                                    new BindAction<>(terrainPolygonEditor, null),
+                                    new BindAction<>(spriteEditor, null))));
                             return true;
                         }
 
@@ -342,8 +353,8 @@ class LevelEditor extends Game {
 
             Level level = Serialization.deserialize(inputStream, Level.class);
 
-            terrainPolygonEditor.unbindFromPolygon();
-            spriteEditor.unbindFromSprite();
+            terrainPolygonEditor.unbind();
+            spriteEditor.unbind();
 
             setLevel(level);
 
@@ -409,18 +420,18 @@ class LevelEditor extends Game {
     private boolean pickTerrainPatchForEditing(@Nullable TerrainPatch terrainPatch) {
         if (terrainPatch == null) {
             terrainPatchTextureOverlayEditor.bindToObject(null);
-            return terrainPolygonEditor.unbindFromPolygon();
+            return terrainPolygonEditor.unbind();
         } else {
             terrainPatchTextureOverlayEditor.bindToObject(terrainPatch.getTextureOverlay());
-            return terrainPolygonEditor.bindToPolygon(terrainPatch.getShape());
+            return terrainPolygonEditor.bind(terrainPatch.getShape());
         }
     }
 
     private boolean pickSpriteForEditing(LevelSprite levelSprite) {
         if (levelSprite == null) {
-            return spriteEditor.unbindFromSprite();
+            return spriteEditor.unbind();
         } else {
-            return spriteEditor.bindToSprite(levelSprite);
+            return spriteEditor.bind(levelSprite);
         }
     }
 

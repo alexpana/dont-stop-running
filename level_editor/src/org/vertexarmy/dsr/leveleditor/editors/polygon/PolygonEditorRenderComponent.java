@@ -28,13 +28,13 @@ class PolygonEditorRenderComponent extends RenderComponent {
 
     @Override
     public void render() {
-        if (!polygonEditor.isBoundToPolygon()) {
+        if (!polygonEditor.isBound()) {
             return;
         }
 
         ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
 
-        Polygon polygon = polygonEditor.getPolygon();
+        Polygon polygon = polygonEditor.getBoundObject();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(new Color(0.35f, 0.35f, 0.35f, 1.0f));
@@ -56,7 +56,7 @@ class PolygonEditorRenderComponent extends RenderComponent {
 
     private void drawHandler(VertexHandler handler) {
         ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
-        Polygon polygon = polygonEditor.getPolygon();
+        Polygon polygon = polygonEditor.getBoundObject();
 
         float zoom = RenderSystem.instance().getZoom();
         Vector2 vertex = polygon.getVertex(handler.getVertexIndex());
@@ -78,7 +78,7 @@ class PolygonEditorRenderComponent extends RenderComponent {
 
     private void drawEdge(int indexFrom, int indexTo) {
         ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
-        Polygon polygon = polygonEditor.getPolygon();
+        Polygon polygon = polygonEditor.getBoundObject();
 
         Vector2 from = polygon.getVertex(indexFrom);
         Vector2 to = polygon.getVertex(indexTo);

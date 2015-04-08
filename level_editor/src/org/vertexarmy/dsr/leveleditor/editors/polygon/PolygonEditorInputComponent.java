@@ -30,7 +30,7 @@ class PolygonEditorInputComponent implements InputComponent, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (!polygonEditor.isBoundToPolygon()) {
+        if (!polygonEditor.isBound()) {
             return false;
         }
 
@@ -43,43 +43,43 @@ class PolygonEditorInputComponent implements InputComponent, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().keyUp(keycode);
+        return polygonEditor.isBound() && polygonEditor.getEditMode().keyUp(keycode);
 
     }
 
     @Override
     public boolean keyTyped(char character) {
-        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().keyTyped(character);
+        return polygonEditor.isBound() && polygonEditor.getEditMode().keyTyped(character);
 
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().touchDown(screenX, screenY, pointer, button);
+        return polygonEditor.isBound() && polygonEditor.getEditMode().touchDown(screenX, screenY, pointer, button);
 
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().touchUp(screenX, screenY, pointer, button);
+        return polygonEditor.isBound() && polygonEditor.getEditMode().touchUp(screenX, screenY, pointer, button);
 
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().touchDragged(screenX, screenY, pointer);
+        return polygonEditor.isBound() && polygonEditor.getEditMode().touchDragged(screenX, screenY, pointer);
 
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().mouseMoved(screenX, screenY);
+        return polygonEditor.isBound() && polygonEditor.getEditMode().mouseMoved(screenX, screenY);
 
     }
 
     @Override
     public boolean scrolled(int amount) {
-        return polygonEditor.isBoundToPolygon() && polygonEditor.getEditMode().scrolled(amount);
+        return polygonEditor.isBound() && polygonEditor.getEditMode().scrolled(amount);
 
     }
 }

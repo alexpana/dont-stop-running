@@ -42,7 +42,7 @@ public class EditModeAddVertex extends InputAdapter implements EditMode {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        List<Edge> edges = polygonEditor.getPolygon().getEdgeList();
+        List<Edge> edges = polygonEditor.getBoundObject().getEdgeList();
 
         Vector2 mousePosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
 
