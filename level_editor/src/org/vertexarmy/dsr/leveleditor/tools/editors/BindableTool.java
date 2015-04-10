@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors;
+package org.vertexarmy.dsr.leveleditor.tools.editors;
 
 import javax.annotation.Nullable;
 
@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
  * created by Alex
  * on 08-Apr-2015.
  */
-public abstract class Bindable<T> {
+public abstract class BindableTool<T> {
     private T boundObject;
 
     public boolean bind(T object) {

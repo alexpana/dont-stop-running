@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.sprite;
+package org.vertexarmy.dsr.leveleditor.tools.editors.levelsprite;
 
 import lombok.Getter;
 import lombok.Setter;

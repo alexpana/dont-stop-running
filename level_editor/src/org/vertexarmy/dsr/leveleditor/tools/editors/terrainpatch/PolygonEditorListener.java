@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.terrainpatch;
+package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch;
 
 /**
  * created by Alex

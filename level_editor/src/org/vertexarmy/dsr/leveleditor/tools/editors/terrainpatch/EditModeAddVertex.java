@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.terrainpatch;
+package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
-import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.actions.AddNewVertexAction;
+import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.actions.AddNewVertexAction;
 import org.vertexarmy.dsr.math.Algorithms;
 import org.vertexarmy.dsr.math.Edge;
 

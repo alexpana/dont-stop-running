@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.sprite;
+package org.vertexarmy.dsr.leveleditor.tools.editors.levelsprite;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -12,9 +12,9 @@ import org.vertexarmy.dsr.core.systems.RenderSystem;
  * on 04-Apr-2015.
  */
 @RequiredArgsConstructor
-public class SpriteEditorRenderComponent extends RenderComponent {
+public class LevelSpriteEditorRenderComponent extends RenderComponent {
 
-    private final SpriteEditor editor;
+    private final LevelSpriteEditor editor;
 
     @Override
     public void render() {

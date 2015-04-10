@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.sprite;
+package org.vertexarmy.dsr.leveleditor.tools.editors.levelsprite;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -9,14 +9,14 @@ import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.game.level.LevelSprite;
-import org.vertexarmy.dsr.leveleditor.editors.Bindable;
+import org.vertexarmy.dsr.leveleditor.tools.editors.BindableTool;
 import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
 
 /**
  * created by Alex
  * on 04-Apr-2015.
  */
-public class SpriteEditor extends Bindable<LevelSprite> {
+public class LevelSpriteEditor extends BindableTool<LevelSprite> {
     @Getter
     private final Node node = new Node();
 
@@ -31,11 +31,11 @@ public class SpriteEditor extends Bindable<LevelSprite> {
 
     @Getter
     @Setter
-    private SpriteEditorListener listener;
+    private LevelSpriteEditorListener listener;
 
-    public SpriteEditor(Root root) {
-        node.addComponent(ComponentType.INPUT, new SpriteEditorInputComponent(this));
-        node.addComponent(ComponentType.RENDER, new SpriteEditorRenderComponent(this));
+    public LevelSpriteEditor(Root root) {
+        node.addComponent(ComponentType.INPUT, new LevelSpriteEditorInputComponent(this));
+        node.addComponent(ComponentType.RENDER, new LevelSpriteEditorRenderComponent(this));
 
         editDialog = new GenericEditor(root.getUiNode().getStage(), "Edit sprite", root.getUiNode().getUiSkin(), LevelSprite.class);
         editDialog.setSize(235, 200);

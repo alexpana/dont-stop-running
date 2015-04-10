@@ -1,32 +1,32 @@
 package org.vertexarmy.dsr.leveleditor;
 
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.editors.Bindable;
+import org.vertexarmy.dsr.leveleditor.tools.editors.BindableTool;
 
 /**
  * created by Alex
  * on 08-Apr-2015.
  */
 public class BindAction<T> implements ActionManager.Action {
-    private final Bindable<T> bindable;
+    private final BindableTool<T> tool;
     private final T object;
     private final T oldObject;
 
-    public BindAction(Bindable<T> bindable, T object) {
-        this.bindable = bindable;
+    public BindAction(BindableTool<T> tool, T object) {
+        this.tool = tool;
         this.object = object;
-        this.oldObject = bindable.getBoundObject();
+        this.oldObject = tool.getBoundObject();
     }
 
 
     @Override
     public void doAction() {
-        bindable.bind(object);
+        tool.bind(object);
     }
 
     @Override
     public void undoAction() {
-        bindable.bind(oldObject);
+        tool.bind(oldObject);
     }
 
     @Override

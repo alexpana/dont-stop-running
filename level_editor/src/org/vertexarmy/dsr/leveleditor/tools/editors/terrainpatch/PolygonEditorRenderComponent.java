@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.terrainpatch;
+package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;

@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.terrainpatch;
+package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
@@ -13,7 +13,7 @@ import org.vertexarmy.dsr.game.level.TerrainPatch;
 import org.vertexarmy.dsr.graphics.TextureOverlay;
 import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
-import org.vertexarmy.dsr.leveleditor.editors.Bindable;
+import org.vertexarmy.dsr.leveleditor.tools.editors.BindableTool;
 import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
 import org.vertexarmy.dsr.math.Polygon;
 
@@ -25,7 +25,7 @@ import java.util.Map;
  * created by Alex
  * on 3/21/2015.
  */
-public class TerrainPatchEditor extends Bindable<TerrainPatch> {
+public class TerrainPatchEditor extends BindableTool<TerrainPatch> {
     @Getter(value = AccessLevel.PACKAGE)
     private final List<VertexHandler> vertexHandlers = Lists.newArrayList();
 

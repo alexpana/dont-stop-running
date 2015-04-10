@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.sprite;
+package org.vertexarmy.dsr.leveleditor.tools.editors.levelsprite;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -15,10 +15,10 @@ import org.vertexarmy.dsr.math.Algorithms;
  * on 04-Apr-2015.
  */
 @RequiredArgsConstructor
-public class SpriteEditorInputComponent extends InputAdapter implements InputComponent {
+public class LevelSpriteEditorInputComponent extends InputAdapter implements InputComponent {
     private final DragHelper dragHelper = new DragHelper();
 
-    private final SpriteEditor editor;
+    private final LevelSpriteEditor editor;
 
     enum EditMode {
         MOVE,

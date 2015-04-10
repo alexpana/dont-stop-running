@@ -1,9 +1,9 @@
-package org.vertexarmy.dsr.leveleditor.editors.terrainpatch.actions;
+package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.actions;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.TerrainPatchEditor;
+import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditor;
 
 import java.util.List;
 

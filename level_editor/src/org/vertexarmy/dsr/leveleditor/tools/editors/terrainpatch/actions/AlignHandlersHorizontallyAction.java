@@ -1,10 +1,10 @@
-package org.vertexarmy.dsr.leveleditor.editors.terrainpatch.actions;
+package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.actions;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.TerrainPatchEditor;
-import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.VertexHandler;
+import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditor;
+import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.VertexHandler;
 
 import java.util.List;
 
@@ -12,14 +12,14 @@ import java.util.List;
  * Created by alex
  * on 24.03.2015.
  */
-public class AlignHandlersVerticallyAction extends ActionManager.ActionAdapter {
+public class AlignHandlersHorizontallyAction extends ActionManager.ActionAdapter {
     private final TerrainPatchEditor terrainPatchEditor;
 
     private final List<VertexHandler> selectedVertexHandlers = Lists.newArrayList();
 
     private final List<Vector2> originalVertexPositions = Lists.newArrayList();
 
-    public AlignHandlersVerticallyAction(TerrainPatchEditor editor, List<VertexHandler> selectedVertexHandlers) {
+    public AlignHandlersHorizontallyAction(TerrainPatchEditor editor, List<VertexHandler> selectedVertexHandlers) {
         terrainPatchEditor = editor;
         this.selectedVertexHandlers.addAll(selectedVertexHandlers);
 
@@ -30,17 +30,17 @@ public class AlignHandlersVerticallyAction extends ActionManager.ActionAdapter {
 
     @Override
     public void doAction() {
-        float medianX = 0;
+        float medianY = 0;
         List<VertexHandler> selectedHandlers = terrainPatchEditor.getSelectedHandlers();
         if (!selectedHandlers.isEmpty()) {
             for (VertexHandler handler : selectedHandlers) {
-                medianX += terrainPatchEditor.getVertex(handler).x;
+                medianY += terrainPatchEditor.getVertex(handler).y;
             }
 
-            medianX /= selectedHandlers.size();
+            medianY /= selectedHandlers.size();
             for (VertexHandler handler : selectedHandlers) {
                 Vector2 originalPosition = terrainPatchEditor.getVertex(handler);
-                terrainPatchEditor.setVertex(handler, medianX, originalPosition.y);
+                terrainPatchEditor.setVertex(handler, originalPosition.x, medianY);
             }
         }
     }
@@ -59,7 +59,7 @@ public class AlignHandlersVerticallyAction extends ActionManager.ActionAdapter {
         }
 
         for (VertexHandler handler : selectedVertexHandlers) {
-            if (terrainPatchEditor.getVertex(handler).x != terrainPatchEditor.getVertex(selectedVertexHandlers.get(0)).x) {
+            if (terrainPatchEditor.getVertex(handler).y != terrainPatchEditor.getVertex(selectedVertexHandlers.get(0)).y) {
                 return true;
             }
         }
