@@ -1,6 +1,7 @@
 package org.vertexarmy.dsr.leveleditor.ui;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -24,6 +25,10 @@ public class Spinner extends TextField {
     @Getter
     @Setter
     private float increment = 0.1f;
+
+    @Getter
+    @Setter
+    private Model<Float> floatModel;
 
     public Spinner(String text, Skin skin) {
         super(text, skin);
@@ -97,5 +102,14 @@ public class Spinner extends TextField {
         ChangeListener.ChangeEvent event = new ChangeListener.ChangeEvent();
         event.setTarget(this);
         notify(event, false);
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        if (floatModel != null) {
+            previousValue = floatModel.getValue();
+            setText(String.valueOf(previousValue));
+        }
+        super.draw(batch, parentAlpha);
     }
 }

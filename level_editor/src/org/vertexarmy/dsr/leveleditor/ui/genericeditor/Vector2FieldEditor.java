@@ -2,12 +2,9 @@ package org.vertexarmy.dsr.leveleditor.ui.genericeditor;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import org.vertexarmy.dsr.core.ReflectionHelper;
@@ -35,7 +32,6 @@ public class Vector2FieldEditor extends FieldEditor {
 
         textFieldX = new Spinner("", skin);
         textFieldX.setIncrement(ReflectionHelper.getPrecisionAnnotationValue(field));
-
         textFieldX.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -82,7 +78,10 @@ public class Vector2FieldEditor extends FieldEditor {
         this.boundObject = object;
         if (object != null) {
             textFieldX.setText(String.valueOf(ReflectionHelper.getField(object, getBoundField(), Vector2.Zero).x));
+            textFieldX.setFloatModel(new Vector2FieldModel(Vector2FieldModel.Element.X, getBoundField(), boundObject));
+
             textFieldY.setText(String.valueOf(ReflectionHelper.getField(object, getBoundField(), Vector2.Zero).y));
+            textFieldY.setFloatModel(new Vector2FieldModel(Vector2FieldModel.Element.Y, getBoundField(), boundObject));
         }
     }
 }
