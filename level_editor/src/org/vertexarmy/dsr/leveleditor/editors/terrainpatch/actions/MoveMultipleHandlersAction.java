@@ -1,10 +1,10 @@
-package org.vertexarmy.dsr.leveleditor.editors.polygon.actions;
+package org.vertexarmy.dsr.leveleditor.editors.terrainpatch.actions;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.editors.polygon.VertexHandler;
+import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.TerrainPatchEditor;
+import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.VertexHandler;
 import org.vertexarmy.dsr.math.Algorithms;
 
 import java.util.List;
@@ -20,14 +20,14 @@ public class MoveMultipleHandlersAction extends ActionManager.ActionAdapter {
 
     private final List<Vector2> newPositions = Lists.newArrayList();
 
-    private final PolygonEditor polygonEditor;
+    private final TerrainPatchEditor terrainPatchEditor;
 
     public MoveMultipleHandlersAction(
-            PolygonEditor polygonEditor,
+            TerrainPatchEditor terrainPatchEditor,
             List<VertexHandler> vertexHandlers,
             List<Vector2> originalPositions,
             List<Vector2> newPositions) {
-        this.polygonEditor = polygonEditor;
+        this.terrainPatchEditor = terrainPatchEditor;
         this.vertexHandlers.addAll(vertexHandlers);
         this.originalPositions.addAll(originalPositions);
         this.newPositions.addAll(newPositions);
@@ -36,14 +36,14 @@ public class MoveMultipleHandlersAction extends ActionManager.ActionAdapter {
     @Override
     public void doAction() {
         for (int i = 0; i < vertexHandlers.size(); ++i) {
-            polygonEditor.setVertex(vertexHandlers.get(i), newPositions.get(i));
+            terrainPatchEditor.setVertex(vertexHandlers.get(i), newPositions.get(i));
         }
     }
 
     @Override
     public void undoAction() {
         for (int i = 0; i < vertexHandlers.size(); ++i) {
-            polygonEditor.setVertex(vertexHandlers.get(i), originalPositions.get(i));
+            terrainPatchEditor.setVertex(vertexHandlers.get(i), originalPositions.get(i));
         }
     }
 

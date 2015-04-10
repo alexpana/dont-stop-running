@@ -30,16 +30,14 @@ import org.vertexarmy.dsr.game.level.TerrainPatch;
 import org.vertexarmy.dsr.graphics.TextureOverlay;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraController;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
-import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditorListener;
+import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.PolygonEditorListener;
+import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.TerrainPatchEditor;
 import org.vertexarmy.dsr.leveleditor.editors.sprite.SpriteEditor;
 import org.vertexarmy.dsr.leveleditor.editors.sprite.SpriteEditorListener;
 import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
 import org.vertexarmy.dsr.leveleditor.ui.*;
 import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
-import org.vertexarmy.dsr.math.Polygon;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -59,7 +57,7 @@ class LevelEditor extends Game {
 
     private Level level;
 
-    private PolygonEditor terrainPolygonEditor = new PolygonEditor();
+    private TerrainPatchEditor terrainTerrainPatchEditor;
 
     private SpriteEditor spriteEditor;
 
@@ -94,24 +92,17 @@ class LevelEditor extends Game {
         ElegantGraySkin.install(root.getUiNode().getUiSkin());
 
         initUI();
+
         spriteEditor = new SpriteEditor(root);
 
-        root.addNode(new Node(ComponentType.INPUT, userUserPanningCameraController));
-        root.addNode(new Node(ComponentType.UPDATE, autoScrollCameraController));
-        root.addNode(createEditorNode());
-        root.addNode(terrainPolygonEditor.getNode());
-        root.addNode(spriteEditor.getNode());
-
-        setLevel(Level.createDefaultLevel());
-
-        userUserPanningCameraController.setEnabled(true);
+        terrainTerrainPatchEditor = new TerrainPatchEditor(root);
 
         terrainPatchTextureOverlayEditor = new GenericEditor(root.getUiNode().getStage(), "Texture Overlay", root.getUiNode().getUiSkin(), TextureOverlay.class);
 
-        terrainPolygonEditor.setListener(new PolygonEditorListener() {
+        terrainTerrainPatchEditor.setListener(new PolygonEditorListener() {
             @Override
             public void deletePolygonRequested() {
-                ActionManager.instance().runAction(new RemoveTerrainPatchAction(level, findTerrainPatch(terrainPolygonEditor.getBoundObject())));
+                ActionManager.instance().runAction(new RemoveTerrainPatchAction(level, terrainTerrainPatchEditor.getBoundObject()));
             }
         });
 
@@ -122,18 +113,19 @@ class LevelEditor extends Game {
             }
         });
 
+        root.addNode(new Node(ComponentType.INPUT, userUserPanningCameraController));
+        root.addNode(new Node(ComponentType.UPDATE, autoScrollCameraController));
+        root.addNode(createEditorNode());
+        root.addNode(terrainTerrainPatchEditor.getNode());
+        root.addNode(spriteEditor.getNode());
+
+        userUserPanningCameraController.setEnabled(true);
+
+        setLevel(Level.createDefaultLevel());
+
         if (initTask != null) {
             initTask.apply(this);
         }
-    }
-
-    private TerrainPatch findTerrainPatch(Polygon patchShape) {
-        for (TerrainPatch terrainPatch : level.getTerrainPatches()) {
-            if (terrainPatch.getShape() == patchShape) {
-                return terrainPatch;
-            }
-        }
-        return null;
     }
 
     private Node createEditorNode() {
@@ -156,7 +148,7 @@ class LevelEditor extends Game {
                 return new InputAdapter() {
                     @Override
                     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                        if (terrainPolygonEditor.getHoveredVertex() != null) {
+                        if (terrainTerrainPatchEditor.getHoveredVertex() != null) {
                             return false;
                         }
 
@@ -164,10 +156,10 @@ class LevelEditor extends Game {
 
                         if (pickResult.getType() == ItemPicker.ItemType.TERRAIN_POLYGON) {
                             final TerrainPatch pickedTerrainPatch = (TerrainPatch) pickResult.getObject();
-                            boolean selectionChanged = pickedTerrainPatch.getShape() != terrainPolygonEditor.getBoundObject();
+                            boolean selectionChanged = pickedTerrainPatch != terrainTerrainPatchEditor.getBoundObject();
 
                             ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
-                                    new BindAction<>(terrainPolygonEditor, pickedTerrainPatch.getShape()),
+                                    new BindAction<>(terrainTerrainPatchEditor, pickedTerrainPatch),
                                     new BindAction<>(spriteEditor, null))));
 
                             return selectionChanged;
@@ -178,7 +170,7 @@ class LevelEditor extends Game {
                             boolean selectionChanged = pickedLevelSprite != spriteEditor.getBoundObject();
 
                             ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
-                                    new BindAction<>(terrainPolygonEditor, null),
+                                    new BindAction<>(terrainTerrainPatchEditor, null),
                                     new BindAction<>(spriteEditor, pickedLevelSprite))));
 
                             return selectionChanged;
@@ -215,7 +207,7 @@ class LevelEditor extends Game {
 
                         if (Shortcuts.isDeselectShortcut(keycode)) {
                             ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
-                                    new BindAction<>(terrainPolygonEditor, null),
+                                    new BindAction<>(terrainTerrainPatchEditor, null),
                                     new BindAction<>(spriteEditor, null))));
                             return true;
                         }
@@ -353,7 +345,7 @@ class LevelEditor extends Game {
 
             Level level = Serialization.deserialize(inputStream, Level.class);
 
-            terrainPolygonEditor.unbind();
+            terrainTerrainPatchEditor.unbind();
             spriteEditor.unbind();
 
             setLevel(level);
@@ -415,24 +407,6 @@ class LevelEditor extends Game {
         this.level = level;
 
         levelRenderer.setLevel(level);
-    }
-
-    private boolean pickTerrainPatchForEditing(@Nullable TerrainPatch terrainPatch) {
-        if (terrainPatch == null) {
-            terrainPatchTextureOverlayEditor.bindToObject(null);
-            return terrainPolygonEditor.unbind();
-        } else {
-            terrainPatchTextureOverlayEditor.bindToObject(terrainPatch.getTextureOverlay());
-            return terrainPolygonEditor.bind(terrainPatch.getShape());
-        }
-    }
-
-    private boolean pickSpriteForEditing(LevelSprite levelSprite) {
-        if (levelSprite == null) {
-            return spriteEditor.unbind();
-        } else {
-            return spriteEditor.bind(levelSprite);
-        }
     }
 
     public static void launch(Function<LevelEditor, Boolean> initTask) {

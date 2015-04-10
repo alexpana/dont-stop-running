@@ -1,9 +1,9 @@
-package org.vertexarmy.dsr.leveleditor.editors.polygon.actions;
+package org.vertexarmy.dsr.leveleditor.editors.terrainpatch.actions;
 
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.editors.polygon.PolygonEditor;
-import org.vertexarmy.dsr.leveleditor.editors.polygon.VertexHandler;
+import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.TerrainPatchEditor;
+import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.VertexHandler;
 
 import java.util.List;
 
@@ -12,26 +12,26 @@ import java.util.List;
  * on 24.03.2015.
  */
 public class SelectHandlersAction extends ActionManager.ActionAdapter {
-    private final PolygonEditor polygonEditor;
+    private final TerrainPatchEditor terrainPatchEditor;
 
     private final List<VertexHandler> selectedHandlers = Lists.newArrayList();
 
-    public SelectHandlersAction(PolygonEditor polygonEditor, List<VertexHandler> selectedHandlers) {
-        this.polygonEditor = polygonEditor;
+    public SelectHandlersAction(TerrainPatchEditor terrainPatchEditor, List<VertexHandler> selectedHandlers) {
+        this.terrainPatchEditor = terrainPatchEditor;
         this.selectedHandlers.addAll(selectedHandlers);
     }
 
     @Override
     public void doAction() {
         for (VertexHandler vertexHandler : selectedHandlers) {
-            polygonEditor.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(true);
+            terrainPatchEditor.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(true);
         }
     }
 
     @Override
     public void undoAction() {
         for (VertexHandler vertexHandler : selectedHandlers) {
-            polygonEditor.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(false);
+            terrainPatchEditor.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(false);
         }
     }
 

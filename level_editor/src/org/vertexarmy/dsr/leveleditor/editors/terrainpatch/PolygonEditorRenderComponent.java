@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.polygon;
+package org.vertexarmy.dsr.leveleditor.editors.terrainpatch;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -19,22 +19,22 @@ class PolygonEditorRenderComponent extends RenderComponent {
     private static final Color DEFAULT_VERTEX_HANDLER_COLOR = Color.YELLOW;
     private final List<VertexHandler> vertexHandlers;
 
-    private final PolygonEditor polygonEditor;
+    private final TerrainPatchEditor terrainPatchEditor;
 
-    public PolygonEditorRenderComponent(PolygonEditor polygonEditor) {
-        this.polygonEditor = polygonEditor;
-        vertexHandlers = polygonEditor.getVertexHandlers();
+    public PolygonEditorRenderComponent(TerrainPatchEditor terrainPatchEditor) {
+        this.terrainPatchEditor = terrainPatchEditor;
+        vertexHandlers = terrainPatchEditor.getVertexHandlers();
     }
 
     @Override
     public void render() {
-        if (!polygonEditor.isBound()) {
+        if (!terrainPatchEditor.isBound()) {
             return;
         }
 
         ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
 
-        Polygon polygon = polygonEditor.getBoundObject();
+        Polygon polygon = terrainPatchEditor.getBoundPolygon();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(new Color(0.35f, 0.35f, 0.35f, 1.0f));
@@ -51,12 +51,12 @@ class PolygonEditorRenderComponent extends RenderComponent {
         }
         shapeRenderer.end();
 
-        polygonEditor.getEditMode().render();
+        terrainPatchEditor.getEditMode().render();
     }
 
     private void drawHandler(VertexHandler handler) {
         ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
-        Polygon polygon = polygonEditor.getBoundObject();
+        Polygon polygon = terrainPatchEditor.getBoundPolygon();
 
         float zoom = RenderSystem.instance().getZoom();
         Vector2 vertex = polygon.getVertex(handler.getVertexIndex());
@@ -78,7 +78,7 @@ class PolygonEditorRenderComponent extends RenderComponent {
 
     private void drawEdge(int indexFrom, int indexTo) {
         ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
-        Polygon polygon = polygonEditor.getBoundObject();
+        Polygon polygon = terrainPatchEditor.getBoundPolygon();
 
         Vector2 from = polygon.getVertex(indexFrom);
         Vector2 to = polygon.getVertex(indexTo);

@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.polygon;
+package org.vertexarmy.dsr.leveleditor.editors.terrainpatch;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
@@ -6,11 +6,15 @@ import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.vertexarmy.dsr.core.Root;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
+import org.vertexarmy.dsr.game.level.TerrainPatch;
+import org.vertexarmy.dsr.graphics.TextureOverlay;
 import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
 import org.vertexarmy.dsr.leveleditor.editors.Bindable;
+import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
 import org.vertexarmy.dsr.math.Polygon;
 
 import java.util.Collections;
@@ -21,10 +25,9 @@ import java.util.Map;
  * created by Alex
  * on 3/21/2015.
  */
-public class PolygonEditor extends Bindable<Polygon> {
+public class TerrainPatchEditor extends Bindable<TerrainPatch> {
     @Getter(value = AccessLevel.PACKAGE)
     private final List<VertexHandler> vertexHandlers = Lists.newArrayList();
-
 
     @Getter
     private Node node;
@@ -32,6 +35,9 @@ public class PolygonEditor extends Bindable<Polygon> {
     @Getter
     @Setter
     private PolygonEditorListener listener;
+
+    @Getter
+    private GenericEditor textureOverlayEditor;
 
     public enum EditModeType {
         DEFAULT,
@@ -42,19 +48,21 @@ public class PolygonEditor extends Bindable<Polygon> {
 
     private final Map<EditModeType, EditMode> editModes = Maps.newHashMap();
 
-    public PolygonEditor() {
+    public TerrainPatchEditor(Root root) {
         editModes.put(EditModeType.DEFAULT, new EditModeDefault(this));
         editModes.put(EditModeType.ADD_VERTEX, new EditModeAddVertex(this));
         setEditMode(EditModeType.DEFAULT);
+
+        textureOverlayEditor = new GenericEditor(root.getUiNode().getStage(), "Edit Overlay", root.getUiNode().getUiSkin(), TextureOverlay.class);
 
         node = new Node();
         node.addComponent(ComponentType.RENDER, new PolygonEditorRenderComponent(this));
         node.addComponent(ComponentType.INPUT, new PolygonEditorInputComponent(this));
     }
 
-    public PolygonEditor(Polygon polygon) {
+    public TerrainPatchEditor(TerrainPatch terrainPatch) {
         super();
-        bind(polygon);
+        bind(terrainPatch);
     }
 
     EditMode getEditMode() {
@@ -90,12 +98,14 @@ public class PolygonEditor extends Bindable<Polygon> {
     }
 
     @Override
-    public void doBind(Polygon polygon) {
-        if (polygon != null) {
+    public void doBind(TerrainPatch terrainPatch) {
+        if (terrainPatch != null) {
             updateVertexHandlers();
+            textureOverlayEditor.bindToObject(terrainPatch.getTextureOverlay());
             setEditMode(EditModeType.DEFAULT);
         } else {
             vertexHandlers.clear();
+            textureOverlayEditor.bindToObject(null);
         }
     }
 
@@ -112,8 +122,16 @@ public class PolygonEditor extends Bindable<Polygon> {
         return selectedHandlers;
     }
 
+    public Polygon getBoundPolygon() {
+        if (isBound()) {
+            return getBoundObject().getShape();
+        } else {
+            return null;
+        }
+    }
+
     public Vector2 getVertex(VertexHandler handler) {
-        return getBoundObject().getVertex(handler.getVertexIndex());
+        return getBoundPolygon().getVertex(handler.getVertexIndex());
     }
 
     public void setVertex(VertexHandler handler, Vector2 position) {
@@ -121,11 +139,11 @@ public class PolygonEditor extends Bindable<Polygon> {
     }
 
     public void setVertex(VertexHandler handler, float x, float y) {
-        getBoundObject().setVertex(handler.getVertexIndex(), new Vector2(x, y));
+        getBoundPolygon().setVertex(handler.getVertexIndex(), new Vector2(x, y));
     }
 
     public void addVertex(int index, Vector2 position) {
-        getBoundObject().addVertex(index, position);
+        getBoundPolygon().addVertex(index, position);
         updateVertexHandlers();
     }
 
@@ -146,20 +164,20 @@ public class PolygonEditor extends Bindable<Polygon> {
         Collections.sort(indexList);
 
         for (int i = 0; i < indexList.size(); ++i) {
-            getBoundObject().removeVertex(indexList.get(i) - i);
+            getBoundPolygon().removeVertex(indexList.get(i) - i);
         }
 
         updateVertexHandlers();
     }
 
     public void setVertices(List<Vector2> vertices) {
-        getBoundObject().setVertices(vertices);
+        getBoundPolygon().setVertices(vertices);
         updateVertexHandlers();
     }
 
     private void updateVertexHandlers() {
         vertexHandlers.clear();
-        for (int i = 0; i < getBoundObject().getVertexCount(); ++i) {
+        for (int i = 0; i < getBoundPolygon().getVertexCount(); ++i) {
             vertexHandlers.add(new VertexHandler(i));
         }
     }

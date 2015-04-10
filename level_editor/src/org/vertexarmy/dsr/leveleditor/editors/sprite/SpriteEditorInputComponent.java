@@ -41,8 +41,13 @@ public class SpriteEditorInputComponent extends InputAdapter implements InputCom
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.E) {
+        if (keycode == Input.Keys.E && editor.isBound()) {
             editor.getEditDialog().show();
+            return true;
+        }
+
+        if (keycode == Input.Keys.ESCAPE && editor.getEditDialog().isVisible()) {
+            editor.getEditDialog().hide();
             return true;
         }
 

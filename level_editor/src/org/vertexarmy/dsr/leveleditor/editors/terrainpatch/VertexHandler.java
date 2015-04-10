@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.editors.polygon;
+package org.vertexarmy.dsr.leveleditor.editors.terrainpatch;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

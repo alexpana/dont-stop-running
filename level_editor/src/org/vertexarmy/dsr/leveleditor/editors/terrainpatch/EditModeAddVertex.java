@@ -1,5 +1,6 @@
-package org.vertexarmy.dsr.leveleditor.editors.polygon;
+package org.vertexarmy.dsr.leveleditor.editors.terrainpatch;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -7,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
-import org.vertexarmy.dsr.leveleditor.editors.polygon.actions.AddNewVertexAction;
+import org.vertexarmy.dsr.leveleditor.editors.terrainpatch.actions.AddNewVertexAction;
 import org.vertexarmy.dsr.math.Algorithms;
 import org.vertexarmy.dsr.math.Edge;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public class EditModeAddVertex extends InputAdapter implements EditMode {
     private static final float MIN_PROJECTION_DISTANCE = 10.0f;
 
-    private final PolygonEditor polygonEditor;
+    private final TerrainPatchEditor terrainPatchEditor;
 
     public final Vector2 shadowVertex = new Vector2();
 
@@ -28,8 +29,8 @@ public class EditModeAddVertex extends InputAdapter implements EditMode {
 
     private boolean closeToEdge = false;
 
-    public EditModeAddVertex(PolygonEditor polygonEditor) {
-        this.polygonEditor = polygonEditor;
+    public EditModeAddVertex(TerrainPatchEditor terrainPatchEditor) {
+        this.terrainPatchEditor = terrainPatchEditor;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class EditModeAddVertex extends InputAdapter implements EditMode {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        List<Edge> edges = polygonEditor.getBoundObject().getEdgeList();
+        List<Edge> edges = terrainPatchEditor.getBoundPolygon().getEdgeList();
 
         Vector2 mousePosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
 
@@ -77,9 +78,24 @@ public class EditModeAddVertex extends InputAdapter implements EditMode {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (closeToEdge) {
-            ActionManager.instance().runAction(new AddNewVertexAction(polygonEditor, shadowEdgeIndex + 1, shadowVertex.cpy()));
+            ActionManager.instance().runAction(new AddNewVertexAction(terrainPatchEditor, shadowEdgeIndex + 1, shadowVertex.cpy()));
             return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.E) {
+            terrainPatchEditor.getTextureOverlayEditor().show();
+            return true;
+        }
+
+        if (keycode == Input.Keys.ESCAPE) {
+            terrainPatchEditor.getTextureOverlayEditor().hide();
+            return true;
+        }
+
         return false;
     }
 
