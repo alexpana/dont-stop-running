@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## [1.3] 2015-04-12
 ### Added
 - Support for editing sprites
 - JSON serialization for more flexible serialization between versions

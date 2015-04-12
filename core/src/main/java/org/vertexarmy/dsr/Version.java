@@ -6,7 +6,7 @@ package org.vertexarmy.dsr;
  */
 public class Version {
     public static final int MAJOR = 1;
-    public static final int MINOR = 2;
+    public static final int MINOR = 3;
 
     public static final String releaseName = "Hatchling";
 
