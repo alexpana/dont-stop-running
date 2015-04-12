@@ -45,6 +45,9 @@ public class Menu extends Table {
 
     private Label titleLabel;
 
+    @Getter
+    private Vector2 displayLocation = Vector2.Zero.cpy();
+
     public Menu(Stage stage, Skin skin) {
         this.stage = stage;
         this.skin = skin;
@@ -85,6 +88,7 @@ public class Menu extends Table {
         stage.addActor(this);
         setVisible(true);
         setBounds(position.x, Gdx.graphics.getHeight() - (position.y + getPrefHeight()), getPrefWidth(), getPrefHeight());
+        displayLocation = position;
     }
 
     public void hide() {

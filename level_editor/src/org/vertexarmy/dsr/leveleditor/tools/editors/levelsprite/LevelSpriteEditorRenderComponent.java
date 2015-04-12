@@ -14,7 +14,7 @@ import org.vertexarmy.dsr.core.systems.RenderSystem;
 @RequiredArgsConstructor
 public class LevelSpriteEditorRenderComponent extends RenderComponent {
 
-    private final LevelSpriteEditor editor;
+    private final LevelSpriteEditTool editor;
 
     @Override
     public void render() {

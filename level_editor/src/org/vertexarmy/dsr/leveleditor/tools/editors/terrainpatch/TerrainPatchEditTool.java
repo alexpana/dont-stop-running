@@ -13,7 +13,7 @@ import org.vertexarmy.dsr.game.level.TerrainPatch;
 import org.vertexarmy.dsr.graphics.TextureOverlay;
 import org.vertexarmy.dsr.leveleditor.DebugItems;
 import org.vertexarmy.dsr.leveleditor.DebugValues;
-import org.vertexarmy.dsr.leveleditor.tools.editors.BindableTool;
+import org.vertexarmy.dsr.leveleditor.tools.BindableTool;
 import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
 import org.vertexarmy.dsr.math.Polygon;
 
@@ -25,7 +25,7 @@ import java.util.Map;
  * created by Alex
  * on 3/21/2015.
  */
-public class TerrainPatchEditor extends BindableTool<TerrainPatch> {
+public class TerrainPatchEditTool extends BindableTool<TerrainPatch> {
     @Getter(value = AccessLevel.PACKAGE)
     private final List<VertexHandler> vertexHandlers = Lists.newArrayList();
 
@@ -48,7 +48,7 @@ public class TerrainPatchEditor extends BindableTool<TerrainPatch> {
 
     private final Map<EditModeType, EditMode> editModes = Maps.newHashMap();
 
-    public TerrainPatchEditor(Root root) {
+    public TerrainPatchEditTool(Root root) {
         editModes.put(EditModeType.DEFAULT, new EditModeDefault(this));
         editModes.put(EditModeType.ADD_VERTEX, new EditModeAddVertex(this));
         setEditMode(EditModeType.DEFAULT);
@@ -60,7 +60,7 @@ public class TerrainPatchEditor extends BindableTool<TerrainPatch> {
         node.addComponent(ComponentType.INPUT, new PolygonEditorInputComponent(this));
     }
 
-    public TerrainPatchEditor(TerrainPatch terrainPatch) {
+    public TerrainPatchEditTool(TerrainPatch terrainPatch) {
         super();
         bind(terrainPatch);
     }

@@ -19,22 +19,22 @@ class PolygonEditorRenderComponent extends RenderComponent {
     private static final Color DEFAULT_VERTEX_HANDLER_COLOR = Color.YELLOW;
     private final List<VertexHandler> vertexHandlers;
 
-    private final TerrainPatchEditor terrainPatchEditor;
+    private final TerrainPatchEditTool terrainPatchEditTool;
 
-    public PolygonEditorRenderComponent(TerrainPatchEditor terrainPatchEditor) {
-        this.terrainPatchEditor = terrainPatchEditor;
-        vertexHandlers = terrainPatchEditor.getVertexHandlers();
+    public PolygonEditorRenderComponent(TerrainPatchEditTool terrainPatchEditTool) {
+        this.terrainPatchEditTool = terrainPatchEditTool;
+        vertexHandlers = terrainPatchEditTool.getVertexHandlers();
     }
 
     @Override
     public void render() {
-        if (!terrainPatchEditor.isBound()) {
+        if (!terrainPatchEditTool.isBound()) {
             return;
         }
 
         ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
 
-        Polygon polygon = terrainPatchEditor.getBoundPolygon();
+        Polygon polygon = terrainPatchEditTool.getBoundPolygon();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(new Color(0.35f, 0.35f, 0.35f, 1.0f));
@@ -51,12 +51,12 @@ class PolygonEditorRenderComponent extends RenderComponent {
         }
         shapeRenderer.end();
 
-        terrainPatchEditor.getEditMode().render();
+        terrainPatchEditTool.getEditMode().render();
     }
 
     private void drawHandler(VertexHandler handler) {
         ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
-        Polygon polygon = terrainPatchEditor.getBoundPolygon();
+        Polygon polygon = terrainPatchEditTool.getBoundPolygon();
 
         float zoom = RenderSystem.instance().getZoom();
         Vector2 vertex = polygon.getVertex(handler.getVertexIndex());
@@ -78,7 +78,7 @@ class PolygonEditorRenderComponent extends RenderComponent {
 
     private void drawEdge(int indexFrom, int indexTo) {
         ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
-        Polygon polygon = terrainPatchEditor.getBoundPolygon();
+        Polygon polygon = terrainPatchEditTool.getBoundPolygon();
 
         Vector2 from = polygon.getVertex(indexFrom);
         Vector2 to = polygon.getVertex(indexTo);

@@ -12,15 +12,15 @@ import java.util.Map;
  * on 3/23/2015.
  */
 class PolygonEditorInputComponent implements InputComponent, InputProcessor {
-    private final TerrainPatchEditor terrainPatchEditor;
+    private final TerrainPatchEditTool terrainPatchEditTool;
 
-    private final Map<Integer, TerrainPatchEditor.EditModeType> hotkeys = Maps.newHashMap();
+    private final Map<Integer, TerrainPatchEditTool.EditModeType> hotkeys = Maps.newHashMap();
 
-    public PolygonEditorInputComponent(final TerrainPatchEditor terrainPatchEditor) {
-        this.terrainPatchEditor = terrainPatchEditor;
+    public PolygonEditorInputComponent(final TerrainPatchEditTool terrainPatchEditTool) {
+        this.terrainPatchEditTool = terrainPatchEditTool;
 
-        hotkeys.put(Input.Keys.NUM_1, TerrainPatchEditor.EditModeType.DEFAULT);
-        hotkeys.put(Input.Keys.NUM_2, TerrainPatchEditor.EditModeType.ADD_VERTEX);
+        hotkeys.put(Input.Keys.NUM_1, TerrainPatchEditTool.EditModeType.DEFAULT);
+        hotkeys.put(Input.Keys.NUM_2, TerrainPatchEditTool.EditModeType.ADD_VERTEX);
     }
 
     @Override
@@ -30,55 +30,55 @@ class PolygonEditorInputComponent implements InputComponent, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (!terrainPatchEditor.isBound()) {
+        if (!terrainPatchEditTool.isBound()) {
             return false;
         }
 
         if (hotkeys.containsKey(keycode)) {
-            terrainPatchEditor.setEditMode(hotkeys.get(keycode));
+            terrainPatchEditTool.setEditMode(hotkeys.get(keycode));
             return true;
         }
-        return terrainPatchEditor.getEditMode().keyDown(keycode);
+        return terrainPatchEditTool.getEditMode().keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return terrainPatchEditor.isBound() && terrainPatchEditor.getEditMode().keyUp(keycode);
+        return terrainPatchEditTool.isBound() && terrainPatchEditTool.getEditMode().keyUp(keycode);
 
     }
 
     @Override
     public boolean keyTyped(char character) {
-        return terrainPatchEditor.isBound() && terrainPatchEditor.getEditMode().keyTyped(character);
+        return terrainPatchEditTool.isBound() && terrainPatchEditTool.getEditMode().keyTyped(character);
 
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return terrainPatchEditor.isBound() && terrainPatchEditor.getEditMode().touchDown(screenX, screenY, pointer, button);
+        return terrainPatchEditTool.isBound() && terrainPatchEditTool.getEditMode().touchDown(screenX, screenY, pointer, button);
 
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return terrainPatchEditor.isBound() && terrainPatchEditor.getEditMode().touchUp(screenX, screenY, pointer, button);
+        return terrainPatchEditTool.isBound() && terrainPatchEditTool.getEditMode().touchUp(screenX, screenY, pointer, button);
 
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return terrainPatchEditor.isBound() && terrainPatchEditor.getEditMode().touchDragged(screenX, screenY, pointer);
+        return terrainPatchEditTool.isBound() && terrainPatchEditTool.getEditMode().touchDragged(screenX, screenY, pointer);
 
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return terrainPatchEditor.isBound() && terrainPatchEditor.getEditMode().mouseMoved(screenX, screenY);
+        return terrainPatchEditTool.isBound() && terrainPatchEditTool.getEditMode().mouseMoved(screenX, screenY);
 
     }
 
     @Override
     public boolean scrolled(int amount) {
-        return terrainPatchEditor.isBound() && terrainPatchEditor.getEditMode().scrolled(amount);
+        return terrainPatchEditTool.isBound() && terrainPatchEditTool.getEditMode().scrolled(amount);
     }
 }

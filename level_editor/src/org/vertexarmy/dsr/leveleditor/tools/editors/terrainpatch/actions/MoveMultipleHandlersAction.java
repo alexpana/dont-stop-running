@@ -3,7 +3,7 @@ package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.actions;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditor;
+import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditTool;
 import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.VertexHandler;
 import org.vertexarmy.dsr.math.Algorithms;
 
@@ -20,14 +20,14 @@ public class MoveMultipleHandlersAction extends ActionManager.ActionAdapter {
 
     private final List<Vector2> newPositions = Lists.newArrayList();
 
-    private final TerrainPatchEditor terrainPatchEditor;
+    private final TerrainPatchEditTool terrainPatchEditTool;
 
     public MoveMultipleHandlersAction(
-            TerrainPatchEditor terrainPatchEditor,
+            TerrainPatchEditTool terrainPatchEditTool,
             List<VertexHandler> vertexHandlers,
             List<Vector2> originalPositions,
             List<Vector2> newPositions) {
-        this.terrainPatchEditor = terrainPatchEditor;
+        this.terrainPatchEditTool = terrainPatchEditTool;
         this.vertexHandlers.addAll(vertexHandlers);
         this.originalPositions.addAll(originalPositions);
         this.newPositions.addAll(newPositions);
@@ -36,14 +36,14 @@ public class MoveMultipleHandlersAction extends ActionManager.ActionAdapter {
     @Override
     public void doAction() {
         for (int i = 0; i < vertexHandlers.size(); ++i) {
-            terrainPatchEditor.setVertex(vertexHandlers.get(i), newPositions.get(i));
+            terrainPatchEditTool.setVertex(vertexHandlers.get(i), newPositions.get(i));
         }
     }
 
     @Override
     public void undoAction() {
         for (int i = 0; i < vertexHandlers.size(); ++i) {
-            terrainPatchEditor.setVertex(vertexHandlers.get(i), originalPositions.get(i));
+            terrainPatchEditTool.setVertex(vertexHandlers.get(i), originalPositions.get(i));
         }
     }
 

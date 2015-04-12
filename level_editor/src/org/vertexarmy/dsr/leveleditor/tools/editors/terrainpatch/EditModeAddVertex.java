@@ -21,7 +21,7 @@ import java.util.List;
 public class EditModeAddVertex extends InputAdapter implements EditMode {
     private static final float MIN_PROJECTION_DISTANCE = 10.0f;
 
-    private final TerrainPatchEditor terrainPatchEditor;
+    private final TerrainPatchEditTool terrainPatchEditTool;
 
     public final Vector2 shadowVertex = new Vector2();
 
@@ -29,8 +29,8 @@ public class EditModeAddVertex extends InputAdapter implements EditMode {
 
     private boolean closeToEdge = false;
 
-    public EditModeAddVertex(TerrainPatchEditor terrainPatchEditor) {
-        this.terrainPatchEditor = terrainPatchEditor;
+    public EditModeAddVertex(TerrainPatchEditTool terrainPatchEditTool) {
+        this.terrainPatchEditTool = terrainPatchEditTool;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EditModeAddVertex extends InputAdapter implements EditMode {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        List<Edge> edges = terrainPatchEditor.getBoundPolygon().getEdgeList();
+        List<Edge> edges = terrainPatchEditTool.getBoundPolygon().getEdgeList();
 
         Vector2 mousePosition = RenderSystem.instance().screenToWorld(new Vector2(screenX, screenY));
 
@@ -78,7 +78,7 @@ public class EditModeAddVertex extends InputAdapter implements EditMode {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (closeToEdge) {
-            ActionManager.instance().runAction(new AddNewVertexAction(terrainPatchEditor, shadowEdgeIndex + 1, shadowVertex.cpy()));
+            ActionManager.instance().runAction(new AddNewVertexAction(terrainPatchEditTool, shadowEdgeIndex + 1, shadowVertex.cpy()));
             return true;
         }
         return false;
@@ -87,12 +87,12 @@ public class EditModeAddVertex extends InputAdapter implements EditMode {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.E) {
-            terrainPatchEditor.getTextureOverlayEditor().show();
+            terrainPatchEditTool.getTextureOverlayEditor().show();
             return true;
         }
 
         if (keycode == Input.Keys.ESCAPE) {
-            terrainPatchEditor.getTextureOverlayEditor().hide();
+            terrainPatchEditTool.getTextureOverlayEditor().hide();
             return true;
         }
 

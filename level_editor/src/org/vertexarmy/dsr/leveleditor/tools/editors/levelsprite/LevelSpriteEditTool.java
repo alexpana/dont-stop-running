@@ -9,14 +9,14 @@ import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.game.level.LevelSprite;
-import org.vertexarmy.dsr.leveleditor.tools.editors.BindableTool;
+import org.vertexarmy.dsr.leveleditor.tools.BindableTool;
 import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
 
 /**
  * created by Alex
  * on 04-Apr-2015.
  */
-public class LevelSpriteEditor extends BindableTool<LevelSprite> {
+public class LevelSpriteEditTool extends BindableTool<LevelSprite> {
     @Getter
     private final Node node = new Node();
 
@@ -33,7 +33,7 @@ public class LevelSpriteEditor extends BindableTool<LevelSprite> {
     @Setter
     private LevelSpriteEditorListener listener;
 
-    public LevelSpriteEditor(Root root) {
+    public LevelSpriteEditTool(Root root) {
         node.addComponent(ComponentType.INPUT, new LevelSpriteEditorInputComponent(this));
         node.addComponent(ComponentType.RENDER, new LevelSpriteEditorRenderComponent(this));
 

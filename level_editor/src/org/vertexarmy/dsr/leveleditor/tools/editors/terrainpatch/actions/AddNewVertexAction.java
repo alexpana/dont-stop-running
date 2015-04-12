@@ -2,33 +2,33 @@ package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.actions;
 
 import com.badlogic.gdx.math.Vector2;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditor;
+import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditTool;
 
 /**
  * Created by alex
  * on 25.03.2015.
  */
 public class AddNewVertexAction implements ActionManager.Action {
-    private final TerrainPatchEditor terrainPatchEditor;
+    private final TerrainPatchEditTool terrainPatchEditTool;
 
     private final int index;
 
     private final Vector2 position;
 
-    public AddNewVertexAction(TerrainPatchEditor terrainPatchEditor, int index, Vector2 position) {
-        this.terrainPatchEditor = terrainPatchEditor;
+    public AddNewVertexAction(TerrainPatchEditTool terrainPatchEditTool, int index, Vector2 position) {
+        this.terrainPatchEditTool = terrainPatchEditTool;
         this.index = index;
         this.position = position;
     }
 
     @Override
     public void doAction() {
-        terrainPatchEditor.addVertex(index, position);
+        terrainPatchEditTool.addVertex(index, position);
     }
 
     @Override
     public void undoAction() {
-        terrainPatchEditor.removeVertex(index);
+        terrainPatchEditTool.removeVertex(index);
     }
 
     @Override

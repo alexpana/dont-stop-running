@@ -3,7 +3,7 @@ package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.actions;
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditor;
+import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditTool;
 
 import java.util.List;
 
@@ -12,13 +12,13 @@ import java.util.List;
  * on 3/25/2015.
  */
 public class RemoveVerticesAction implements ActionManager.Action {
-    private final TerrainPatchEditor editor;
+    private final TerrainPatchEditTool editor;
 
     private final List<Vector2> allVertices = Lists.newArrayList();
 
     private final List<Vector2> remainingVertices = Lists.newArrayList();
 
-    public RemoveVerticesAction(TerrainPatchEditor editor, List<Vector2> allVertices, List<Vector2> remainingVertices) {
+    public RemoveVerticesAction(TerrainPatchEditTool editor, List<Vector2> allVertices, List<Vector2> remainingVertices) {
         this.editor = editor;
         this.allVertices.addAll(allVertices);
         this.remainingVertices.addAll(remainingVertices);

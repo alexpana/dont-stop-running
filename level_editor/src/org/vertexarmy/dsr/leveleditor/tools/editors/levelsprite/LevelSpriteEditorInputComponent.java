@@ -18,7 +18,7 @@ import org.vertexarmy.dsr.math.Algorithms;
 public class LevelSpriteEditorInputComponent extends InputAdapter implements InputComponent {
     private final DragHelper dragHelper = new DragHelper();
 
-    private final LevelSpriteEditor editor;
+    private final LevelSpriteEditTool editor;
 
     enum EditMode {
         MOVE,

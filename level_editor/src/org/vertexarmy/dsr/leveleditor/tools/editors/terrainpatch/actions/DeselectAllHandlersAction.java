@@ -2,7 +2,7 @@ package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.actions;
 
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditor;
+import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditTool;
 import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.VertexHandler;
 
 import java.util.List;
@@ -12,14 +12,14 @@ import java.util.List;
  * on 24.03.2015.
  */
 public class DeselectAllHandlersAction extends ActionManager.ActionAdapter {
-    private final TerrainPatchEditor terrainPatchEditor;
+    private final TerrainPatchEditTool terrainPatchEditTool;
 
     private final List<VertexHandler> allHandlers = Lists.newArrayList();
 
     private final List<VertexHandler> selectedHandlers = Lists.newArrayList();
 
-    public DeselectAllHandlersAction(TerrainPatchEditor terrainPatchEditor, List<VertexHandler> allHandlers, List<VertexHandler> selectedHandlers) {
-        this.terrainPatchEditor = terrainPatchEditor;
+    public DeselectAllHandlersAction(TerrainPatchEditTool terrainPatchEditTool, List<VertexHandler> allHandlers, List<VertexHandler> selectedHandlers) {
+        this.terrainPatchEditTool = terrainPatchEditTool;
         this.allHandlers.addAll(allHandlers);
         this.selectedHandlers.addAll(selectedHandlers);
     }
@@ -27,14 +27,14 @@ public class DeselectAllHandlersAction extends ActionManager.ActionAdapter {
     @Override
     public void doAction() {
         for (VertexHandler vertexHandler : allHandlers) {
-            terrainPatchEditor.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(false);
+            terrainPatchEditTool.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(false);
         }
     }
 
     @Override
     public void undoAction() {
         for (VertexHandler vertexHandler : selectedHandlers) {
-            terrainPatchEditor.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(true);
+            terrainPatchEditTool.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(true);
         }
     }
 

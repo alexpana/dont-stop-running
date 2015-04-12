@@ -1,7 +1,7 @@
 package org.vertexarmy.dsr.leveleditor;
 
 import org.vertexarmy.dsr.core.ActionManager;
-import org.vertexarmy.dsr.leveleditor.tools.editors.BindableTool;
+import org.vertexarmy.dsr.leveleditor.tools.BindableTool;
 
 /**
  * created by Alex

@@ -1,4 +1,4 @@
-package org.vertexarmy.dsr.leveleditor.tools.editors;
+package org.vertexarmy.dsr.leveleditor.tools;
 
 import javax.annotation.Nullable;
 
