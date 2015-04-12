@@ -351,8 +351,6 @@ class LevelEditor extends Game {
         final MenuItem insertSpriteItem = new MenuItem("Insert sprite");
         final MenuItem editBackgroundItem = new MenuItem("Edit Background");
 
-        actionMenu.addItem(insertTerrainPatchItem);
-        actionMenu.addItem(insertSpriteItem);
         actionMenu.addItem(editBackgroundItem);
 
         actionMenu.setMenuListener(new Menu.Listener() {
