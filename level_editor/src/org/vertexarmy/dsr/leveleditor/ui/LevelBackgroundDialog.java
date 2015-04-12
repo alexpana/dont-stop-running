@@ -61,6 +61,8 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
 
         parallaxSpeedTextField = new TextField("1.0", skin);
 
+        setMovable(true);
+
         initComponents();
 
         initListeners();

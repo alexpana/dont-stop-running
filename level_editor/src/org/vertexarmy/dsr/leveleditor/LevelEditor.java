@@ -1,9 +1,6 @@
 package org.vertexarmy.dsr.leveleditor;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
@@ -30,13 +27,15 @@ import org.vertexarmy.dsr.game.level.TerrainPatch;
 import org.vertexarmy.dsr.graphics.TextureOverlay;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraController;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
-import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.PolygonEditorListener;
-import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditor;
+import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
 import org.vertexarmy.dsr.leveleditor.tools.editors.levelsprite.LevelSpriteEditor;
 import org.vertexarmy.dsr.leveleditor.tools.editors.levelsprite.LevelSpriteEditorListener;
-import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
+import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.PolygonEditorListener;
+import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditor;
 import org.vertexarmy.dsr.leveleditor.ui.*;
 import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
+import org.vertexarmy.dsr.leveleditor.ui.menu.Menu;
+import org.vertexarmy.dsr.leveleditor.ui.menu.MenuItem;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,6 +77,8 @@ class LevelEditor extends Game {
     private AutoScrollCameraController autoScrollCameraController = new AutoScrollCameraController();
 
     private GenericEditor terrainPatchTextureOverlayEditor;
+
+    private Menu actionMenu;
 
     private LevelEditor(Function<LevelEditor, Boolean> initTask) {
         this.initTask = initTask;
@@ -148,34 +149,40 @@ class LevelEditor extends Game {
                 return new InputAdapter() {
                     @Override
                     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                        if (terrainTerrainPatchEditor.getHoveredVertex() != null) {
-                            return false;
+                        if (button == Input.Buttons.LEFT) {
+                            actionMenu.hide();
+                            if (terrainTerrainPatchEditor.getHoveredVertex() != null) {
+                                return false;
+                            }
+
+                            ItemPicker.PickResult pickResult = ItemPicker.pickObject(level, screenX, screenY);
+
+                            if (pickResult.getType() == ItemPicker.ItemType.TERRAIN_POLYGON) {
+                                final TerrainPatch pickedTerrainPatch = (TerrainPatch) pickResult.getObject();
+                                boolean selectionChanged = pickedTerrainPatch != terrainTerrainPatchEditor.getBoundObject();
+
+                                ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
+                                        new BindAction<>(terrainTerrainPatchEditor, pickedTerrainPatch),
+                                        new BindAction<>(levelSpriteEditor, null))));
+
+                                return selectionChanged;
+                            }
+
+                            if (pickResult.getType() == ItemPicker.ItemType.LEVEL_SPRITE) {
+                                LevelSprite pickedLevelSprite = (LevelSprite) pickResult.getObject();
+                                boolean selectionChanged = pickedLevelSprite != levelSpriteEditor.getBoundObject();
+
+                                ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
+                                        new BindAction<>(terrainTerrainPatchEditor, null),
+                                        new BindAction<>(levelSpriteEditor, pickedLevelSprite))));
+
+                                return selectionChanged;
+                            }
                         }
-
-                        ItemPicker.PickResult pickResult = ItemPicker.pickObject(level, screenX, screenY);
-
-                        if (pickResult.getType() == ItemPicker.ItemType.TERRAIN_POLYGON) {
-                            final TerrainPatch pickedTerrainPatch = (TerrainPatch) pickResult.getObject();
-                            boolean selectionChanged = pickedTerrainPatch != terrainTerrainPatchEditor.getBoundObject();
-
-                            ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
-                                    new BindAction<>(terrainTerrainPatchEditor, pickedTerrainPatch),
-                                    new BindAction<>(levelSpriteEditor, null))));
-
-                            return selectionChanged;
+                        if (button == Input.Buttons.RIGHT) {
+                            actionMenu.showAt(new Vector2(screenX, screenY));
+                            return true;
                         }
-
-                        if (pickResult.getType() == ItemPicker.ItemType.LEVEL_SPRITE) {
-                            LevelSprite pickedLevelSprite = (LevelSprite) pickResult.getObject();
-                            boolean selectionChanged = pickedLevelSprite != levelSpriteEditor.getBoundObject();
-
-                            ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
-                                    new BindAction<>(terrainTerrainPatchEditor, null),
-                                    new BindAction<>(levelSpriteEditor, pickedLevelSprite))));
-
-                            return selectionChanged;
-                        }
-
                         return false;
                     }
 
@@ -336,6 +343,37 @@ class LevelEditor extends Game {
                 levelRenderer.reloadLevel();
             }
         });
+
+        actionMenu = new Menu(root.getUiNode().getStage(), root.getUiNode().getUiSkin());
+        actionMenu.setTitle("General Actions");
+
+        final MenuItem insertTerrainPatchItem = new MenuItem("Insert terrain patch");
+        final MenuItem insertSpriteItem = new MenuItem("Insert sprite");
+        final MenuItem editBackgroundItem = new MenuItem("Edit Background");
+
+        actionMenu.addItem(insertTerrainPatchItem);
+        actionMenu.addItem(insertSpriteItem);
+        actionMenu.addItem(editBackgroundItem);
+
+        actionMenu.setMenuListener(new Menu.Listener() {
+            @Override
+            public void itemActivated(MenuItem item) {
+                if (item == insertTerrainPatchItem) {
+                    // TODO: implement!
+                }
+
+                if (item == insertSpriteItem) {
+                    // TODO: implement!
+                }
+
+                if (item == editBackgroundItem) {
+                    levelBackgroundDialog.show();
+
+                }
+
+                actionMenu.hide();
+            }
+        });
     }
 
     public void loadLevel(File selectedFile) {
@@ -418,5 +456,4 @@ class LevelEditor extends Game {
         config.title = "Level Editor - " + Version.value();
         new LwjglApplication(new LevelEditor(initTask), config);
     }
-
 }

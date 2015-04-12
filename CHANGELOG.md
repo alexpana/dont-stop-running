@@ -8,6 +8,7 @@
 - Spinner UI components
 - Support for removing terrain patches
 - Support for removing terrain sprites
+- Contextual menu
 
 ## [1.2] 2015-04-04
 ### Added
