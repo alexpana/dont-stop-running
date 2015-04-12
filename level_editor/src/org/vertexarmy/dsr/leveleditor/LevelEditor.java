@@ -24,17 +24,16 @@ import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.level.Level;
 import org.vertexarmy.dsr.game.level.LevelSprite;
 import org.vertexarmy.dsr.game.level.TerrainPatch;
-import org.vertexarmy.dsr.graphics.TextureOverlay;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.AutoScrollCameraController;
 import org.vertexarmy.dsr.leveleditor.cameracontroller.UserPanningCameraController;
 import org.vertexarmy.dsr.leveleditor.levelrenderer.LevelRenderer;
-import org.vertexarmy.dsr.leveleditor.tools.builders.TerrainPatchBuilder;
+import org.vertexarmy.dsr.leveleditor.tools.builders.NewLevelSpriteTool;
+import org.vertexarmy.dsr.leveleditor.tools.builders.NewTerrainPatchTool;
 import org.vertexarmy.dsr.leveleditor.tools.editors.levelsprite.LevelSpriteEditTool;
 import org.vertexarmy.dsr.leveleditor.tools.editors.levelsprite.LevelSpriteEditorListener;
 import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.PolygonEditorListener;
 import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditTool;
 import org.vertexarmy.dsr.leveleditor.ui.*;
-import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
 import org.vertexarmy.dsr.leveleditor.ui.menu.Menu;
 import org.vertexarmy.dsr.leveleditor.ui.menu.MenuItem;
 
@@ -57,12 +56,6 @@ class LevelEditor extends Game {
 
     private Level level;
 
-    private TerrainPatchEditTool terrainPatchEditTool;
-
-    private LevelSpriteEditTool levelSpriteEditTool;
-
-    private Toolbox toolbox;
-
     private DebugValuesPanel debugValuesPanel;
 
     private LevelSaveDialog saveDialog;
@@ -77,11 +70,15 @@ class LevelEditor extends Game {
 
     private AutoScrollCameraController autoScrollCameraController = new AutoScrollCameraController();
 
-    private GenericEditor terrainPatchTextureOverlayEditor;
-
     private Menu actionMenu;
 
-    private TerrainPatchBuilder terrainPatchBuilder = new TerrainPatchBuilder();
+    private TerrainPatchEditTool terrainPatchEditTool;
+
+    private LevelSpriteEditTool levelSpriteEditTool;
+
+    private NewTerrainPatchTool newTerrainPatchTool;
+
+    private NewLevelSpriteTool newLevelSpriteTool;
 
     private LevelEditor(Function<LevelEditor, Boolean> initTask) {
         this.initTask = initTask;
@@ -97,25 +94,7 @@ class LevelEditor extends Game {
 
         initUI();
 
-        levelSpriteEditTool = new LevelSpriteEditTool(root);
-
-        terrainPatchEditTool = new TerrainPatchEditTool(root);
-
-        terrainPatchTextureOverlayEditor = new GenericEditor(root.getUiNode().getStage(), "Texture Overlay", root.getUiNode().getUiSkin(), TextureOverlay.class);
-
-        terrainPatchEditTool.setListener(new PolygonEditorListener() {
-            @Override
-            public void deletePolygonRequested() {
-                ActionManager.instance().runAction(new RemoveTerrainPatchAction(level, terrainPatchEditTool.getBoundObject()));
-            }
-        });
-
-        levelSpriteEditTool.setListener(new LevelSpriteEditorListener() {
-            @Override
-            public void deleteSpriteRequested() {
-                ActionManager.instance().runAction(new RemoveTerrainSpriteAction(level, levelSpriteEditTool.getBoundObject()));
-            }
-        });
+        initTools();
 
         root.addNode(new Node(ComponentType.INPUT, userUserPanningCameraController));
         root.addNode(new Node(ComponentType.UPDATE, autoScrollCameraController));
@@ -243,6 +222,34 @@ class LevelEditor extends Game {
         return originNode;
     }
 
+    private void initTools() {
+        terrainPatchEditTool = new TerrainPatchEditTool(root.getUiContext());
+        terrainPatchEditTool.setListener(new PolygonEditorListener() {
+            @Override
+            public void deletePolygonRequested() {
+                ActionManager.instance().runAction(new RemoveTerrainPatchAction(level, terrainPatchEditTool.getBoundObject()));
+            }
+        });
+
+        levelSpriteEditTool = new LevelSpriteEditTool(root.getUiContext());
+        levelSpriteEditTool.setListener(new LevelSpriteEditorListener() {
+            @Override
+            public void deleteSpriteRequested() {
+                ActionManager.instance().runAction(new RemoveTerrainSpriteAction(level, levelSpriteEditTool.getBoundObject()));
+            }
+        });
+
+        newTerrainPatchTool = new NewTerrainPatchTool();
+
+        newLevelSpriteTool = new NewLevelSpriteTool(root.getUiContext());
+        newLevelSpriteTool.setListener(new NewLevelSpriteTool.Listener() {
+            @Override
+            public void spriteAdded(LevelSprite newLevelSprite) {
+                levelSpriteEditTool.bind(newLevelSprite);
+            }
+        });
+    }
+
     private void loadAssets() {
         loadFonts();
         loadTextures();
@@ -274,7 +281,7 @@ class LevelEditor extends Game {
         debugValuesPanel = new DebugValuesPanel(root.getUiNode().getUiSkin());
         debugValuesPanel.setVisible(false);
 
-        toolbox = new Toolbox(root.getUiNode().getUiSkin(), new Toolbox.Listener() {
+        Toolbox toolbox = new Toolbox(root.getUiNode().getUiSkin(), new Toolbox.Listener() {
             @Override
             public void loadFileRequested() {
                 loadDialog.show();
@@ -302,17 +309,12 @@ class LevelEditor extends Game {
                 userUserPanningCameraController.setEnabled(false);
                 autoScrollCameraController.decreaseSpeed();
             }
-
-            @Override
-            public void editTerrainPatch() {
-                terrainPatchTextureOverlayEditor.show();
-            }
         });
 
         root.getUiNode().getContentTable().add(toolbox).expandX().fill().row();
         root.getUiNode().getContentTable().add(debugValuesPanel).left().row();
 
-        saveDialog = new LevelSaveDialog(root.getUiNode().getStage(), "Save Level", root.getUiNode().getUiSkin());
+        saveDialog = new LevelSaveDialog(root.getUiContext(), "Save Level");
         saveDialog.setListener(new Dialog.Listener<LevelSaveDialog.Event>() {
             @Override
             public void dialogAccepted(LevelSaveDialog.Event event) {
@@ -321,7 +323,7 @@ class LevelEditor extends Game {
             }
         });
 
-        loadDialog = new LevelLoadDialog(root.getUiNode().getStage(), "Load Level", root.getUiNode().getUiSkin());
+        loadDialog = new LevelLoadDialog(root.getUiContext(), "Load Level");
         loadDialog.setListener(new Dialog.Listener<LevelLoadDialog.Event>() {
             @Override
             public void dialogAccepted(LevelLoadDialog.Event event) {
@@ -335,9 +337,9 @@ class LevelEditor extends Game {
             }
         });
 
-        spritePickerDialog = new SpritePickerDialog(root.getUiNode().getStage(), "Select terrain texture", root.getUiNode().getUiSkin());
+        spritePickerDialog = new SpritePickerDialog(root.getUiContext(), "Select terrain texture");
 
-        levelBackgroundDialog = new LevelBackgroundDialog(root.getUiNode().getStage(), "Edit Background", root.getUiNode().getUiSkin());
+        levelBackgroundDialog = new LevelBackgroundDialog(root.getUiContext(), "Edit Background");
         levelBackgroundDialog.setListener(new Dialog.Listener<LevelBackgroundDialog.Event>() {
             @Override
             public void dialogAccepted(LevelBackgroundDialog.Event event) {
@@ -355,19 +357,21 @@ class LevelEditor extends Game {
         final MenuItem editBackgroundItem = new MenuItem("Edit Background");
 
         actionMenu.addItem(insertTerrainPatchItem);
+        actionMenu.addItem(insertSpriteItem);
         actionMenu.addItem(editBackgroundItem);
 
         actionMenu.setMenuListener(new Menu.Listener() {
             @Override
             public void itemActivated(MenuItem item) {
+                Vector2 worldPosition = RenderSystem.instance().screenToWorld(actionMenu.getDisplayLocation());
+
                 if (item == insertTerrainPatchItem) {
-                    Vector2 worldPosition = RenderSystem.instance().screenToWorld(actionMenu.getDisplayLocation());
-                    TerrainPatch newTerrainPatch = terrainPatchBuilder.addRectangleTerrainPatch(level, (int) worldPosition.x, (int) worldPosition.y, 100, 100);
+                    TerrainPatch newTerrainPatch = newTerrainPatchTool.addRectangleTerrainPatch(level, (int) worldPosition.x, (int) worldPosition.y, 100, 100);
                     terrainPatchEditTool.bind(newTerrainPatch);
                 }
 
                 if (item == insertSpriteItem) {
-                    // TODO: implement!
+                    newLevelSpriteTool.createLevelSprite(level, worldPosition);
                 }
 
                 if (item == editBackgroundItem) {

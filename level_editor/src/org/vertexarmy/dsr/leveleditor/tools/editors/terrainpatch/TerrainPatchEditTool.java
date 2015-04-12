@@ -6,7 +6,7 @@ import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.vertexarmy.dsr.core.Root;
+import org.vertexarmy.dsr.core.UiContext;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.game.level.TerrainPatch;
@@ -48,21 +48,16 @@ public class TerrainPatchEditTool extends BindableTool<TerrainPatch> {
 
     private final Map<EditModeType, EditMode> editModes = Maps.newHashMap();
 
-    public TerrainPatchEditTool(Root root) {
+    public TerrainPatchEditTool(UiContext uiContext) {
         editModes.put(EditModeType.DEFAULT, new EditModeDefault(this));
         editModes.put(EditModeType.ADD_VERTEX, new EditModeAddVertex(this));
         setEditMode(EditModeType.DEFAULT);
 
-        textureOverlayEditor = new GenericEditor(root.getUiNode().getStage(), "Edit Overlay", root.getUiNode().getUiSkin(), TextureOverlay.class);
+        textureOverlayEditor = new GenericEditor(uiContext, "Edit Overlay", TextureOverlay.class);
 
         node = new Node();
         node.addComponent(ComponentType.RENDER, new PolygonEditorRenderComponent(this));
         node.addComponent(ComponentType.INPUT, new PolygonEditorInputComponent(this));
-    }
-
-    public TerrainPatchEditTool(TerrainPatch terrainPatch) {
-        super();
-        bind(terrainPatch);
     }
 
     EditMode getEditMode() {
@@ -98,7 +93,7 @@ public class TerrainPatchEditTool extends BindableTool<TerrainPatch> {
     }
 
     @Override
-    public void doBind(TerrainPatch terrainPatch) {
+    protected void doBind(TerrainPatch terrainPatch) {
         if (terrainPatch != null) {
             updateVertexHandlers();
             textureOverlayEditor.bindToObject(terrainPatch.getTextureOverlay());

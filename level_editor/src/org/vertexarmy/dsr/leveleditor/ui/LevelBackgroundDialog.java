@@ -4,12 +4,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
 import com.beust.jcommander.internal.Maps;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.vertexarmy.dsr.core.UiContext;
 import org.vertexarmy.dsr.game.level.BackgroundLayer;
 import org.vertexarmy.dsr.leveleditor.AssetName;
 
@@ -42,24 +42,24 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
 
     private final TextField parallaxSpeedTextField;
 
-    public LevelBackgroundDialog(Stage stage, String title, Skin skin) {
-        super(stage, title, skin);
+    public LevelBackgroundDialog(UiContext uiContext, String title) {
+        super(uiContext, title);
 
-        texturePickerDialog = new SpritePickerDialog(stage, "Select Texture", skin);
+        texturePickerDialog = new SpritePickerDialog(uiContext, "Select Texture");
 
-        layerList = new List<>(skin);
+        layerList = new List<>(uiContext.getSkin());
 
-        layerTextureNameLabel = new Label("Texture", skin);
+        layerTextureNameLabel = new Label("Texture", uiContext.getSkin());
 
-        textureName = new Label("none", skin);
+        textureName = new Label("none", uiContext.getSkin());
 
         selectTextureButton = UIToolkit.createImageButton(AssetName.ICON_SELECT_TEXTURE);
 
         clearTextureButton = UIToolkit.createImageButton(AssetName.ICON_CLEAR_TEXTURE);
 
-        parallaxSpeedLabel = new Label("Parallax", skin);
+        parallaxSpeedLabel = new Label("Parallax", uiContext.getSkin());
 
-        parallaxSpeedTextField = new TextField("1.0", skin);
+        parallaxSpeedTextField = new TextField("1.0", uiContext.getSkin());
 
         setMovable(true);
 
@@ -147,9 +147,9 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
 
     @Override
     protected Actor getContent() {
-        Table contentTable = new Table(getSkin());
+        Table contentTable = new Table(getUiContext().getSkin());
 
-        Table rightTable = new Table(getSkin());
+        Table rightTable = new Table(getUiContext().getSkin());
 
         rightTable.add(layerTextureNameLabel).left().padRight(10);
         rightTable.add(textureName).fill().expand();
@@ -159,7 +159,7 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
         rightTable.add(parallaxSpeedLabel).left().padRight(10);
         rightTable.add(parallaxSpeedTextField).fillX().expandX().top().colspan(3);
 
-        contentTable.add(new ScrollPane(layerList, getSkin())).width(70).padRight(5);
+        contentTable.add(new ScrollPane(layerList, getUiContext().getSkin())).width(70).padRight(5);
         contentTable.add(rightTable).fillX().expandX().top();
 
         return contentTable;
@@ -173,7 +173,7 @@ public class LevelBackgroundDialog extends Dialog<LevelBackgroundDialog.Event> {
 
     @Override
     public void show() {
-        getStage().addActor(this);
+        getUiContext().getStage().addActor(this);
         setVisible(true);
 
         setWidth(400);

@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Getter;
 import lombok.Setter;
-import org.vertexarmy.dsr.core.Root;
+import org.vertexarmy.dsr.core.UiContext;
 import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.core.component.ComponentType;
 import org.vertexarmy.dsr.core.component.Node;
@@ -33,16 +33,16 @@ public class LevelSpriteEditTool extends BindableTool<LevelSprite> {
     @Setter
     private LevelSpriteEditorListener listener;
 
-    public LevelSpriteEditTool(Root root) {
+    public LevelSpriteEditTool(UiContext uiContext) {
         node.addComponent(ComponentType.INPUT, new LevelSpriteEditorInputComponent(this));
         node.addComponent(ComponentType.RENDER, new LevelSpriteEditorRenderComponent(this));
 
-        editDialog = new GenericEditor(root.getUiNode().getStage(), "Edit sprite", root.getUiNode().getUiSkin(), LevelSprite.class);
+        editDialog = new GenericEditor(uiContext, "Edit sprite", LevelSprite.class);
         editDialog.setSize(235, 200);
     }
 
     @Override
-    public void doBind(LevelSprite levelSprite) {
+    protected void doBind(LevelSprite levelSprite) {
         editDialog.bindToObject(levelSprite);
     }
 

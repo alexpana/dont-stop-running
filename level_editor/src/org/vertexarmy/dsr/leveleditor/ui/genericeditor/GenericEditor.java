@@ -2,13 +2,12 @@ package org.vertexarmy.dsr.leveleditor.ui.genericeditor;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.beust.jcommander.internal.Maps;
 import org.vertexarmy.dsr.core.ReflectionHelper;
+import org.vertexarmy.dsr.core.UiContext;
 import org.vertexarmy.dsr.leveleditor.ui.Dialog;
 
 import java.lang.reflect.Field;
@@ -32,12 +31,12 @@ public class GenericEditor extends Dialog {
 
     private float fullSizeHeight = 100;
 
-    public GenericEditor(Stage stage, String title, Skin skin, Class objectClass) {
-        super(stage, title, skin);
+    public GenericEditor(UiContext uiContext, String title, Class objectClass) {
+        super(uiContext, title);
 
         objectContentTable = createContentTable(objectClass);
 
-        contentTable = new Table(getSkin());
+        contentTable = new Table(uiContext.getSkin());
 
         contentTable.add(emptyContentTable);
 
@@ -47,23 +46,23 @@ public class GenericEditor extends Dialog {
     }
 
     private Table createEmptyContentTable() {
-        Table result = new Table(getSkin());
+        Table result = new Table(getUiContext().getSkin());
 
-        Label emptyLabel = new Label("Nothing selected", getSkin());
+        Label emptyLabel = new Label("Nothing selected", getUiContext().getSkin());
         emptyLabel.setAlignment(Align.center);
         result.add(emptyLabel).fillX().expandX().center();
         return result;
     }
 
     private Table createContentTable(Class objectClass) {
-        Table result = new Table(getSkin());
+        Table result = new Table(getUiContext().getSkin());
 
         for (Field field : objectClass.getDeclaredFields()) {
             if (ReflectionHelper.classHasProperty(objectClass, field.getName())) {
                 FieldEditor editor = createEditorForField(field);
                 if (editor != null) {
                     fieldEditorMap.put(field, editor);
-                    result.add(new Label(field.getName(), getSkin())).right().fillX().padRight(6);
+                    result.add(new Label(field.getName(), getUiContext().getSkin())).right().fillX().padRight(6);
                     result.add(editor.getUiComponent()).fillX().expandX().left().width(150).row();
                 }
             }
@@ -74,23 +73,23 @@ public class GenericEditor extends Dialog {
 
     private FieldEditor createEditorForField(final Field field) {
         if (field.getType() == Boolean.class || field.getType() == boolean.class) {
-            return new BooleanFieldEditor(field, getSkin());
+            return new BooleanFieldEditor(field, getUiContext().getSkin());
         }
 
         if (field.getType() == Vector2.class) {
-            return new Vector2FieldEditor(field, getSkin());
+            return new Vector2FieldEditor(field, getUiContext().getSkin());
         }
 
         if (field.getType() == String.class && field.getName().contains("texture")) {
-            return new TextureFieldEditor(field, getStage(), getSkin());
+            return new TextureFieldEditor(field, getUiContext());
         }
 
         if (field.getType() == Float.class || field.getType() == float.class) {
-            return new FloatFieldEditor(field, getSkin());
+            return new FloatFieldEditor(field, getUiContext().getSkin());
         }
 
         if (field.getType() == Integer.class || field.getType() == int.class) {
-            return new IntegerFieldEditor(field, getSkin());
+            return new IntegerFieldEditor(field, getUiContext().getSkin());
         }
 
         return null;
@@ -126,7 +125,7 @@ public class GenericEditor extends Dialog {
 
     @Override
     public void show() {
-        getStage().addActor(this);
+        getUiContext().getStage().addActor(this);
         this.setVisible(true);
 
         this.setSize(fullSizeWidth, fullSizeHeight);

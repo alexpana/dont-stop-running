@@ -8,7 +8,7 @@ import org.vertexarmy.dsr.math.Polygon;
  * created by Alex
  * on 10-Apr-2015.
  */
-public class TerrainPatchBuilder {
+public class NewTerrainPatchTool {
     public TerrainPatch addRectangleTerrainPatch(Level level, int x, int y, int w, int h) {
         TerrainPatch terrainPatch = new TerrainPatch(new Polygon(new float[]{
                 x - w / 2, y + h / 2,

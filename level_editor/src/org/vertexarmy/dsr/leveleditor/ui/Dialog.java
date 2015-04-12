@@ -4,43 +4,36 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import lombok.Getter;
 import lombok.Setter;
+import org.vertexarmy.dsr.core.UiContext;
 
 /**
  * created by Alex
  * on 3/28/2015.
  */
 public abstract class Dialog<E> extends Window {
-
     @Setter
     private Listener<E> listener;
-
     private final TextButton cancelButton;
 
     @Getter
     private final TextButton actionButton;
 
     @Getter
-    private final Stage stage;
+    private final UiContext uiContext;
 
-    @Getter
-    private final Skin skin;
+    public Dialog(UiContext uiContext, String title) {
+        super(title, uiContext.getSkin());
+        this.uiContext = uiContext;
 
-    public Dialog(Stage stage, String title, Skin skin) {
-        super(title, skin);
-        this.skin = skin;
-        this.stage = stage;
+        actionButton = new TextButton("Save", uiContext.getSkin());
 
-        actionButton = new TextButton("Save", skin);
-
-        cancelButton = new TextButton("Cancel", skin);
+        cancelButton = new TextButton("Cancel", uiContext.getSkin());
 
         initComponents();
 

@@ -25,8 +25,6 @@ public class Toolbox extends Table {
 
     private ImageButton autoScrollBackwardButton;
 
-    private ImageButton editTerrainPatchButton;
-
     public Toolbox(Skin uiSkin, Listener listener) {
         this.listener = listener;
         this.setBackground(new NinePatchDrawable(new NinePatch(uiSkin.getRegion("panel"), 1, 1, 2, 1)));
@@ -45,8 +43,6 @@ public class Toolbox extends Table {
         autoScrollForwardButton = UIToolkit.createImageButton(AssetName.ICON_PLAY_FORWARD);
         pauseAutoScrollButton = UIToolkit.createImageButton(AssetName.ICON_PAUSE);
         autoScrollBackwardButton = UIToolkit.createImageButton(AssetName.ICON_PLAY_REVERSE);
-
-        editTerrainPatchButton = UIToolkit.createImageButton(AssetName.ICON_PAUSE);
     }
 
     private void layoutComponents() {
@@ -58,7 +54,6 @@ public class Toolbox extends Table {
         this.add(autoScrollBackwardButton);
         this.add(pauseAutoScrollButton);
         this.add(autoScrollForwardButton);
-        this.add(editTerrainPatchButton);
     }
 
     private void initListeners() {
@@ -103,13 +98,6 @@ public class Toolbox extends Table {
                 notifyAutoScrollForward();
             }
         });
-
-        UIToolkit.addActionListener(editTerrainPatchButton, new UIToolkit.ActionListener() {
-            @Override
-            public void action() {
-                notifyEditTerrainPatch();
-            }
-        });
     }
 
     private void notifyLoadFileRequested() {
@@ -142,12 +130,6 @@ public class Toolbox extends Table {
         }
     }
 
-    private void notifyEditTerrainPatch() {
-        if (listener != null) {
-            listener.editTerrainPatch();
-        }
-    }
-
     public interface Listener {
         void loadFileRequested();
 
@@ -158,7 +140,5 @@ public class Toolbox extends Table {
         void pauseAutoScrollRequested();
 
         void autoScrollBackwardRequested();
-
-        void editTerrainPatch();
     }
 }

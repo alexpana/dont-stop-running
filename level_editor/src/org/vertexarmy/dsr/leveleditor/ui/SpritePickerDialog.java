@@ -5,12 +5,15 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.collection.ArrayUtils;
+import org.vertexarmy.dsr.core.UiContext;
 import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.graphics.GraphicsUtils;
 
@@ -21,22 +24,16 @@ import java.util.Collections;
  * on 30.03.2015.
  */
 public class SpritePickerDialog extends Dialog<SpritePickerDialog.Event> {
-    private final Stage stage;
-
-    private final Skin skin;
-
     private final List<Object> availableLevelsList;
 
     private final ImageButton previewArea;
 
     private TextureRegion selectedTexture;
 
-    public SpritePickerDialog(Stage stage, String title, Skin skin) {
-        super(stage, title, skin);
-        this.stage = stage;
-        this.skin = skin;
+    public SpritePickerDialog(UiContext uiContext, String title) {
+        super(uiContext, title);
 
-        availableLevelsList = new List<>(skin);
+        availableLevelsList = new List<>(uiContext.getSkin());
 
         previewArea = new ImageButton(new ImageButton.ImageButtonStyle());
 
@@ -84,7 +81,7 @@ public class SpritePickerDialog extends Dialog<SpritePickerDialog.Event> {
     protected Actor getContent() {
         Table contentTable = new Table();
 
-        ScrollPane scrollPane = new ScrollPane(availableLevelsList, skin);
+        ScrollPane scrollPane = new ScrollPane(availableLevelsList, getUiContext().getSkin());
         scrollPane.setHeight(300);
         scrollPane.setFadeScrollBars(false);
 
@@ -110,7 +107,7 @@ public class SpritePickerDialog extends Dialog<SpritePickerDialog.Event> {
 
     @Override
     public void show() {
-        stage.addActor(this);
+        getUiContext().getStage().addActor(this);
         setVisible(true);
         setSize(500, 355);
         UIToolkit.centerWindow(this);

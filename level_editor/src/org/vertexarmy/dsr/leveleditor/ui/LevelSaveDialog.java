@@ -4,11 +4,10 @@ package org.vertexarmy.dsr.leveleditor.ui;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.vertexarmy.dsr.core.UiContext;
 
 /**
  * created by Alex
@@ -22,10 +21,10 @@ public class LevelSaveDialog extends Dialog<LevelSaveDialog.Event> {
 
     private final TextField nameTextField;
 
-    public LevelSaveDialog(Stage stage, String title, Skin skin) {
-        super(stage, title, skin);
+    public LevelSaveDialog(UiContext uiContext, String title) {
+        super(uiContext, title);
 
-        nameTextField = new TextField("", skin);
+        nameTextField = new TextField("", uiContext.getSkin());
 
         getActionButton().setText("Save");
 
@@ -66,7 +65,7 @@ public class LevelSaveDialog extends Dialog<LevelSaveDialog.Event> {
 
     @Override
     public void show() {
-        getStage().addActor(this);
+        getUiContext().getStage().addActor(this);
         setVisible(true);
 
         setWidth(300);

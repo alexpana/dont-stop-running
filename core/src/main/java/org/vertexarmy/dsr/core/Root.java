@@ -25,6 +25,9 @@ public class Root {
     @Getter
     private UiNode uiNode;
 
+    @Getter
+    private UiContext uiContext;
+
     public Root() {
     }
 
@@ -41,6 +44,8 @@ public class Root {
 
         uiNode = new UiNode();
         addNode(uiNode);
+
+        uiContext = new UiContext(uiNode.getStage(), uiNode.getUiSkin());
     }
 
     public void addNode(Node node) {

@@ -1,13 +1,12 @@
 package org.vertexarmy.dsr.leveleditor.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.vertexarmy.dsr.core.UiContext;
 import org.vertexarmy.dsr.leveleditor.FileUtils;
 
 import java.io.File;
@@ -23,15 +22,15 @@ public class LevelLoadDialog extends Dialog<LevelLoadDialog.Event> {
 
     private final ScrollPane scrollPane;
 
-    public LevelLoadDialog(Stage stage, String title, Skin skin) {
-        super(stage, title, skin);
+    public LevelLoadDialog(UiContext uiContext, String title) {
+        super(uiContext, title);
 
-        availableLevelsList = new List<>(skin);
+        availableLevelsList = new List<>(uiContext.getSkin());
         availableLevelsList.setSize(100, 100);
 
         getActionButton().setText("Load");
 
-        scrollPane = new ScrollPane(availableLevelsList, skin);
+        scrollPane = new ScrollPane(availableLevelsList, uiContext.getSkin());
         scrollPane.setHeight(300);
         scrollPane.setFadeScrollBars(false);
 
@@ -64,7 +63,7 @@ public class LevelLoadDialog extends Dialog<LevelLoadDialog.Event> {
     @Override
     public void show() {
         discoverAvailableLevelsList();
-        getStage().addActor(this);
+        getUiContext().getStage().addActor(this);
         setVisible(true);
 
         setSize(300, 200);

@@ -2,12 +2,11 @@ package org.vertexarmy.dsr.leveleditor.ui.genericeditor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import org.vertexarmy.dsr.core.ReflectionHelper;
+import org.vertexarmy.dsr.core.UiContext;
 import org.vertexarmy.dsr.leveleditor.AssetName;
 import org.vertexarmy.dsr.leveleditor.ui.Dialog;
 import org.vertexarmy.dsr.leveleditor.ui.SpritePickerDialog;
@@ -23,29 +22,25 @@ public class TextureFieldEditor extends FieldEditor {
 
     private final Label textureNameLabel;
 
-    private final ImageButton selectTextureButton;
-
-    private final ImageButton clearTextureButton;
-
     private final Table contentTable;
 
     private SpritePickerDialog texturePickerDialog;
 
     private Object boundObject;
 
-    public TextureFieldEditor(final Field field, Stage stage, Skin skin) {
+    public TextureFieldEditor(final Field field, final UiContext uiContext) {
         super(field);
 
-        texturePickerDialog = new SpritePickerDialog(stage, "Select texture", skin);
+        texturePickerDialog = new SpritePickerDialog(uiContext, "Select texture");
 
-        textureNameLabel = new Label("none", skin);
+        textureNameLabel = new Label("none", uiContext.getSkin());
         textureNameLabel.setStyle(new Label.LabelStyle(textureNameLabel.getStyle()));
 
-        selectTextureButton = UIToolkit.createImageButton(AssetName.ICON_SELECT_TEXTURE);
+        ImageButton selectTextureButton = UIToolkit.createImageButton(AssetName.ICON_SELECT_TEXTURE);
 
-        clearTextureButton = UIToolkit.createImageButton(AssetName.ICON_CLEAR_TEXTURE);
+        ImageButton clearTextureButton = UIToolkit.createImageButton(AssetName.ICON_CLEAR_TEXTURE);
 
-        contentTable = new Table(skin);
+        contentTable = new Table(uiContext.getSkin());
         contentTable.add(textureNameLabel).fill().expand();
         contentTable.add(selectTextureButton).right();
         contentTable.add(clearTextureButton).right().row();
