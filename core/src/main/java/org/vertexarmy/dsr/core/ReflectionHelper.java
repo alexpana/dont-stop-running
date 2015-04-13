@@ -1,7 +1,10 @@
 package org.vertexarmy.dsr.core;
 
+import com.google.common.collect.ImmutableList;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * created by Alex
@@ -9,11 +12,8 @@ import java.lang.reflect.Method;
  */
 @SuppressWarnings("unused")
 public class ReflectionHelper {
-    public static boolean classHasProperty(Class objectClass, String fieldName) {
-        // TODO: replace these ugly hacks
-        return (classHasMethod(objectClass, "set" + fieldName) || classHasMethod(objectClass, "set" + fieldName.substring(2))) &&
-                (classHasMethod(objectClass, "get" + fieldName) || classHasMethod(objectClass, "has" + fieldName) || classHasMethod(objectClass, "is" + fieldName) || classHasMethod(objectClass, fieldName)) &&
-                classHasField(objectClass, fieldName);
+    public static boolean hasReadWriteAccess(Class objectClass, Field field) {
+        return hasSetter(objectClass, field) && hasGetter(objectClass, field);
     }
 
     public static boolean classHasMethod(Class objectClass, String methodName) {
@@ -59,8 +59,10 @@ public class ReflectionHelper {
     }
 
     public static Method findSetter(Class objectClass, Field field) {
+        List<String> setterNames = setterNames(field.getName());
+
         for (Method method : objectClass.getMethods()) {
-            if (method.getName().equalsIgnoreCase("set" + field.getName()) || method.getName().equalsIgnoreCase("set" + field.getName().substring(2))) {
+            if (setterNames.contains(method.getName())) {
                 return method;
             }
         }
@@ -68,8 +70,10 @@ public class ReflectionHelper {
     }
 
     public static Method findGetter(Class objectClass, Field field) {
+        List<String> getterNames = getterNames(field.getName());
+
         for (Method method : objectClass.getMethods()) {
-            if (method.getName().equalsIgnoreCase("get" + field.getName()) || method.getName().equalsIgnoreCase(field.getName()) || method.getName().equalsIgnoreCase("is" + field.getName()) || method.getName().equalsIgnoreCase("has" + field.getName())) {
+            if (getterNames.contains(method.getName())) {
                 return method;
             }
         }
@@ -85,4 +89,21 @@ public class ReflectionHelper {
         }
     }
 
+    private static boolean hasGetter(Class objectClass, Field field) {
+        return findGetter(objectClass, field) != null;
+    }
+
+    private static boolean hasSetter(Class objectClass, Field field) {
+        return findSetter(objectClass, field) != null;
+    }
+
+    private static List<String> getterNames(String fieldName) {
+        String capitalFieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+        return ImmutableList.of("get" + capitalFieldName, fieldName, "is" + capitalFieldName, "has" + capitalFieldName);
+    }
+
+    private static List<String> setterNames(String fieldName) {
+        String capitalFieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+        return ImmutableList.of("set" + capitalFieldName, "set" + fieldName.substring(2));
+    }
 }

@@ -58,7 +58,7 @@ public class GenericEditor extends Dialog {
         Table result = new Table(getUiContext().getSkin());
 
         for (Field field : objectClass.getDeclaredFields()) {
-            if (ReflectionHelper.classHasProperty(objectClass, field.getName())) {
+            if (ReflectionHelper.hasReadWriteAccess(objectClass, field)) {
                 FieldEditor editor = createEditorForField(field);
                 if (editor != null) {
                     fieldEditorMap.put(field, editor);
