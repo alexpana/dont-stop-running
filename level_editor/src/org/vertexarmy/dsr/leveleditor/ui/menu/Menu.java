@@ -30,6 +30,8 @@ import java.util.List;
  */
 public class Menu extends Table {
 
+    private static final List<Menu> INSTANCES = Lists.newArrayList();
+
     private static final Listener EMPTY_LISTENER = new EmptyListener();
 
     private final List<MenuItem> menuItems = Lists.newArrayList();
@@ -58,6 +60,8 @@ public class Menu extends Table {
         titleLabel.setStyle(titleLabelStyle);
 
         this.setBackground(new NinePatchDrawable(new NinePatch(context.getSkin().getRegion("panel-w-border"), 1, 1, 2, 1)));
+
+        INSTANCES.add(this);
     }
 
     public void setTitle(String title) {
@@ -76,9 +80,7 @@ public class Menu extends Table {
     }
 
     public void showAt(Vector2 position) {
-        if (isVisible()) {
-            hide();
-        }
+        hideAllMenuInstances();
 
         refreshItems();
 
@@ -133,6 +135,16 @@ public class Menu extends Table {
     public interface Listener {
         void itemActivated(MenuItem item);
 
+    }
+
+    public void dispose() {
+        INSTANCES.remove(this);
+    }
+
+    private static void hideAllMenuInstances() {
+        for (Menu menu : INSTANCES) {
+            menu.hide();
+        }
     }
 
     private static class EmptyListener implements Listener {

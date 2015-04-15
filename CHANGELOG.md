@@ -5,6 +5,9 @@
 - Support for undoing sprite drag and drop actions
 - Support for sprite editor contextual menu
 
+### Improvements
+- Only one menu can be visible on the screen at any time
+
 ## [1.3] 2015-04-12
 ### Added
 - Support for editing sprites
