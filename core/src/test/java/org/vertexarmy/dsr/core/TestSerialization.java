@@ -1,17 +1,14 @@
 package org.vertexarmy.dsr.core;
 
-import com.google.common.collect.ImmutableList;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.vertexarmy.dsr.game.level.Level;
-import org.vertexarmy.dsr.game.level.LevelSprite;
 import org.vertexarmy.dsr.game.level.TerrainPatch;
 import org.vertexarmy.dsr.math.Polygon;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Collections;
 
 /**
  * Created by alex
@@ -38,6 +35,11 @@ public class TestSerialization {
         Polygon startAreaPolygon = new Polygon(new float[]{0, 0, 1, 1, 2, 2, 3, 3});
         Polygon endAreaPolygon = new Polygon(new float[]{0, 0, 1, 1, 2, 2});
         Polygon terrainPolygon = new Polygon(new float[]{10, 20, 30, 40, 50, 60, 70, 80, 90, 100});
-        return new Level(startAreaPolygon, endAreaPolygon, ImmutableList.of(new TerrainPatch(terrainPolygon)), Collections.<LevelSprite>emptyList());
+        Level level = new Level();
+        level.getTerrainPatches().add(new TerrainPatch(terrainPolygon));
+        level.setStartArea(startAreaPolygon);
+        level.setEndArea(endAreaPolygon);
+
+        return level;
     }
 }

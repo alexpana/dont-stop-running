@@ -5,9 +5,12 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import lombok.RequiredArgsConstructor;
+import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.core.DragHelper;
+import org.vertexarmy.dsr.core.ReflectionHelper;
 import org.vertexarmy.dsr.core.component.InputComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
+import org.vertexarmy.dsr.leveleditor.StateChangeAction;
 import org.vertexarmy.dsr.math.Algorithms;
 
 /**
@@ -19,6 +22,10 @@ public class LevelSpriteEditorInputComponent extends InputAdapter implements Inp
     private final DragHelper dragHelper = new DragHelper();
 
     private final LevelSpriteEditTool editor;
+
+    private ReflectionHelper.Memento originalState;
+
+    private ReflectionHelper.Memento newState;
 
     enum EditMode {
         MOVE,
@@ -71,6 +78,7 @@ public class LevelSpriteEditorInputComponent extends InputAdapter implements Inp
                 Algorithms.createRectangle(editor.getSpriteBottomLeftCorner(), editor.getSpriteTopRightCorner()).contains(mouseWorldPosition)) {
             editMode = EditMode.MOVE;
             dragHelper.beginDrag(mouseWorldPosition);
+            originalState = ReflectionHelper.extractMemento(editor.getBoundObject());
             return true;
         }
 
@@ -82,6 +90,8 @@ public class LevelSpriteEditorInputComponent extends InputAdapter implements Inp
         if (dragHelper.isDragging()) {
             editMode = EditMode.NONE;
             dragHelper.endDrag();
+            newState = ReflectionHelper.extractMemento(editor.getBoundObject());
+            ActionManager.instance().runAction(new StateChangeAction(editor.getBoundObject(), originalState, newState));
             return true;
         } else {
             return false;

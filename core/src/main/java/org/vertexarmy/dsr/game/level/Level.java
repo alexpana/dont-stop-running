@@ -1,35 +1,33 @@
 package org.vertexarmy.dsr.game.level;
 
-import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
-import com.google.common.collect.ImmutableList;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.vertexarmy.dsr.math.Polygon;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode
-@RequiredArgsConstructor
 public class Level implements Serializable {
 
     @Getter
     private final List<BackgroundLayer> backgroundLayers = Lists.newArrayList();
 
     @Getter
-    private final Polygon startArea;
+    @Setter
+    private Polygon startArea;
 
     @Getter
-    private final Polygon endArea;
+    @Setter
+    private Polygon endArea;
 
     @Getter
-    private final List<TerrainPatch> terrainPatches;
+    private final List<TerrainPatch> terrainPatches = Lists.newArrayList();
 
     @Getter
-    private final List<LevelSprite> levelSprites;
+    private final List<LevelSprite> levelSprites = Lists.newArrayList();
 
     public BackgroundLayer getBackgroundLayerByType(BackgroundLayer.Type type) {
         for (BackgroundLayer layer : backgroundLayers) {
@@ -39,20 +37,5 @@ public class Level implements Serializable {
         }
 
         return null;
-    }
-
-    public static Level createDefaultLevel() {
-        List<TerrainPatch> terrainPatches = Lists.newArrayList();
-        terrainPatches.add(new TerrainPatch(new Polygon(new float[]{100, 100, 100, -100, -100, -100, -100, 100})));
-
-
-        List<LevelSprite> levelSprites = Lists.newArrayList();
-        levelSprites.add(new LevelSprite("dirt", Vector2.Zero.cpy(), 0, new Vector2(1, 1), 0, true));
-        levelSprites.add(new LevelSprite("saw", new Vector2(70, 70), 0, new Vector2(1, 1), 0, false));
-        levelSprites.add(new LevelSprite("saw", new Vector2(400, 400), 0, new Vector2(1, 1), 0, false));
-
-        return new Level(null, null,
-                terrainPatches,
-                levelSprites);
     }
 }

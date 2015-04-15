@@ -104,7 +104,7 @@ class LevelEditor extends Game {
 
         userUserPanningCameraController.setEnabled(true);
 
-        setLevel(Level.createDefaultLevel());
+        setLevel(new Level());
 
         if (initTask != null) {
             initTask.apply(this);

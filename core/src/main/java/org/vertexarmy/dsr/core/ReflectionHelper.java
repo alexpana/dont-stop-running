@@ -1,10 +1,12 @@
 package org.vertexarmy.dsr.core;
 
+import com.beust.jcommander.internal.Maps;
 import com.google.common.collect.ImmutableList;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /**
  * created by Alex
@@ -86,6 +88,29 @@ public class ReflectionHelper {
             return precision.value();
         } else {
             return 1.0f;
+        }
+    }
+
+    public static Memento extractMemento(Object object) {
+        Memento memento = new Memento();
+        for (Field field : object.getClass().getDeclaredFields()) {
+            memento.fieldValues.put(field, CopyUtils.deepCopy(ReflectionHelper.getField(object, field, null)));
+        }
+        return memento;
+    }
+
+    public static void applyMemento(Object object, Memento memento) {
+        for (Map.Entry<Field, Object> entry : memento.fieldValues.entrySet()) {
+            ReflectionHelper.setField(object, entry.getKey(), entry.getValue());
+        }
+    }
+
+    public static class Memento {
+        private Map<Field, Object> fieldValues = Maps.newHashMap();
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof Memento && this.fieldValues.equals(((Memento) other).fieldValues);
         }
     }
 

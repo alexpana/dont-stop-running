@@ -60,6 +60,7 @@ public class InputSystem {
                             return true;
                         }
                     } catch (Exception ignored) {
+                        ignored.printStackTrace();
                     }
                 }
                 return false;
@@ -73,6 +74,7 @@ public class InputSystem {
                             return true;
                         }
                     } catch (Exception ignored) {
+                        ignored.printStackTrace();
                     }
                 }
                 return false;
@@ -86,6 +88,7 @@ public class InputSystem {
                             return true;
                         }
                     } catch (Exception ignored) {
+                        ignored.printStackTrace();
                     }
                 }
                 return false;
@@ -99,6 +102,7 @@ public class InputSystem {
                             return true;
                         }
                     } catch (Exception ignored) {
+                        ignored.printStackTrace();
                     }
                 }
                 return false;
@@ -112,6 +116,7 @@ public class InputSystem {
                             return true;
                         }
                     } catch (Exception ignored) {
+                        ignored.printStackTrace();
                     }
                 }
                 return false;
@@ -125,6 +130,7 @@ public class InputSystem {
                             return true;
                         }
                     } catch (Exception ignored) {
+                        ignored.printStackTrace();
                     }
                 }
                 return false;
@@ -138,6 +144,7 @@ public class InputSystem {
                             return true;
                         }
                     } catch (Exception ignored) {
+                        ignored.printStackTrace();
                     }
                 }
                 return false;
