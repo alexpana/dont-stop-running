@@ -130,11 +130,7 @@ public class Menu extends Table {
 
     private void itemActivated(MenuItemEntry item) {
         listener.itemActivated(item.getMenuItem());
-    }
-
-    public interface Listener {
-        void itemActivated(MenuItem item);
-
+        hide();
     }
 
     public void dispose() {
@@ -145,6 +141,10 @@ public class Menu extends Table {
         for (Menu menu : INSTANCES) {
             menu.hide();
         }
+    }
+
+    public interface Listener {
+        void itemActivated(MenuItem item);
     }
 
     private static class EmptyListener implements Listener {

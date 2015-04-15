@@ -38,11 +38,12 @@ public class NewLevelSpriteTool {
         });
     }
 
-    public LevelSprite createLevelSprite(Level level, Vector2 position) {
+    public void createLevelSprite(Level level, Vector2 position) {
+        // TODO: create action
+
         boundLevel = level;
         newSpritePosition = position;
         spritePickerDialog.show();
-        return null;
     }
 
     public interface Listener {

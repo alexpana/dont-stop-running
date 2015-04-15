@@ -378,8 +378,6 @@ class LevelEditor extends Game {
                     levelBackgroundDialog.show();
 
                 }
-
-                actionMenu.hide();
             }
         });
     }

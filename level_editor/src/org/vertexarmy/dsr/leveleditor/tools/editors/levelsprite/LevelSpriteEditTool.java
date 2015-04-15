@@ -72,8 +72,6 @@ public class LevelSpriteEditTool extends BindableTool<LevelSprite> {
                 if (item == deleteItem) {
                     deleteSprite();
                 }
-
-                contextMenu.hide();
             }
         });
     }

@@ -10,6 +10,8 @@ import org.vertexarmy.dsr.math.Polygon;
  */
 public class NewTerrainPatchTool {
     public TerrainPatch addRectangleTerrainPatch(Level level, int x, int y, int w, int h) {
+        // TODO: create action
+
         TerrainPatch terrainPatch = new TerrainPatch(new Polygon(new float[]{
                 x - w / 2, y + h / 2,
                 x + w / 2, y + h / 2,
