@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -16,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.beust.jcommander.internal.Lists;
 import lombok.Getter;
 import lombok.Setter;
+import org.vertexarmy.dsr.core.UiContext;
 import org.vertexarmy.dsr.core.assets.FontRepository;
 import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.graphics.GraphicsUtils;
@@ -36,10 +36,6 @@ public class Menu extends Table {
 
     private final List<MenuItemEntry> menuItemEntries = Lists.newArrayList();
 
-    private Stage stage;
-
-    private Skin skin;
-
     @Setter
     private Listener listener = EMPTY_LISTENER;
 
@@ -48,11 +44,12 @@ public class Menu extends Table {
     @Getter
     private Vector2 displayLocation = Vector2.Zero.cpy();
 
-    public Menu(Stage stage, Skin skin) {
-        this.stage = stage;
-        this.skin = skin;
+    private UiContext context;
 
-        titleLabel = new Label("", skin);
+    public Menu(UiContext context) {
+        this.context = context;
+
+        titleLabel = new Label("", context.getSkin());
 
         Label.LabelStyle titleLabelStyle = new Label.LabelStyle(titleLabel.getStyle());
         titleLabelStyle.font = FontRepository.instance().getFont(AssetName.FONT_MARKE_8);
@@ -60,7 +57,7 @@ public class Menu extends Table {
 
         titleLabel.setStyle(titleLabelStyle);
 
-        this.setBackground(new NinePatchDrawable(new NinePatch(skin.getRegion("panel-w-border"), 1, 1, 2, 1)));
+        this.setBackground(new NinePatchDrawable(new NinePatch(context.getSkin().getRegion("panel-w-border"), 1, 1, 2, 1)));
     }
 
     public void setTitle(String title) {
@@ -85,7 +82,7 @@ public class Menu extends Table {
 
         refreshItems();
 
-        stage.addActor(this);
+        context.getStage().addActor(this);
         setVisible(true);
         setBounds(position.x, Gdx.graphics.getHeight() - (position.y + getPrefHeight()), getPrefWidth(), getPrefHeight());
         displayLocation = position;
@@ -114,7 +111,7 @@ public class Menu extends Table {
         menuItemEntries.clear();
         add(titleLabel).left().padLeft(4).row();
         for (MenuItem item : menuItems) {
-            MenuItemEntry menuItemEntry = new MenuItemEntry(this, item, skin);
+            MenuItemEntry menuItemEntry = new MenuItemEntry(this, item, context.getSkin());
             menuItemEntries.add(menuItemEntry);
             add(menuItemEntry).fillX().expandX().left().row();
         }

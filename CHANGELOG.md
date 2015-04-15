@@ -1,5 +1,10 @@
 # Change Log
 
+## Unreleased
+### Added
+- Support for undoing sprite drag and drop actions
+- Support for sprite editor contextual menu
+
 ## [1.3] 2015-04-12
 ### Added
 - Support for editing sprites

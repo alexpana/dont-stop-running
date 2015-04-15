@@ -74,12 +74,20 @@ public class LevelSpriteEditorInputComponent extends InputAdapter implements Inp
 
         Vector2 mouseWorldPosition = RenderSystem.instance().screenToWorld(screenX, screenY);
 
+        editor.getContextMenu().hide();
+
         if (!editor.getRotateHandler().isHovered() && !editor.getScaleHandler().isHovered() &&
-                Algorithms.createRectangle(editor.getSpriteBottomLeftCorner(), editor.getSpriteTopRightCorner()).contains(mouseWorldPosition)) {
-            editMode = EditMode.MOVE;
-            dragHelper.beginDrag(mouseWorldPosition);
-            originalState = ReflectionHelper.extractMemento(editor.getBoundObject());
-            return true;
+                spriteBoundsContain(mouseWorldPosition)) {
+            if (button == Input.Buttons.LEFT) {
+                editMode = EditMode.MOVE;
+                dragHelper.beginDrag(mouseWorldPosition);
+                originalState = ReflectionHelper.extractMemento(editor.getBoundObject());
+                return true;
+            }
+
+            if (button == Input.Buttons.RIGHT) {
+                editor.getContextMenu().showAt(new Vector2(screenX, screenY));
+            }
         }
 
         return false;
@@ -87,6 +95,10 @@ public class LevelSpriteEditorInputComponent extends InputAdapter implements Inp
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (!editor.isBound()) {
+            return false;
+        }
+
         if (dragHelper.isDragging()) {
             editMode = EditMode.NONE;
             dragHelper.endDrag();
@@ -114,5 +126,9 @@ public class LevelSpriteEditorInputComponent extends InputAdapter implements Inp
         }
 
         return false;
+    }
+
+    private boolean spriteBoundsContain(Vector2 worldPosition) {
+        return Algorithms.createRectangle(editor.getSpriteBottomLeftCorner(), editor.getSpriteTopRightCorner()).contains(worldPosition);
     }
 }

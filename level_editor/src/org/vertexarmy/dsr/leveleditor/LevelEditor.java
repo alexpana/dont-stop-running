@@ -131,13 +131,13 @@ class LevelEditor extends Game {
                 return new InputAdapter() {
                     @Override
                     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                        if (button == Input.Buttons.LEFT) {
+                        ItemPicker.PickResult pickResult = ItemPicker.pickObject(level, screenX, screenY);
+
+                        if (button == Input.Buttons.LEFT && pickResult.getObject() != null) {
                             actionMenu.hide();
                             if (terrainPatchEditTool.getHoveredVertex() != null) {
                                 return false;
                             }
-
-                            ItemPicker.PickResult pickResult = ItemPicker.pickObject(level, screenX, screenY);
 
                             if (pickResult.getType() == ItemPicker.ItemType.TERRAIN_POLYGON) {
                                 final TerrainPatch pickedTerrainPatch = (TerrainPatch) pickResult.getObject();
@@ -161,7 +161,7 @@ class LevelEditor extends Game {
                                 return selectionChanged;
                             }
                         }
-                        if (button == Input.Buttons.RIGHT) {
+                        if (button == Input.Buttons.RIGHT && pickResult.getObject() == null) {
                             actionMenu.showAt(new Vector2(screenX, screenY));
                             return true;
                         }
@@ -349,7 +349,7 @@ class LevelEditor extends Game {
             }
         });
 
-        actionMenu = new Menu(root.getUiNode().getStage(), root.getUiNode().getUiSkin());
+        actionMenu = new Menu(root.getUiContext());
         actionMenu.setTitle("General Actions");
 
         final MenuItem insertTerrainPatchItem = new MenuItem("Insert terrain patch");

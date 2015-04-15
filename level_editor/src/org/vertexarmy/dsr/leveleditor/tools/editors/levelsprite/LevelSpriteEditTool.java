@@ -11,6 +11,8 @@ import org.vertexarmy.dsr.core.component.Node;
 import org.vertexarmy.dsr.game.level.LevelSprite;
 import org.vertexarmy.dsr.leveleditor.tools.BindableTool;
 import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
+import org.vertexarmy.dsr.leveleditor.ui.menu.Menu;
+import org.vertexarmy.dsr.leveleditor.ui.menu.MenuItem;
 
 /**
  * created by Alex
@@ -33,12 +35,47 @@ public class LevelSpriteEditTool extends BindableTool<LevelSprite> {
     @Setter
     private LevelSpriteEditorListener listener;
 
+    @Getter
+    private Menu contextMenu;
+
+    private UiContext uiContext;
+
     public LevelSpriteEditTool(UiContext uiContext) {
+        this.uiContext = uiContext;
+
         node.addComponent(ComponentType.INPUT, new LevelSpriteEditorInputComponent(this));
         node.addComponent(ComponentType.RENDER, new LevelSpriteEditorRenderComponent(this));
 
         editDialog = new GenericEditor(uiContext, "Edit sprite", LevelSprite.class);
         editDialog.setSize(235, 200);
+
+        initMenu();
+    }
+
+    private void initMenu() {
+        contextMenu = new Menu(uiContext);
+        contextMenu.setTitle("Sprite");
+
+        final MenuItem editItem = new MenuItem("Edit sprite");
+        final MenuItem deleteItem = new MenuItem("Delete sprite");
+
+        contextMenu.addItem(editItem);
+        contextMenu.addItem(deleteItem);
+
+        contextMenu.setMenuListener(new Menu.Listener() {
+            @Override
+            public void itemActivated(MenuItem item) {
+                if (item == editItem) {
+                    editDialog.show();
+                }
+
+                if (item == deleteItem) {
+                    deleteSprite();
+                }
+
+                contextMenu.hide();
+            }
+        });
     }
 
     @Override
