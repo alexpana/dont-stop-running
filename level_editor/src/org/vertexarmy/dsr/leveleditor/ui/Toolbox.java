@@ -6,24 +6,35 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.beust.jcommander.internal.Maps;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.leveleditor.AssetName;
+
+import java.util.Map;
 
 /**
  * Created by alex
  * on 26.03.2015.
  */
 public class Toolbox extends Table {
+
+    @RequiredArgsConstructor
+    public enum Item {
+        OPEN_LEVEL(AssetName.ICON_FILE_OPEN),
+        SAVE_LEVEL(AssetName.ICON_FILE_SAVE),
+        AUTO_SCROLL_BACKWARD(AssetName.ICON_PLAY_REVERSE),
+        AUTO_SCROLL_PAUSE(AssetName.ICON_PAUSE),
+        AUTO_SCROLL_FORWARD(AssetName.ICON_PLAY_FORWARD),
+        SETTINGS(AssetName.ICON_SETTINGS);
+
+        @Getter
+        private final String iconName;
+    }
+
     private final Listener listener;
 
-    private ImageButton openLevelButton;
-
-    private ImageButton saveLevelButton;
-
-    private ImageButton autoScrollForwardButton;
-
-    private ImageButton pauseAutoScrollButton;
-
-    private ImageButton autoScrollBackwardButton;
+    private Map<ImageButton, Item> imageButtonItemsMap = Maps.newLinkedHashMap();
 
     public Toolbox(Skin uiSkin, Listener listener) {
         this.listener = listener;
@@ -37,108 +48,38 @@ public class Toolbox extends Table {
     }
 
     private void createComponents() {
-        openLevelButton = UIToolkit.createImageButton(AssetName.ICON_FILE_OPEN);
-        saveLevelButton = UIToolkit.createImageButton(AssetName.ICON_FILE_SAVE);
-
-        autoScrollForwardButton = UIToolkit.createImageButton(AssetName.ICON_PLAY_FORWARD);
-        pauseAutoScrollButton = UIToolkit.createImageButton(AssetName.ICON_PAUSE);
-        autoScrollBackwardButton = UIToolkit.createImageButton(AssetName.ICON_PLAY_REVERSE);
+        for (Item item : Item.values()) {
+            imageButtonItemsMap.put(UIToolkit.createImageButton(item.getIconName()), item);
+        }
     }
 
     private void layoutComponents() {
         this.align(Align.left);
         this.pad(2, 2, 2, 2);
 
-        this.add(openLevelButton);
-        this.add(saveLevelButton);
-        this.add(autoScrollBackwardButton);
-        this.add(pauseAutoScrollButton);
-        this.add(autoScrollForwardButton);
+        for (ImageButton imageButton : imageButtonItemsMap.keySet()) {
+            add(imageButton);
+        }
     }
 
     private void initListeners() {
-        UIToolkit.addActionListener(openLevelButton, new UIToolkit.ActionListener() {
-            @Override
-            public void action() {
-                notifyLoadFileRequested();
-            }
-        });
-
-        UIToolkit.addActionListener(saveLevelButton, new UIToolkit.ActionListener() {
-            @Override
-            public void action() {
-                notifySaveFileRequested();
-            }
-        });
-
-        UIToolkit.addActionListener(autoScrollBackwardButton, new UIToolkit.ActionListener() {
-            @Override
-            public void action() {
-                notifyAutoScrollBackward();
-            }
-        });
-
-        UIToolkit.addActionListener(pauseAutoScrollButton, new UIToolkit.ActionListener() {
-            @Override
-            public void action() {
-                notifyPauseAutoScroll();
-            }
-        });
-
-        UIToolkit.addActionListener(autoScrollForwardButton, new UIToolkit.ActionListener() {
-            @Override
-            public void action() {
-                notifyAutoScrollForward();
-            }
-        });
-
-        UIToolkit.addActionListener(autoScrollForwardButton, new UIToolkit.ActionListener() {
-            @Override
-            public void action() {
-                notifyAutoScrollForward();
-            }
-        });
-    }
-
-    private void notifyLoadFileRequested() {
-        if (listener != null) {
-            listener.loadFileRequested();
+        for (final ImageButton imageButton : imageButtonItemsMap.keySet()) {
+            UIToolkit.addActionListener(imageButton, new UIToolkit.ActionListener() {
+                @Override
+                public void action() {
+                    notifyActionRequested(imageButtonItemsMap.get(imageButton));
+                }
+            });
         }
     }
 
-    private void notifySaveFileRequested() {
+    private void notifyActionRequested(Item item) {
         if (listener != null) {
-            listener.saveFileRequested();
-        }
-    }
-
-    private void notifyAutoScrollBackward() {
-        if (listener != null) {
-            listener.autoScrollBackwardRequested();
-        }
-    }
-
-    private void notifyPauseAutoScroll() {
-        if (listener != null) {
-            listener.pauseAutoScrollRequested();
-        }
-    }
-
-    private void notifyAutoScrollForward() {
-        if (listener != null) {
-            listener.autoScrollForwardRequested();
+            listener.actionRequested(item);
         }
     }
 
     public interface Listener {
-        void loadFileRequested();
-
-        void saveFileRequested();
-
-        void autoScrollForwardRequested();
-
-        void pauseAutoScrollRequested();
-
-        void autoScrollBackwardRequested();
+        void actionRequested(Item actionItem);
     }
 }

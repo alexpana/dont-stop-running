@@ -4,6 +4,7 @@
 ### Added
 - Support for undoing sprite drag and drop actions
 - Support for sprite editor contextual menu
+- Support for toggling the visibility of various items
 
 ### Improvements
 - Only one menu can be visible on the screen at any time

@@ -114,7 +114,7 @@ public class GridRenderer {
     }
 
     public void renderRulers() {
-        if (!rulersVisible) {
+        if (!rulersVisible || !visible) {
             return;
         }
 

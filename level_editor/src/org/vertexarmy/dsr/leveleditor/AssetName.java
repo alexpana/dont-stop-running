@@ -18,6 +18,7 @@ public class AssetName {
     public final static String ICON_PLAY_FORWARD = "icon_play_forward";
     public final static String ICON_PAUSE = "icon_pause";
     public final static String ICON_PLAY_REVERSE = "icon_play_reverse";
+    public final static String ICON_SETTINGS = "icon_settings";
 
     public final static String FONT_MARKE_8 = "font_marke_8";
     public final static String FONT_VERA_SANS_MONO_10 = "font_vera_sans_mono_10";

@@ -1,5 +1,7 @@
 package org.vertexarmy.dsr.leveleditor.levelrenderer;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.vertexarmy.dsr.game.level.Level;
 
 /**
@@ -13,6 +15,18 @@ public class LevelRenderer {
 
     private final SpritesRenderer spritesRenderer = new SpritesRenderer();
 
+    @Getter
+    @Setter
+    private boolean showBackground = true;
+
+    @Getter
+    @Setter
+    private boolean showLevelSprites = true;
+
+    @Getter
+    @Setter
+    private boolean showTerrainPatches = true;
+
     public void setLevel(Level level) {
         backgroundRenderer.setLevel(level);
         terrainRenderer.setLevel(level);
@@ -20,11 +34,19 @@ public class LevelRenderer {
     }
 
     public void render() {
-        backgroundRenderer.render();
+        if (showBackground) {
+            backgroundRenderer.render();
+        }
 
-        spritesRenderer.renderBackgroundSprites();
-        terrainRenderer.render();
-        spritesRenderer.renderForegroundSprites();
+        if (showLevelSprites) {
+            spritesRenderer.renderBackgroundSprites();
+        }
+        if (showTerrainPatches) {
+            terrainRenderer.render();
+        }
+        if (showLevelSprites) {
+            spritesRenderer.renderForegroundSprites();
+        }
     }
 
     public void reloadLevel() {

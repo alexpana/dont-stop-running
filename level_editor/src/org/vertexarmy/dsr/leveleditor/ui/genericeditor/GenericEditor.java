@@ -12,12 +12,13 @@ import org.vertexarmy.dsr.leveleditor.ui.Dialog;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import org.vertexarmy.dsr.leveleditor.ui.UIToolkit;
 
 /**
  * created by Alex
  * on 05-Apr-2015.
  */
-public class GenericEditor extends Dialog {
+public class GenericEditor extends Dialog<Object> {
 
     private final Table contentTable;
 
@@ -30,6 +31,7 @@ public class GenericEditor extends Dialog {
     private float fullSizeWidth = 200;
 
     private float fullSizeHeight = 100;
+    private Object boundObject;
 
     public GenericEditor(UiContext uiContext, String title, Class objectClass) {
         super(uiContext, title);
@@ -96,7 +98,9 @@ public class GenericEditor extends Dialog {
     }
 
     public void bindToObject(Object object) {
-        if (object == null) {
+        boundObject = object;
+
+        if (boundObject == null) {
             contentTable.clear();
             contentTable.add(emptyContentTable).fill().expand().center();
         } else {
@@ -107,7 +111,7 @@ public class GenericEditor extends Dialog {
         }
 
         for (FieldEditor fieldEditor : fieldEditorMap.values()) {
-            fieldEditor.bindToObject(object);
+            fieldEditor.bindToObject(boundObject);
         }
 
         this.setSize(fullSizeWidth, fullSizeHeight);
@@ -121,6 +125,7 @@ public class GenericEditor extends Dialog {
     @Override
     protected void doAction() {
         hide();
+        notifyListener(boundObject);
     }
 
     @Override
@@ -129,6 +134,7 @@ public class GenericEditor extends Dialog {
         this.setVisible(true);
 
         this.setSize(fullSizeWidth, fullSizeHeight);
+        UIToolkit.centerWindow(this);
     }
 
     @Override

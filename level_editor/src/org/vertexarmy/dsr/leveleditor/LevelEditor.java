@@ -34,6 +34,7 @@ import org.vertexarmy.dsr.leveleditor.tools.editors.levelsprite.LevelSpriteEdito
 import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.PolygonEditorListener;
 import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditTool;
 import org.vertexarmy.dsr.leveleditor.ui.*;
+import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
 import org.vertexarmy.dsr.leveleditor.ui.menu.Menu;
 import org.vertexarmy.dsr.leveleditor.ui.menu.MenuItem;
 
@@ -66,6 +67,8 @@ class LevelEditor extends Game {
 
     private LevelBackgroundDialog levelBackgroundDialog;
 
+    private GenericEditor editorSettingsDialog;
+
     private UserPanningCameraController userUserPanningCameraController = new UserPanningCameraController();
 
     private AutoScrollCameraController autoScrollCameraController = new AutoScrollCameraController();
@@ -79,6 +82,8 @@ class LevelEditor extends Game {
     private NewTerrainPatchTool newTerrainPatchTool;
 
     private NewLevelSpriteTool newLevelSpriteTool;
+
+    private EditorSettings levelEditorSettings = new EditorSettings();
 
     private LevelEditor(Function<LevelEditor, Boolean> initTask) {
         this.initTask = initTask;
@@ -285,31 +290,30 @@ class LevelEditor extends Game {
 
         Toolbox toolbox = new Toolbox(root.getUiNode().getUiSkin(), new Toolbox.Listener() {
             @Override
-            public void loadFileRequested() {
-                loadDialog.show();
-            }
-
-            @Override
-            public void saveFileRequested() {
-                saveDialog.show();
-            }
-
-            @Override
-            public void autoScrollForwardRequested() {
-                userUserPanningCameraController.setEnabled(false);
-                autoScrollCameraController.increaseSpeed();
-            }
-
-            @Override
-            public void pauseAutoScrollRequested() {
-                userUserPanningCameraController.setEnabled(true);
-                autoScrollCameraController.resetSpeed();
-            }
-
-            @Override
-            public void autoScrollBackwardRequested() {
-                userUserPanningCameraController.setEnabled(false);
-                autoScrollCameraController.decreaseSpeed();
+            public void actionRequested(Toolbox.Item actionItem) {
+                switch (actionItem) {
+                    case OPEN_LEVEL:
+                        loadDialog.show();
+                        break;
+                    case SAVE_LEVEL:
+                        saveDialog.show();
+                        break;
+                    case AUTO_SCROLL_FORWARD:
+                        userUserPanningCameraController.setEnabled(false);
+                        autoScrollCameraController.increaseSpeed();
+                        break;
+                    case AUTO_SCROLL_PAUSE:
+                        userUserPanningCameraController.setEnabled(true);
+                        autoScrollCameraController.resetSpeed();
+                        break;
+                    case AUTO_SCROLL_BACKWARD:
+                        userUserPanningCameraController.setEnabled(false);
+                        autoScrollCameraController.decreaseSpeed();
+                        break;
+                    case SETTINGS:
+                        editorSettingsDialog.show();
+                        break;
+                }
             }
         });
 
@@ -351,16 +355,30 @@ class LevelEditor extends Game {
             }
         });
 
+        editorSettingsDialog = new GenericEditor(root.getUiContext(), "Editor Settings", EditorSettings.class);
+        editorSettingsDialog.bindToObject(levelEditorSettings);
+        editorSettingsDialog.setListener(new Dialog.Listener<Object>() {
+            @Override
+            public void dialogAccepted(Object event) {
+                levelRenderer.setShowBackground(levelEditorSettings.isShowBackground());
+                levelRenderer.setShowLevelSprites(levelEditorSettings.isShowSprites());
+                levelRenderer.setShowTerrainPatches(levelEditorSettings.isShowTerrain());
+                gridRenderer.setVisible(levelEditorSettings.isShowGrid());
+            }
+        });
+
         actionMenu = new Menu(root.getUiContext());
         actionMenu.setTitle("General Actions");
 
         final MenuItem insertTerrainPatchItem = new MenuItem("Insert terrain patch");
         final MenuItem insertSpriteItem = new MenuItem("Insert sprite");
         final MenuItem editBackgroundItem = new MenuItem("Edit Background");
+        final MenuItem editorSettingsItem = new MenuItem("Editor Settings");
 
         actionMenu.addItem(insertTerrainPatchItem);
         actionMenu.addItem(insertSpriteItem);
         actionMenu.addItem(editBackgroundItem);
+        actionMenu.addItem(editorSettingsItem);
 
         actionMenu.setMenuListener(new Menu.Listener() {
             @Override
@@ -378,7 +396,10 @@ class LevelEditor extends Game {
 
                 if (item == editBackgroundItem) {
                     levelBackgroundDialog.show();
+                }
 
+                if (item == editorSettingsItem) {
+                    editorSettingsDialog.show();
                 }
             }
         });
