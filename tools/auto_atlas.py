@@ -1,22 +1,26 @@
 from cStringIO import StringIO
+import sys
+import json
 
-# Output example:
-#
-# skin.png
-# size: 256,128
-# format: RGBA8888
-# filter: Linear,Linear
-# repeat: none
-# check-off
-# rotate: false
-#   xy: 11, 5
-#   size: 14, 14
-#   orig: 14, 14
-#   offset: 0, 0
-#   index: -1
+'''
+Output example:
+
+skin.png
+size: 256,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+check-off
+rotate: false
+  xy: 11, 5
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+'''
+
+
 def create_atlas(texture, size, grid_size, region_names):
-    grid_indicator_size = 1
-
     result = StringIO()
 
     indent = 0
@@ -53,7 +57,12 @@ def create_atlas(texture, size, grid_size, region_names):
     return result
 
 
-atlas = create_atlas("ui_icons.png", [85, 85], 21,
-                     ["icon_alignv", "icon_alignh", "icon_file_open", "icon_file_save", "icon_select_texture", "icon_clear_texture", "icon_play_forward", "icon_pause", "icon_play_reverse"])
+structure = json.loads(open(sys.argv[1]).read())
+
+
+atlas = create_atlas(structure["texture"],
+                     structure["texture_size"],
+                     structure["icon_size"],
+                     structure["icon_names"])
 
 print atlas.getvalue()

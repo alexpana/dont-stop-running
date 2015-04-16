@@ -1,0 +1,17 @@
+{
+  "texture": "ui_icons.png",
+  "texture_size": [85, 85],
+  "icon_size": 21,
+  "icon_names": [
+    "icon_alignv",
+    "icon_alignh",
+    "icon_file_open",
+    "icon_file_save",
+    "icon_select_texture",
+    "icon_clear_texture",
+    "icon_play_forward",
+    "icon_pause",
+    "icon_play_reverse",
+    "icon_settings"
+  ]
+}
