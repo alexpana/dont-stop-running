@@ -26,7 +26,11 @@ public final class ActionManager {
         return INSTANCE;
     }
 
-    public void runAction(Action action) {
+    public static void runAction(Action action) {
+        INSTANCE.doRunAction(action);
+    }
+
+    private void doRunAction(Action action) {
         if (!action.isValid()) {
             return;
         }
@@ -100,6 +104,7 @@ public final class ActionManager {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class ReverseAction implements Action {
         private final Action action;
 
@@ -129,6 +134,10 @@ public final class ActionManager {
 
         public CompositeAction(List<Action> actionList) {
             this.actionList = actionList;
+        }
+
+        public CompositeAction(Action... actionList) {
+            this.actionList = Lists.newArrayList(actionList);
         }
 
         @Override

@@ -14,32 +14,32 @@ import java.util.List;
 public class DeselectAllHandlersAction extends ActionManager.ActionAdapter {
     private final TerrainPatchEditTool terrainPatchEditTool;
 
-    private final List<VertexHandler> allHandlers = Lists.newArrayList();
+    private final List<Integer> allHandlerIndices = Lists.newArrayList();
 
-    private final List<VertexHandler> selectedHandlers = Lists.newArrayList();
+    private final List<Integer> selectedHandlerIndices = Lists.newArrayList();
 
-    public DeselectAllHandlersAction(TerrainPatchEditTool terrainPatchEditTool, List<VertexHandler> allHandlers, List<VertexHandler> selectedHandlers) {
+    public DeselectAllHandlersAction(TerrainPatchEditTool terrainPatchEditTool, List<Integer> allHandlerIndices, List<Integer> selectedHandlerIndices) {
         this.terrainPatchEditTool = terrainPatchEditTool;
-        this.allHandlers.addAll(allHandlers);
-        this.selectedHandlers.addAll(selectedHandlers);
+        this.allHandlerIndices.addAll(allHandlerIndices);
+        this.selectedHandlerIndices.addAll(selectedHandlerIndices);
     }
 
     @Override
     public void doAction() {
-        for (VertexHandler vertexHandler : allHandlers) {
-            terrainPatchEditTool.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(false);
+        for (Integer vertexHandlerIndex : allHandlerIndices) {
+            terrainPatchEditTool.findHandlerByIndex(vertexHandlerIndex).setSelected(false);
         }
     }
 
     @Override
     public void undoAction() {
-        for (VertexHandler vertexHandler : selectedHandlers) {
-            terrainPatchEditTool.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(true);
+        for (Integer vertexHandlerIndex : selectedHandlerIndices) {
+            terrainPatchEditTool.findHandlerByIndex(vertexHandlerIndex).setSelected(true);
         }
     }
 
     @Override
     public boolean isValid() {
-        return !selectedHandlers.isEmpty();
+        return !selectedHandlerIndices.isEmpty();
     }
 }

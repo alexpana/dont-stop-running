@@ -13,17 +13,17 @@ import java.util.List;
  * on 24.03.2015.
  */
 public class AlignHandlersVerticallyAction extends ActionManager.ActionAdapter {
-    private final TerrainPatchEditTool terrainPatchEditTool;
+    private final TerrainPatchEditTool editorTool;
 
-    private final List<VertexHandler> selectedVertexHandlers = Lists.newArrayList();
+    private final List<Integer> vertexHandlersIndices = Lists.newArrayList();
 
     private final List<Vector2> originalVertexPositions = Lists.newArrayList();
 
-    public AlignHandlersVerticallyAction(TerrainPatchEditTool editor, List<VertexHandler> selectedVertexHandlers) {
-        terrainPatchEditTool = editor;
-        this.selectedVertexHandlers.addAll(selectedVertexHandlers);
+    public AlignHandlersVerticallyAction(TerrainPatchEditTool editor, List<Integer> vertexHandlersIndices) {
+        editorTool = editor;
+        this.vertexHandlersIndices.addAll(vertexHandlersIndices);
 
-        for (VertexHandler handler : selectedVertexHandlers) {
+        for (Integer handler : vertexHandlersIndices) {
             originalVertexPositions.add(editor.getVertex(handler));
         }
     }
@@ -31,35 +31,36 @@ public class AlignHandlersVerticallyAction extends ActionManager.ActionAdapter {
     @Override
     public void doAction() {
         float medianX = 0;
-        List<VertexHandler> selectedHandlers = terrainPatchEditTool.getSelectedHandlers();
+        List<VertexHandler> selectedHandlers = editorTool.getSelectedHandlers();
         if (!selectedHandlers.isEmpty()) {
             for (VertexHandler handler : selectedHandlers) {
-                medianX += terrainPatchEditTool.getVertex(handler).x;
+                medianX += editorTool.getVertex(handler).x;
             }
 
             medianX /= selectedHandlers.size();
             for (VertexHandler handler : selectedHandlers) {
-                Vector2 originalPosition = terrainPatchEditTool.getVertex(handler);
-                terrainPatchEditTool.setVertex(handler, medianX, originalPosition.y);
+                Vector2 originalPosition = editorTool.getVertex(handler);
+                editorTool.setVertex(handler, medianX, originalPosition.y);
             }
         }
     }
 
     @Override
     public void undoAction() {
-        for (int i = 0; i < selectedVertexHandlers.size(); ++i) {
-            terrainPatchEditTool.setVertex(selectedVertexHandlers.get(i), originalVertexPositions.get(i));
+        for (int i = 0; i < vertexHandlersIndices.size(); ++i) {
+            VertexHandler vertexHandler = editorTool.findHandlerByIndex(vertexHandlersIndices.get(i));
+            editorTool.setVertex(vertexHandler, originalVertexPositions.get(i));
         }
     }
 
     @Override
     public boolean isValid() {
-        if (selectedVertexHandlers.size() < 2) {
+        if (vertexHandlersIndices.size() < 2) {
             return false;
         }
 
-        for (VertexHandler handler : selectedVertexHandlers) {
-            if (terrainPatchEditTool.getVertex(handler).x != terrainPatchEditTool.getVertex(selectedVertexHandlers.get(0)).x) {
+        for (Integer handlerIndex : vertexHandlersIndices) {
+            if (editorTool.getVertex(handlerIndex).x != editorTool.getVertex(vertexHandlersIndices.get(0)).x) {
                 return true;
             }
         }

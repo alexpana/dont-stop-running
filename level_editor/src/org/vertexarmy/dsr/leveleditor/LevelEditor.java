@@ -143,7 +143,7 @@ class LevelEditor extends Game {
                                 final TerrainPatch pickedTerrainPatch = (TerrainPatch) pickResult.getObject();
                                 boolean selectionChanged = pickedTerrainPatch != terrainPatchEditTool.getBoundObject();
 
-                                ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
+                                ActionManager.runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
                                         new BindAction<>(terrainPatchEditTool, pickedTerrainPatch),
                                         new BindAction<>(levelSpriteEditTool, null))));
 
@@ -154,7 +154,7 @@ class LevelEditor extends Game {
                                 LevelSprite pickedLevelSprite = (LevelSprite) pickResult.getObject();
                                 boolean selectionChanged = pickedLevelSprite != levelSpriteEditTool.getBoundObject();
 
-                                ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
+                                ActionManager.runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
                                         new BindAction<>(terrainPatchEditTool, null),
                                         new BindAction<>(levelSpriteEditTool, pickedLevelSprite))));
 
@@ -195,9 +195,9 @@ class LevelEditor extends Game {
                         }
 
                         if (Shortcuts.isDeselectShortcut(keycode)) {
-                            ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.<ActionManager.Action>of(
+                            ActionManager.runAction(new ActionManager.CompositeAction(
                                     new BindAction<>(terrainPatchEditTool, null),
-                                    new BindAction<>(levelSpriteEditTool, null))));
+                                    new BindAction<>(levelSpriteEditTool, null)));
                             return true;
                         }
 
@@ -227,7 +227,9 @@ class LevelEditor extends Game {
         terrainPatchEditTool.setListener(new PolygonEditorListener() {
             @Override
             public void deletePolygonRequested() {
-                ActionManager.instance().runAction(new RemoveTerrainPatchAction(level, terrainPatchEditTool.getBoundObject()));
+                ActionManager.runAction(new ActionManager.CompositeAction(
+                        new BindAction<>(terrainPatchEditTool, null),
+                        new RemoveTerrainPatchAction(level, terrainPatchEditTool.getBoundObject())));
             }
         });
 
@@ -235,7 +237,7 @@ class LevelEditor extends Game {
         levelSpriteEditTool.setListener(new LevelSpriteEditorListener() {
             @Override
             public void deleteSpriteRequested() {
-                ActionManager.instance().runAction(new RemoveTerrainSpriteAction(level, levelSpriteEditTool.getBoundObject()));
+                ActionManager.runAction(new RemoveTerrainSpriteAction(level, levelSpriteEditTool.getBoundObject()));
             }
         });
 

@@ -129,6 +129,10 @@ public class TerrainPatchEditTool extends BindableTool<TerrainPatch> {
         return getBoundPolygon().getVertex(handler.getVertexIndex());
     }
 
+    public Vector2 getVertex(Integer handlerIndex) {
+        return getBoundPolygon().getVertex(findHandlerByIndex(handlerIndex).getVertexIndex());
+    }
+
     public void setVertex(VertexHandler handler, Vector2 position) {
         setVertex(handler, position.x, position.y);
     }
@@ -170,13 +174,6 @@ public class TerrainPatchEditTool extends BindableTool<TerrainPatch> {
         updateVertexHandlers();
     }
 
-    private void updateVertexHandlers() {
-        vertexHandlers.clear();
-        for (int i = 0; i < getBoundPolygon().getVertexCount(); ++i) {
-            vertexHandlers.add(new VertexHandler(i));
-        }
-    }
-
     public VertexHandler findHandlerByIndex(int index) {
         for (VertexHandler handler : vertexHandlers) {
             if (handler.getVertexIndex() == index) {
@@ -196,10 +193,37 @@ public class TerrainPatchEditTool extends BindableTool<TerrainPatch> {
         return null;
     }
 
+    List<Integer> handlersToIndices(List<VertexHandler> vertexHandlers) {
+        List<Integer> result = Lists.newArrayList();
+        for (VertexHandler vertexHandler : vertexHandlers) {
+            result.add(indexOf(vertexHandler));
+        }
+        return result;
+    }
+
     void deleteBoundPolygon() {
         if (isBound()) {
             notifyDeletePolygonRequested();
             unbind();
+        }
+    }
+
+    Integer indexOf(VertexHandler handler) {
+        int index = 0;
+        for (VertexHandler vertexHandler : vertexHandlers) {
+            if (vertexHandler == handler) {
+                return index;
+            }
+            index += 1;
+        }
+
+        return null;
+    }
+
+    private void updateVertexHandlers() {
+        vertexHandlers.clear();
+        for (int i = 0; i < getBoundPolygon().getVertexCount(); ++i) {
+            vertexHandlers.add(new VertexHandler(i));
         }
     }
 

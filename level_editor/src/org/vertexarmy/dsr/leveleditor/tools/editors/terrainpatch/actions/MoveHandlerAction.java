@@ -3,7 +3,6 @@ package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.actions;
 import com.badlogic.gdx.math.Vector2;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditTool;
-import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.VertexHandler;
 
 /**
  * Created by alex
@@ -14,13 +13,13 @@ public class MoveHandlerAction extends ActionManager.ActionAdapter {
 
     private final Vector2 newPosition = new Vector2();
 
-    private final VertexHandler vertexHandler;
+    private final Integer vertexHandlerIndex;
 
-    private final TerrainPatchEditTool terrainPatchEditTool;
+    private final TerrainPatchEditTool editorTool;
 
-    public MoveHandlerAction(TerrainPatchEditTool terrainPatchEditTool, VertexHandler vertexHandler, Vector2 originalPosition, Vector2 newPosition) {
-        this.terrainPatchEditTool = terrainPatchEditTool;
-        this.vertexHandler = vertexHandler;
+    public MoveHandlerAction(TerrainPatchEditTool editorTool, Integer vertexHandlerIndex, Vector2 originalPosition, Vector2 newPosition) {
+        this.editorTool = editorTool;
+        this.vertexHandlerIndex = vertexHandlerIndex;
         this.originalPosition.set(originalPosition);
         this.newPosition.set(newPosition);
     }
@@ -28,12 +27,12 @@ public class MoveHandlerAction extends ActionManager.ActionAdapter {
 
     @Override
     public void doAction() {
-        terrainPatchEditTool.setVertex(vertexHandler, newPosition.x, newPosition.y);
+        editorTool.setVertex(editorTool.findHandlerByIndex(vertexHandlerIndex), newPosition.x, newPosition.y);
     }
 
     @Override
     public void undoAction() {
-        terrainPatchEditTool.setVertex(vertexHandler, originalPosition.x, originalPosition.y);
+        editorTool.setVertex(editorTool.findHandlerByIndex(vertexHandlerIndex), originalPosition.x, originalPosition.y);
     }
 
     @Override

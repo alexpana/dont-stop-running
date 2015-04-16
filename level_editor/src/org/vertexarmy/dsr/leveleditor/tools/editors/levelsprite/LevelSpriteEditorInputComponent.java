@@ -103,7 +103,7 @@ public class LevelSpriteEditorInputComponent extends InputAdapter implements Inp
             editMode = EditMode.NONE;
             dragHelper.endDrag();
             newState = ReflectionHelper.extractMemento(editor.getBoundObject());
-            ActionManager.instance().runAction(new StateChangeAction(editor.getBoundObject(), originalState, newState));
+            ActionManager.runAction(new StateChangeAction(editor.getBoundObject(), originalState, newState));
             return true;
         } else {
             return false;

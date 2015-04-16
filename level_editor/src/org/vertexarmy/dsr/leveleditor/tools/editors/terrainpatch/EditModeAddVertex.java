@@ -78,7 +78,7 @@ public class EditModeAddVertex extends InputAdapter implements EditMode {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (closeToEdge) {
-            ActionManager.instance().runAction(new AddNewVertexAction(terrainPatchEditTool, shadowEdgeIndex + 1, shadowVertex.cpy()));
+            ActionManager.runAction(new AddNewVertexAction(terrainPatchEditTool, shadowEdgeIndex + 1, shadowVertex.cpy()));
             return true;
         }
         return false;

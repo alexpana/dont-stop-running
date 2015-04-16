@@ -3,7 +3,6 @@ package org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.actions;
 import com.beust.jcommander.internal.Lists;
 import org.vertexarmy.dsr.core.ActionManager;
 import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.TerrainPatchEditTool;
-import org.vertexarmy.dsr.leveleditor.tools.editors.terrainpatch.VertexHandler;
 
 import java.util.List;
 
@@ -14,29 +13,29 @@ import java.util.List;
 public class SelectHandlersAction extends ActionManager.ActionAdapter {
     private final TerrainPatchEditTool terrainPatchEditTool;
 
-    private final List<VertexHandler> selectedHandlers = Lists.newArrayList();
+    private final List<Integer> selectedHandlerIndices = Lists.newArrayList();
 
-    public SelectHandlersAction(TerrainPatchEditTool terrainPatchEditTool, List<VertexHandler> selectedHandlers) {
+    public SelectHandlersAction(TerrainPatchEditTool terrainPatchEditTool, List<Integer> selectedHandlerIndices) {
         this.terrainPatchEditTool = terrainPatchEditTool;
-        this.selectedHandlers.addAll(selectedHandlers);
+        this.selectedHandlerIndices.addAll(selectedHandlerIndices);
     }
 
     @Override
     public void doAction() {
-        for (VertexHandler vertexHandler : selectedHandlers) {
-            terrainPatchEditTool.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(true);
+        for (Integer vertexHandlerIndex : selectedHandlerIndices) {
+            terrainPatchEditTool.findHandlerByIndex(vertexHandlerIndex).setSelected(true);
         }
     }
 
     @Override
     public void undoAction() {
-        for (VertexHandler vertexHandler : selectedHandlers) {
-            terrainPatchEditTool.findHandlerByIndex(vertexHandler.getVertexIndex()).setSelected(false);
+        for (Integer vertexHandlerIndex : selectedHandlerIndices) {
+            terrainPatchEditTool.findHandlerByIndex(vertexHandlerIndex).setSelected(false);
         }
     }
 
     @Override
     public boolean isValid() {
-        return !selectedHandlers.isEmpty();
+        return !selectedHandlerIndices.isEmpty();
     }
 }

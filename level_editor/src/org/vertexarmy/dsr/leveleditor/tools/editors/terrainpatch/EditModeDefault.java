@@ -37,7 +37,7 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     private final List<Vector2> newVertexPositions = Lists.newArrayList();
 
-    private final TerrainPatchEditTool terrainPatchEditTool;
+    private final TerrainPatchEditTool editor;
 
     private final Vector2 originalVertexPosition = new Vector2();
 
@@ -47,16 +47,16 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        VertexHandler hoveredHandler = terrainPatchEditTool.getHoveredVertexHandler();
+        VertexHandler hoveredHandler = editor.getHoveredVertexHandler();
 
         if (hoveredHandler != null) {
-            if (terrainPatchEditTool.getSelectedHandlers().contains(hoveredHandler)) {
+            if (editor.getSelectedHandlers().contains(hoveredHandler)) {
                 moveVertexDragHelper.beginDrag(mouseWorld(screenX, screenY));
             } else {
                 hoveredHandler.setDragged(true);
 
                 clearSelection();
-                originalVertexPosition.set(terrainPatchEditTool.getVertex(hoveredHandler));
+                originalVertexPosition.set(editor.getVertex(hoveredHandler));
 
                 moveVertexDragHelper.beginDrag(mouseWorld(screenX, screenY));
             }
@@ -75,21 +75,21 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        VertexHandler hoveredHandler = terrainPatchEditTool.getHoveredVertexHandler();
+        VertexHandler hoveredHandler = editor.getHoveredVertexHandler();
 
         if (moveVertexDragHelper.isDragging()) {
             if (multipleHandlersSelected()) {
                 newVertexPositions.clear();
-                for (VertexHandler selectedHandler : terrainPatchEditTool.getSelectedHandlers()) {
-                    newVertexPositions.add(terrainPatchEditTool.getVertex(selectedHandler));
+                for (VertexHandler selectedHandler : editor.getSelectedHandlers()) {
+                    newVertexPositions.add(editor.getVertex(selectedHandler));
                 }
-                ActionManager.instance().runAction(new MoveMultipleHandlersAction(
-                        terrainPatchEditTool,
-                        terrainPatchEditTool.getSelectedHandlers(),
+                ActionManager.runAction(new MoveMultipleHandlersAction(
+                        editor,
+                        editor.handlersToIndices(editor.getSelectedHandlers()),
                         originalVertexPositions,
                         newVertexPositions));
             } else {
-                ActionManager.instance().runAction(new MoveHandlerAction(terrainPatchEditTool, hoveredHandler, originalVertexPosition, terrainPatchEditTool.getVertex(hoveredHandler).cpy()));
+                ActionManager.runAction(new MoveHandlerAction(editor, editor.indexOf(hoveredHandler), originalVertexPosition, editor.getVertex(hoveredHandler).cpy()));
             }
 
             hoveredHandler.setDragged(false);
@@ -108,13 +108,13 @@ public class EditModeDefault extends InputAdapter implements EditMode {
             }
 
             if (!newlySelectedHandlers.isEmpty()) {
-                ActionManager.instance().runAction(new SelectHandlersAction(terrainPatchEditTool, newlySelectedHandlers));
+                ActionManager.runAction(new SelectHandlersAction(editor, editor.handlersToIndices(newlySelectedHandlers)));
             }
 
             // preserve original positions
             originalVertexPositions.clear();
-            for (VertexHandler selectedHandler : terrainPatchEditTool.getSelectedHandlers()) {
-                originalVertexPositions.add(terrainPatchEditTool.getVertex(selectedHandler));
+            for (VertexHandler selectedHandler : editor.getSelectedHandlers()) {
+                originalVertexPositions.add(editor.getVertex(selectedHandler));
             }
 
             return true;
@@ -130,12 +130,12 @@ public class EditModeDefault extends InputAdapter implements EditMode {
             moveVertexDragHelper.reset(mouseWorld(screenX, screenY));
 
             if (multipleHandlersSelected()) {
-                for (VertexHandler selectedHandler : terrainPatchEditTool.getSelectedHandlers()) {
-                    terrainPatchEditTool.setVertex(selectedHandler, terrainPatchEditTool.getVertex(selectedHandler).cpy().add(dragOffset));
+                for (VertexHandler selectedHandler : editor.getSelectedHandlers()) {
+                    editor.setVertex(selectedHandler, editor.getVertex(selectedHandler).cpy().add(dragOffset));
                 }
             } else {
-                VertexHandler draggedHandler = terrainPatchEditTool.getDraggedVertexHandler();
-                terrainPatchEditTool.setVertex(draggedHandler, terrainPatchEditTool.getVertex(draggedHandler).cpy().add(dragOffset));
+                VertexHandler draggedHandler = editor.getDraggedVertexHandler();
+                editor.setVertex(draggedHandler, editor.getVertex(draggedHandler).cpy().add(dragOffset));
             }
 
             return true;
@@ -146,8 +146,8 @@ public class EditModeDefault extends InputAdapter implements EditMode {
             Vector2 vertexPosition = new Vector2();
             Rectangle selectionRect = Algorithms.createRectangle(selectionDragHelper.getDragStartPosition(), selectionDragHelper.getLastPosition());
 
-            for (VertexHandler handler : terrainPatchEditTool.getVertexHandlers()) {
-                vertexPosition.set(terrainPatchEditTool.getVertex(handler));
+            for (VertexHandler handler : editor.getVertexHandlers()) {
+                vertexPosition.set(editor.getVertex(handler));
 
                 boolean selectionCoversHandler = selectionRect.contains(vertexPosition);
 
@@ -167,13 +167,13 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     }
 
     private boolean multipleHandlersSelected() {
-        return !terrainPatchEditTool.getSelectedHandlers().isEmpty();
+        return !editor.getSelectedHandlers().isEmpty();
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        for (VertexHandler handler : terrainPatchEditTool.getVertexHandlers()) {
-            Vector2 vertex = terrainPatchEditTool.getVertex(handler);
+        for (VertexHandler handler : editor.getVertexHandlers()) {
+            Vector2 vertex = editor.getVertex(handler);
             Vector2 m = mouseWorld(screenX, screenY);
 
             handler.setHovered(Math.abs(vertex.x - m.x) < handler.getHitSize() / 2 / RenderSystem.instance().getZoom() &&
@@ -186,24 +186,25 @@ public class EditModeDefault extends InputAdapter implements EditMode {
 
     @Override
     public boolean keyDown(int keycode) {
+        List<Integer> selectedHandlerIndices = editor.handlersToIndices(editor.getSelectedHandlers());
+
         if (keycode == Input.Keys.X) {
-            ActionManager.instance().runAction(new AlignHandlersVerticallyAction(terrainPatchEditTool, terrainPatchEditTool.getSelectedHandlers()));
+            ActionManager.runAction(new AlignHandlersVerticallyAction(editor, selectedHandlerIndices));
             return true;
         }
 
         if (keycode == Input.Keys.Y) {
-            ActionManager.instance().runAction(new AlignHandlersHorizontallyAction(terrainPatchEditTool, terrainPatchEditTool.getSelectedHandlers()));
+            ActionManager.runAction(new AlignHandlersHorizontallyAction(editor, selectedHandlerIndices));
             return true;
         }
 
-
-        if (keycode == Input.Keys.E && terrainPatchEditTool.isBound()) {
-            terrainPatchEditTool.getTextureOverlayEditor().show();
+        if (keycode == Input.Keys.E && editor.isBound()) {
+            editor.getTextureOverlayEditor().show();
             return true;
         }
 
-        if (keycode == Input.Keys.ESCAPE && terrainPatchEditTool.getTextureOverlayEditor().isVisible()) {
-            terrainPatchEditTool.getTextureOverlayEditor().hide();
+        if (keycode == Input.Keys.ESCAPE && editor.getTextureOverlayEditor().isVisible()) {
+            editor.getTextureOverlayEditor().hide();
             return true;
         }
 
@@ -225,19 +226,19 @@ public class EditModeDefault extends InputAdapter implements EditMode {
         List<Vector2> allVertices = Lists.newArrayList();
         List<Vector2> remainingVertices = Lists.newArrayList();
 
-        for (VertexHandler handler : terrainPatchEditTool.getVertexHandlers()) {
-            allVertices.add(terrainPatchEditTool.getVertex(handler));
+        for (VertexHandler handler : editor.getVertexHandlers()) {
+            allVertices.add(editor.getVertex(handler));
             if (!handler.isSelected()) {
-                remainingVertices.add(terrainPatchEditTool.getVertex(handler));
+                remainingVertices.add(editor.getVertex(handler));
             }
         }
 
-        if (remainingVertices.size() < 3 || terrainPatchEditTool.getSelectedHandlers().size() == 0) {
-            terrainPatchEditTool.deleteBoundPolygon();
+        if (remainingVertices.size() < 3 || editor.getSelectedHandlers().size() == 0) {
+            editor.deleteBoundPolygon();
         } else {
-            ActionManager.instance().runAction(new ActionManager.CompositeAction(ImmutableList.of(
-                    new DeselectAllHandlersAction(terrainPatchEditTool, terrainPatchEditTool.getVertexHandlers(), terrainPatchEditTool.getSelectedHandlers()),
-                    new RemoveVerticesAction(terrainPatchEditTool, allVertices, remainingVertices))));
+            ActionManager.runAction(new ActionManager.CompositeAction(ImmutableList.of(
+                    new DeselectAllHandlersAction(editor, editor.handlersToIndices(editor.getVertexHandlers()), editor.handlersToIndices(editor.getSelectedHandlers())),
+                    new RemoveVerticesAction(editor, allVertices, remainingVertices))));
         }
     }
 
@@ -264,8 +265,8 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     @Override
     public void stop() {
         moveVertexDragHelper.endDrag();
-        if (terrainPatchEditTool.getHoveredVertexHandler() != null) {
-            terrainPatchEditTool.getHoveredVertexHandler().setHovered(false);
+        if (editor.getHoveredVertexHandler() != null) {
+            editor.getHoveredVertexHandler().setHovered(false);
         }
 
         DebugValues.instance().clearValue(DebugItems.MULTIPLE_SELECT);
@@ -298,7 +299,7 @@ public class EditModeDefault extends InputAdapter implements EditMode {
     }
 
     private void clearSelection() {
-        ActionManager.instance().runAction(new DeselectAllHandlersAction(terrainPatchEditTool, terrainPatchEditTool.getVertexHandlers(), terrainPatchEditTool.getSelectedHandlers()));
+        ActionManager.runAction(new DeselectAllHandlersAction(editor, editor.handlersToIndices(editor.getVertexHandlers()), editor.handlersToIndices(editor.getSelectedHandlers())));
         originalVertexPositions.clear();
         newlySelectedHandlers.clear();
     }
