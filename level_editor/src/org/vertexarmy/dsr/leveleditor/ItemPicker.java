@@ -18,6 +18,7 @@ import org.vertexarmy.dsr.math.Polygon;
  * on 04-Apr-2015.
  */
 public class ItemPicker {
+
     enum ItemType {
         TERRAIN_POLYGON,
         LEVEL_SPRITE,
@@ -26,6 +27,7 @@ public class ItemPicker {
 
     @RequiredArgsConstructor
     public static class PickResult {
+
         @Getter
         private final ItemType type;
 
@@ -42,7 +44,6 @@ public class ItemPicker {
         if (foregroundSprite != null) {
             return new PickResult(ItemType.LEVEL_SPRITE, foregroundSprite);
         }
-
 
         TerrainPatch pickedPolygon = pickTerrainPolygon(level, screenX, screenY);
         if (pickedPolygon != null) {
@@ -97,14 +98,6 @@ public class ItemPicker {
     }
 
     public static boolean spriteContainsPoint(LevelSprite sprite, Vector2 point) {
-        Vector2 bottomLeftCorner = sprite.getPosition();
-
-        TextureRegion region = TextureRepository.instance().getTexture(sprite.getTextureName());
-        float width = region.getRegionWidth() * sprite.getScale().x;
-        float height = region.getRegionHeight() * sprite.getScale().y;
-
-        Vector2 topRightCorner = bottomLeftCorner.cpy().add(width, height);
-
-        return Algorithms.createRectangle(bottomLeftCorner, topRightCorner).contains(point);
+        return LevelSpriteUtils.getSpriteBounds(sprite).containsVertex(point);
     }
 }

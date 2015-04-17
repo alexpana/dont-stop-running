@@ -10,6 +10,7 @@ import org.vertexarmy.dsr.core.DragHelper;
 import org.vertexarmy.dsr.core.ReflectionHelper;
 import org.vertexarmy.dsr.core.component.InputComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
+import org.vertexarmy.dsr.leveleditor.LevelSpriteUtils;
 import org.vertexarmy.dsr.leveleditor.StateChangeAction;
 import org.vertexarmy.dsr.math.Algorithms;
 
@@ -129,6 +130,6 @@ public class LevelSpriteEditorInputComponent extends InputAdapter implements Inp
     }
 
     private boolean spriteBoundsContain(Vector2 worldPosition) {
-        return Algorithms.createRectangle(editor.getSpriteBottomLeftCorner(), editor.getSpriteTopRightCorner()).contains(worldPosition);
+        return LevelSpriteUtils.getSpriteBounds(editor.getBoundObject()).containsVertex(worldPosition);
     }
 }

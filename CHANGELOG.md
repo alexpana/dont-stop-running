@@ -12,6 +12,7 @@
 - Undo now works properly after deleting a terrain patch
 - auto_atlas.py tool now accepts a structure.json file that describes the atlas 
 - Sprite editor tool now renders the correct outline
+- Mouse clicks now correctly select rotated sprites for picking and dragging
 
 ## [1.3] 2015-04-12
 ### Added
