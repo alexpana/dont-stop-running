@@ -2,17 +2,18 @@ package org.vertexarmy.dsr.math;
 
 import com.badlogic.gdx.math.Vector2;
 import com.beust.jcommander.internal.Lists;
-import lombok.EqualsAndHashCode;
-
 import java.io.Serializable;
 import java.util.List;
+import lombok.EqualsAndHashCode;
+import org.vertexarmy.dsr.core.DeepCopyable;
 
 /**
  * created by Alex
  * on 3/6/2015.
  */
 @EqualsAndHashCode
-public class Polygon implements Serializable {
+public class Polygon implements Serializable, DeepCopyable {
+
     private final List<Vector2> vertexList = Lists.newArrayList();
 
     public Polygon(float[] vertices) {
@@ -30,6 +31,10 @@ public class Polygon implements Serializable {
                 i = 0;
             }
         }
+    }
+
+    public Polygon(List<Vector2> vertexList) {
+        this.vertexList.addAll(vertexList);
     }
 
     public void setVertices(float[] vertices) {
@@ -113,5 +118,43 @@ public class Polygon implements Serializable {
         }
         edges.add(new Edge(vertexList.get(vertexList.size() - 1), vertexList.get(0)));
         return edges;
+    }
+
+    public void scale(Vector2 scale) {
+        for (Vector2 vertex : vertexList) {
+            vertex.scl(scale);
+        }
+    }
+
+    public void rotate(float degrees) {
+        for (Vector2 vertex : vertexList) {
+            vertex.rotate(degrees);
+        }
+    }
+
+    public void translate(Vector2 translation) {
+        for (Vector2 vertex : vertexList) {
+            vertex.add(translation);
+        }
+    }
+
+    @Override
+    public Object copy() {
+        List<Vector2> newVertexList = Lists.newArrayList();
+        for (Vector2 vertex : vertexList) {
+            newVertexList.add(vertex.cpy());
+        }
+        return new Polygon(newVertexList);
+    }
+
+    public float[] toFloatArray() {
+        float[] array = new float[vertexList.size() * 2];
+        int i = 0;
+        for (Vector2 vertex : vertexList) {
+            array[i * 2] = vertex.x;
+            array[i * 2 + 1] = vertex.y;
+            i += 1;
+        }
+        return array;
     }
 }

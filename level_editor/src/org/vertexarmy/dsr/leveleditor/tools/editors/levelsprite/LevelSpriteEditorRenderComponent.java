@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import lombok.RequiredArgsConstructor;
 import org.vertexarmy.dsr.core.component.RenderComponent;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
+import org.vertexarmy.dsr.leveleditor.LevelSpriteUtils;
 
 /**
  * created by Alex
@@ -31,12 +32,10 @@ public class LevelSpriteEditorRenderComponent extends RenderComponent {
 
     private void renderOutline() {
         ShapeRenderer shapeRenderer = RenderSystem.instance().getShapeRenderer();
-        Vector2 bottomLeftCorner = editor.getSpriteBottomLeftCorner();
-        Vector2 topRightCorner = editor.getSpriteTopRightCorner();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.rect(bottomLeftCorner.x, bottomLeftCorner.y, topRightCorner.x - bottomLeftCorner.x, topRightCorner.y - bottomLeftCorner.y);
+        shapeRenderer.polygon(LevelSpriteUtils.getSpriteBounds(editor.getBoundObject()).toFloatArray());
         shapeRenderer.end();
     }
 

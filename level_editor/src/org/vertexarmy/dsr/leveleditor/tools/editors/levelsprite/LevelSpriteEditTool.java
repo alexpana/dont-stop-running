@@ -2,6 +2,7 @@ package org.vertexarmy.dsr.leveleditor.tools.editors.levelsprite;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import lombok.Setter;
 import org.vertexarmy.dsr.core.UiContext;
@@ -13,12 +14,14 @@ import org.vertexarmy.dsr.leveleditor.tools.BindableTool;
 import org.vertexarmy.dsr.leveleditor.ui.genericeditor.GenericEditor;
 import org.vertexarmy.dsr.leveleditor.ui.menu.Menu;
 import org.vertexarmy.dsr.leveleditor.ui.menu.MenuItem;
+import org.vertexarmy.dsr.math.Polygon;
 
 /**
  * created by Alex
  * on 04-Apr-2015.
  */
 public class LevelSpriteEditTool extends BindableTool<LevelSprite> {
+
     @Getter
     private final Node node = new Node();
 

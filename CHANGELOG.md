@@ -11,6 +11,7 @@
 - Menus are now hidden automatically after selecting an action
 - Undo now works properly after deleting a terrain patch
 - auto_atlas.py tool now accepts a structure.json file that describes the atlas 
+- Sprite editor tool now renders the correct outline
 
 ## [1.3] 2015-04-12
 ### Added
