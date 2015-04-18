@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## [1.4] 2015-04-18
 ### Added
 - Support for undoing sprite drag and drop actions
 - Support for sprite editor contextual menu
