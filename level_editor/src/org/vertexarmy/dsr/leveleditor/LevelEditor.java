@@ -268,7 +268,7 @@ class LevelEditor extends Game {
     }
 
     private void loadTextures() {
-        Texture tilesTexture = new Texture(Gdx.files.internal("tiles.png"));
+        Texture tilesTexture = new Texture(Gdx.files.internal("textures/tiles.png"));
         TextureRepository.instance().addTexture("grass", new TextureRegion(tilesTexture, 0, 0, 32, 32));
         TextureRepository.instance().addTexture("dirt", new TextureRegion(tilesTexture, 32, 0, 32, 32));
         TextureRepository.instance().addTexture("saw", new TextureRegion(tilesTexture, 64, 0, 64, 64));
