@@ -16,7 +16,7 @@ public class LevelSpriteUtils {
 
     private static final Polygon NULL_POLYGON = new Polygon(ImmutableList.of(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
 
-    private static final Polygon UNIT_SQUARE_POLYGON = new Polygon(ImmutableList.of(0f, 0f, 0f, 1f, 1f, 1f, 1f, 0f));
+    private static final Polygon UNIT_SQUARE_POLYGON = new Polygon(ImmutableList.of(-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f));
 
     @Nonnull
     public static Polygon getSpriteBounds(LevelSprite sprite) {

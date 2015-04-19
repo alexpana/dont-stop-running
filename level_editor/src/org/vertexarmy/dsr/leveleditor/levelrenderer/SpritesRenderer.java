@@ -3,20 +3,20 @@ package org.vertexarmy.dsr.leveleditor.levelrenderer;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.beust.jcommander.internal.Lists;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import org.vertexarmy.dsr.core.assets.TextureRepository;
 import org.vertexarmy.dsr.core.systems.RenderSystem;
 import org.vertexarmy.dsr.game.level.Level;
 import org.vertexarmy.dsr.game.level.LevelSprite;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * created by Alex
  * on 4/4/2015.
  */
 public class SpritesRenderer {
+
     private Level level;
 
     private final List<Sprite> foregroundSpriteList = Lists.newArrayList();
@@ -83,14 +83,19 @@ public class SpritesRenderer {
 
     private Sprite spriteFromLevelSprite(LevelSprite levelSprite) {
         Sprite sprite = new Sprite(TextureRepository.instance().getTexture(levelSprite.getTextureName()));
-        sprite.setPosition(levelSprite.getPosition().x, levelSprite.getPosition().y);
-        sprite.setScale(levelSprite.getScale().x, levelSprite.getScale().y);
+
+        float width = sprite.getWidth() * sprite.getScaleX();
+        float height = sprite.getHeight() * sprite.getScaleY();
+
         sprite.setRotation(levelSprite.getRotation());
-        sprite.setOrigin(0, 0);
+        sprite.setScale(levelSprite.getScale().x, levelSprite.getScale().y);
+        sprite.setPosition(levelSprite.getPosition().x - width / 2, levelSprite.getPosition().y - height / 2);
+        sprite.getVertices();
         return sprite;
     }
 
     private static final class SpriteZOrderComparator implements Comparator<LevelSprite> {
+
         @Override
         public int compare(LevelSprite lhs, LevelSprite rhs) {
             return lhs.getZOrder() - rhs.getZOrder();
