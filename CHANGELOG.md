@@ -1,5 +1,9 @@
 # Change Log
 
+## Unreleased
+### Added
+- Gradle task for building a complete archived release of the level editor
+
 ## [1.4] 2015-04-18
 ### Added
 - Support for undoing sprite drag and drop actions
