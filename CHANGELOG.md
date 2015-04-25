@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## [1.5] 2015-04-25
 ### Added
 - Gradle task for building a complete archived release of the level editor
 - Fixed a bug where context menus would not disappear

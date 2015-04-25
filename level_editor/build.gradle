@@ -5,7 +5,7 @@ import java.util.zip.ZipOutputStream
 apply plugin: 'java'
 
 sourceCompatibility = 1.7
-version = '1.4'
+version = '1.5'
 
 sourceSets.main.java.srcDirs = ["src/"]
 
