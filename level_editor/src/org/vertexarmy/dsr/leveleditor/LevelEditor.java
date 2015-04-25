@@ -138,6 +138,8 @@ class LevelEditor extends Game {
                     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                         ItemPicker.PickResult pickResult = ItemPicker.pickObject(level, screenX, screenY);
 
+                        Menu.hideAllMenuInstances();
+
                         if (button == Input.Buttons.LEFT && pickResult.getObject() != null) {
                             actionMenu.hide();
                             if (terrainPatchEditTool.getHoveredVertex() != null) {

@@ -137,7 +137,7 @@ public class Menu extends Table {
         INSTANCES.remove(this);
     }
 
-    private static void hideAllMenuInstances() {
+    public static void hideAllMenuInstances() {
         for (Menu menu : INSTANCES) {
             menu.hide();
         }
